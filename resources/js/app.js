@@ -1,0 +1,116 @@
+/**
+ * First we will load all of this project's JavaScript dependencies which
+ * includes Vue and other libraries. It is a great starting point when
+ * building robust, powerful web applications using Vue and Laravel.
+ */
+
+require('./bootstrap');
+
+window.Vue = require('vue').default;
+
+import Vuex from 'Vuex';
+Vue.use(Vuex);
+const store = new Vuex.Store({
+    state: {
+        item: {}
+    }
+});
+
+/**
+ * The following block of code may be used to automatically register your
+ * Vue components. It will recursively scan this directory for the Vue
+ * components and automatically register them with their "basename".
+ *
+ * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ */
+
+// const files = require.context('./', true, /\.vue$/i)
+// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('login-component', require('./components/Login.vue').default);
+Vue.component('buscar-component', require('./components/Buscar.vue').default);
+Vue.component('lista-component', require('./components/Lista.vue').default);
+Vue.component('usuarios-component', require('./components/Usuarios.vue').default);
+Vue.component('alert-component', require('./components/Alert.vue').default);
+Vue.component('modal-component', require('./components/Modal.vue').default);
+Vue.component('paginate-component', require('./components/Paginate.vue').default);
+Vue.component('breadcrumb-component', require('./components/Breadcrumb.vue').default);
+Vue.component('areas-component', require('./components/Areas.vue').default);
+Vue.component('no-itens-component', require('./components/NoItens.vue').default);
+Vue.component('spinner-component', require('./components/Spinner.vue').default);
+
+/**
+ * Next, we will create a fresh Vue application instance and attach it to
+ * the page. Then, you may begin adding components to this application
+ * or customize the JavaScript scaffolding to fit your unique needs.
+ */
+
+Vue.filter('formatDateTime', function(valor){
+    if (!valor) {
+        return '-';
+    }
+    valor = valor.split(' ');
+    let data;
+    let dataFormatada;
+
+    data = valor[0];
+    data = data.split('-');
+    dataFormatada = data[2] + '/' + data[1] + '/' + data[0];
+
+    return dataFormatada + ' - ' + valor[1];
+})
+
+Vue.filter('formatDateTimeStamp', function(valor){
+    if (!valor) {
+        return '-';
+    }
+    valor = valor.split('T');
+    
+    let data = valor[0];
+    let hora = valor[1];
+    let dataFormatada;
+    let horaFormatada;
+
+    // Formatando data
+    data = data.split('-');
+    dataFormatada = data[2] + '/' + data[1] + '/' + data[0];
+
+    // Formatando hora
+    hora = hora.split('.')[0];
+    
+    return dataFormatada + ' - ' + hora;
+})
+
+Vue.filter('formatStatus', function(valor) {
+    let status= {
+        '0': 'Inativo',
+        '1': 'Ativo',
+        '2': 'Bloqueado'
+    };
+    return status[valor];
+});
+
+Vue.filter('formatProfile', function(valor) {
+    let profile = {
+        'superadmin': 'Super Administrador',
+        'administrator': 'Administrador',
+        'manager': 'Gestor',
+        'user': 'Usuário'
+    };
+    return profile[valor];
+});
+
+Vue.filter('formatNextPrevButton', function(valor) {
+    if (valor === '&laquo; Previous') {
+        return '<< Anterior';
+    } else if (valor === 'Next &raquo;') {
+        return 'Próximo >>';
+    }
+    return valor;
+});
+
+const app = new Vue({
+    el: '#app',
+    store
+});
