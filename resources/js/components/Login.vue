@@ -1,29 +1,33 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Login</div>
+            <div class="col-md-8 mt-5">
+                <div class="card mt-5">
+                    <div class="card-header bg-dark text-white">Login</div>
                     <div class="card-body">
                         <form method="POST" action="" @submit.prevent="login($event)">
                             <input type="hidden" name="_token" :value="csrf_token">
                             <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">E-mail</label>
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="" required autocomplete="email" autofocus v-model="email">
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong></strong>
-                                    </span>
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <input id="email" type="email" class="form-control" name="email" value="" required autocomplete="email" autofocus v-model="email">
+                                        <label class="form-label">E-mail*</label>
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong></strong>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">Senha</label>
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password" v-model="password">
+                            <div class="form-group row mt-3">
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password" v-model="password">
+                                        <label class="form-label">Senha</label>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-6 offset-md-4">
+                            <!--<div class="form-group row mt-3">
+                                <div class="col-md-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="remember" id="remember">
                                         <label class="form-check-label" for="remember">
@@ -31,16 +35,25 @@
                                         </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Login
-                                    </button>
-                                    <a class="btn btn-link" href="">
-                                        Esqueceu a senha?
-                                    </a>
+                            </div>-->
+                            <div class="form-group row mb-0 mt-3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-dark text-white w-100">
+                                            Login
+                                        </button>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <a class="btn btn-link" href="/login/reset">
+                                            Esqueceu a senha?
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-0 mt-2">
+                                <alert-component tipo="danger" :detalhes="detalhes" titulo="Erro ao Acessar" v-if="statusLogin == 'erro'"></alert-component>
                             </div>
                         </form>
                     </div>
@@ -51,17 +64,20 @@
 </template>
 
 <script>
+    import * as utils from '../utils/functions';
     export default {
         props: ['csrf_token'],
         data() {
             return {
                 email: '',
-                password: ''
+                password: '',
+                detalhes: {mensagem: 'erro'},
+                statusLogin: ''
             }
         },
         methods: {
             login(e) {
-                let url = 'http://localhost:8000/api/login'
+                let url = utils.API_URL + '/api/login'
                 let configuracoes = {
                     method:'post',
                     body: new URLSearchParams({
@@ -72,10 +88,19 @@
                 fetch(url, configuracoes)
                     .then(response => response.json())
                     .then(data => {
-                        if (data.token) {
-                            document.cookie = 'token='+data.token+':SameSite=Lax'
+                        if (data.error) {
+                            if (data.status == 428) {
+                                window.location.href = "/login/update-password";
+                            } else {
+                                this.statusLogin = 'erro';
+                                this.detalhes.mensagem = data.error;
+                            }
+                        } else {
+                            if (data.token) {
+                                document.cookie = 'token='+data.token+':SameSite=Lax'
+                            }
+                            e.target.submit()
                         }
-                        e.target.submit()
                     })
                 
             }
