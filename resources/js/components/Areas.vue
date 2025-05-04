@@ -200,13 +200,14 @@
 
 <script>
     import { EventBus } from "./eventBus.js";
+    import * as utils from '../utils/functions';
     export default {
         data() {
             return {
                 areas: {data: {}},
                 usuarios: {data: {}},
-                urlBase: 'http://localhost:8000/api/v1/area',
-                urlUser: 'http://localhost:8000/api/v1/user',
+                urlBase: utils.API_URL + '/api/v1/area',
+                urlUser: utils.API_URL + '/api/v1/user',
                 urlPaginacao: '',
                 urlFiltro: '',
                 status: '',
