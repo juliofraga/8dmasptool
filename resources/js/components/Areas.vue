@@ -231,13 +231,13 @@
                     .then(response => {
                         this.status = 'sucesso';
                         this.tituloFeedback = "Área ativada com sucesso";
-                        this.closeModal('modalAtualizarArea');
+                        utils.closeModal('modalAtualizarArea');
                         this.loadAreaList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
                         this.tituloFeedback = "Erro ao ativar área";
-                        this.closeModal('modalAtualizarArea');
+                        utils.closeModal('modalAtualizarArea');
                         this.mensagemFeedback = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
@@ -252,13 +252,13 @@
                     .then(response => {
                         this.status = 'sucesso';
                         this.tituloFeedback = "Área inativada com sucesso";
-                        this.closeModal('modalAtualizarArea');
+                        utils.closeModal('modalAtualizarArea');
                         this.loadAreaList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
                         this.tituloFeedback = "Erro ao inativar área";
-                        this.closeModal('modalAtualizarArea');
+                        utils.closeModal('modalAtualizarArea');
                         this.mensagemFeedback = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
@@ -274,13 +274,13 @@
                     .then(response => {
                         this.status = 'sucesso';
                         this.tituloFeedback = "Área deletada com sucesso";
-                        this.closeModal('modalConfirmarDeletar');
+                        utils.closeModal('modalConfirmarDeletar');
                         this.loadAreaList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
                         this.tituloFeedback = "Erro ao deletar área";
-                        this.closeModal('modalConfirmarDeletar');
+                        utils.closeModal('modalConfirmarDeletar');
                         this.mensagemFeedback = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
@@ -309,13 +309,13 @@
                             .then(response => {
                                 this.status = 'sucesso';
                                 this.tituloFeedback = "Área atualizada com sucesso";
-                                this.closeModal('modalAtualizarArea');
+                                utils.closeModal('modalAtualizarArea');
                                 this.loadAreaList();
                             })
                             .catch(errors => {
                                 this.status = 'erro';
                                 this.tituloFeedback = "Erro ao atualizar área";
-                                this.closeModal('modalAtualizarArea');
+                                utils.closeModal('modalAtualizarArea');
                                 this.mensagemFeedback = {
                                     mensagem: errors.response.data.message,
                                     dados: errors.response.data.errors
@@ -335,30 +335,8 @@
                 this.membros = [],
                 this.managers = []
             },
-            fieldsValidate(campos) {
-                let isValid = true;
-
-                campos.forEach(campo => {
-                    const elemento = document.getElementById(campo);
-                    const valor = this[campo];
-
-                    if (!valor || valor.trim() === '') {
-                        elemento.classList.add('is-invalid');
-                        isValid = false;
-                    } else if (elemento.classList.contains('is-invalid')) {
-                        elemento.classList.remove('is-invalid');
-                    }
-                });
-                return isValid;
-            },
             setUrlFilter(url) {
                 this.urlFiltro = url;
-            },
-            closeModal(modal) {
-                $('#' + modal).modal('hide')
-            },
-            showModal(modal) {
-                $('#' + modal).modal('show')
             },
             loadAreaList() {
                 let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro;
@@ -410,7 +388,7 @@
                     })
             },
             save() {
-                if (this.fieldsValidate(['nome'])) {
+                if (utils.fieldsValidate(['nome'], this)) {
                     let formData = new FormData();
                     formData.append('name', this.nome);
                     formData.append('description', this.descricao);
@@ -428,7 +406,7 @@
                         .then(response => {
                             this.status = 'sucesso';
                             this.tituloFeedback = "Área adicionada com sucesso";
-                            this.closeModal('modalAdicionarArea');
+                            utils.closeModal('modalAdicionarArea');
                             this.loadAreaList();
                             this.cleanAddAreaFormData();
                         })
@@ -436,7 +414,7 @@
                             console.log('error: ', errors);
                             this.status = 'erro';
                             this.tituloFeedback = "Erro ao adicionar área";
-                            this.closeModal('modalAdicionarArea');
+                            utils.closeModal('modalAdicionarArea');
                             this.mensagemFeedback = {
                                 mensagem: errors.response.data.message,
                                 dados: errors.response.data.errors
@@ -444,6 +422,9 @@
                         })
                 }
             },
+            showModal(modal) {
+                $('#' + modal).modal('show')
+            }
         },
         mounted() {
             EventBus.$on("loadAreaList", this.loadAreaList)

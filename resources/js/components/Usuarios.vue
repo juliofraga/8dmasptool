@@ -303,13 +303,13 @@
                     .then(response => {
                         this.status = 'sucesso';
                         this.tituloFeedback = "Usuário ativado com sucesso";
-                        this.closeModal('modalAtualizarUser');
+                        utils.closeModal('modalAtualizarUser');
                         this.loadUserList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
                         this.tituloFeedback = "Erro ao ativar usuário";
-                        this.closeModal('modalAtualizarUser');
+                        utils.closeModal('modalAtualizarUser');
                         this.mensagemFeedback = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
@@ -324,13 +324,13 @@
                     .then(response => {
                         this.status = 'sucesso';
                         this.tituloFeedback = "Usuário inativado com sucesso";
-                        this.closeModal('modalAtualizarUser');
+                        utils.closeModal('modalAtualizarUser');
                         this.loadUserList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
                         this.tituloFeedback = "Erro ao inativar usuário";
-                        this.closeModal('modalAtualizarUser');
+                        utils.closeModal('modalAtualizarUser');
                         this.mensagemFeedback = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
@@ -352,13 +352,13 @@
                     .then(response => {
                         this.status = 'sucesso';
                         this.tituloFeedback = "Usuário deletado com sucesso";
-                        this.closeModal('modalConfirmarDeletar');
+                        utils.closeModal('modalConfirmarDeletar');
                         this.loadUserList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
                         this.tituloFeedback = "Erro ao deletar usuário";
-                        this.closeModal('modalConfirmarDeletar');
+                        utils.closeModal('modalConfirmarDeletar');
                         this.mensagemFeedback = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
@@ -396,13 +396,13 @@
                             .then(response => {
                                 this.status = 'sucesso';
                                 this.tituloFeedback = "Usuário atualizado com sucesso";
-                                this.closeModal('modalAtualizarUsuario');
+                                utils.closeModal('modalAtualizarUsuario');
                                 this.loadUserList();
                             })
                             .catch(errors => {
                                 this.status = 'erro';
                                 this.tituloFeedback = "Erro ao atualizar usuário";
-                                this.closeModal('modalAtualizarUsuario');
+                                utils.closeModal('modalAtualizarUsuario');
                                 this.mensagemFeedback = {
                                     mensagem: errors.response.data.message,
                                     dados: errors.response.data.errors
@@ -411,7 +411,7 @@
                     }
             },
             save() {
-                if (this.fieldsValidate(['nomeCompleto', 'email', 'perfil', 'senha', 'repeteSenha'])) {
+                if (utils.fieldsValidate(['nomeCompleto', 'email', 'perfil', 'senha', 'repeteSenha'], this)) {
                     if (this.senha != this.repeteSenha) {
                         document.getElementById('repeteSenha').classList.add('is-invalid');
                     } else {
@@ -435,14 +435,14 @@
                             .then(response => {
                                 this.status = 'sucesso';
                                 this.tituloFeedback = "Usuário adicionado com sucesso";
-                                this.closeModal('modalAdicionarUsuario');
+                                utils.closeModal('modalAdicionarUsuario');
                                 this.loadUserList();
                                 this.cleanAddUserFormData();
                             })
                             .catch(errors => {
                                 this.status = 'erro';
                                 this.tituloFeedback = "Erro ao adicionar usuário";
-                                this.closeModal('modalAdicionarUsuario');
+                                utils.closeModal('modalAdicionarUsuario');
                                 this.mensagemFeedback = {
                                     mensagem: errors.response.data.message,
                                     dados: errors.response.data.errors
@@ -457,22 +457,6 @@
                 this.senha = '';
                 this.perfil= '';
                 this.repeteSenha = '';
-            },
-            fieldsValidate(campos) {
-                let isValid = true;
-
-                campos.forEach(campo => {
-                    const elemento = document.getElementById(campo);
-                    const valor = this[campo];
-
-                    if (!valor || valor.trim() === '') {
-                        elemento.classList.add('is-invalid');
-                        isValid = false;
-                    } else if (elemento.classList.contains('is-invalid')) {
-                        elemento.classList.remove('is-invalid');
-                    }
-                });
-                return isValid;
             },
             setUrlFilter(url) {
                 this.urlFiltro = url;
@@ -501,9 +485,6 @@
                         }
                     })
                     
-            },
-            closeModal(modal) {
-                $('#' + modal).modal('hide')
             },
             showModal(modal) {
                 $('#' + modal).modal('show')
