@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LogController as Log;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -15,6 +16,10 @@ class AuthController extends Controller
         $data = $request->all(['email', 'password']);
         $token = auth('api')->attempt($data);
         $email = $data['email'];
+        $user = User::where('email', $email)->first();
+        if ($user->status == 0) {
+            return response()->json(['error' => 'A sua conta está inativa.'], 403);
+        }
         if ($token) {
             UserController::registerUserLogin($email);
             return response()->json(['token' => $token]);
