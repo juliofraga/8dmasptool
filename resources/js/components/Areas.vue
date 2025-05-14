@@ -36,6 +36,7 @@
                     status: {title: 'Status', length: '2', type:'ativoInativo'},
                     editar: {title: 'Editar', length: '2', type: 'buttonModal', modalId: '#modalAtualizarArea'},
                     created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetime'},
+                    users: {title: 'Users', length: 'hidden', type:'text'}
                 }" 
                 :dados="areas.data"
                 :status="status"
@@ -156,6 +157,32 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
+                                <select class="form-control" id="membros" name="membros" placeholder="Membros da Área" v-model="selectedUserIds" multiple style="height: auto;" @change="onUserSelectionChange">
+                                    <option value="">Selecione...</option>
+                                    <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
+                                        {{ usuario.name }}
+                                    </option>
+                                </select>
+                                <label class="form-label">Membros da Área</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="manager" name="manager" placeholder="Área" v-model="selectedManagerIds" multiple style="height: auto;">
+                                    <option value="">Selecione...</option>
+                                    <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
+                                        {{ usuario.name }}
+                                    </option>
+                                </select>
+                                <label class="form-label">Gestor da Área</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
                                 <textarea class="form-control" id="descricaoUpdate" name="descricaoUpdate" rows="10" style="height: auto;" v-model="$store.state.item.description">{{ $store.state.item.description }}</textarea>
                                 <label class="form-label">Descrição</label>
                             </div>
@@ -219,7 +246,9 @@
                 tituloFeedback: '',
                 loaded: false,
                 membros: [],
-                managers: []
+                managers: [],
+                selectedUserIds: [],
+                selectedManagerIds: []
             }
         },
         methods: {
@@ -423,13 +452,33 @@
                 }
             },
             showModal(modal) {
-                $('#' + modal).modal('show')
+                utils.showModal(modal);
+            },
+            onUserSelectionChange() {
+                const selectedUsers = this.usuarios.filter(user =>
+                    this.selectedUserIds.includes(user.id)
+                )
+                this.$store.state.item.users = selectedUsers
             }
         },
         mounted() {
             EventBus.$on("loadAreaList", this.loadAreaList)
             EventBus.$on("setUrlFilter", this.setUrlFilter);
             this.loadAreaList();
-        }
+        },
+        watch: {
+            '$store.state.item.users': {
+                handler(newUsers) {
+                    if (Array.isArray(newUsers)) {
+                        this.selectedUserIds = newUsers.map(user => user.id),
+                        this.selectedManagerIds = newUsers
+                            .filter(user => user.pivot?.manager === 1)
+                            .map(user => user.id)
+                    }
+                },
+                immediate: true,
+                deep: true
+            }
+        },
     }
 </script>

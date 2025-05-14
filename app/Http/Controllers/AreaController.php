@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\AreaRepository;
-use Illuminate\Support\Facades\DB;
 
 class AreaController extends Controller
 {
@@ -36,7 +35,8 @@ class AreaController extends Controller
         $users = $request->users;
         if (!empty($users)) {
             $users = explode(',', $users);
-            $this->ligaUserArea($area_object, $users);
+            $managers = explode(',', $request->managers);
+            $this->ligaUserArea($area_object, $users, $managers);
         }
         return $area;
     }
@@ -71,17 +71,15 @@ class AreaController extends Controller
         return $this->areaRepository->getAllRecords($request, $status);
     }
 
-    public function ligaUserArea(Area $area, array $users)
+    public function ligaUserArea(Area $area, array $users, array $managers)
     {
-        // verificar pq nao funciona
         foreach ($users as $user_id) {
             $user = User::find($user_id);
             if ($user) {
-                DB::enableQueryLog();
+                $isManager = in_array($user_id, $managers) ? 1 : 0;
                 $area->users()->syncWithoutDetaching([
-                    $user->id => ['manager' => 0]
+                    $user->id => ['manager' => $isManager]
                 ]);
-                dd(DB::getQueryLog());
             }
         }
     }

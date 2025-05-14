@@ -11,7 +11,7 @@ abstract class AbstractRepository {
 
     public $model;
     private const ERROR_NOT_FOUND = 'Registro não encontrado';
-    private const NUM_RESULTS_PAGE = 20;
+    protected const NUM_RESULTS_PAGE = 20;
 
     public function __construct(Model $model) 
     {
