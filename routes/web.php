@@ -34,6 +34,9 @@ Route::middleware('auth')->group(function() {
                 return view('/admin/cadastro/areas');
             })->name('cadastro-de-areas');
         });
+        Route::get('/meu-perfil', function () {
+            return view('/admin/meu-perfil');
+        })->name('admin-perfil');
     });
 });
 

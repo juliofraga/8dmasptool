@@ -116,7 +116,7 @@
                                         Perfil
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="minha-conta.html">Minha Conta</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('admin-perfil') }}">Minha Conta</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
