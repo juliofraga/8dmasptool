@@ -112,18 +112,6 @@ class UserController extends Controller
         }
     }
 
-    /*public function ligaUserArea(User $user, array $areas)
-    {
-        foreach ($areas as $area_id) {
-            $area = Area::find($area_id);
-            if ($area) {
-                $user->areas()->syncWithoutDetaching([
-                    $area->id => ['manager' => 0]
-                ]);
-            }
-        }
-    }*/
-
     public function getAll(Request $request, string $status)
     {
         return $this->userRepository->getAllRecords($request, $status);

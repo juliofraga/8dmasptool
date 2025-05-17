@@ -38,6 +38,7 @@ class AreaController extends Controller
             $managers = explode(',', $request->managers);
             $this->ligaUserArea($area_object, $users, $managers);
         }
+        $this->areaRepository->storeLog($area, 'insert');
         return $area;
     }
 
@@ -48,7 +49,27 @@ class AreaController extends Controller
 
     public function update(Request $request, int $id)
     {
-        return $this->areaRepository->update($request, $id, []);
+        $area = $this->area->find($id);
+        if (!$area) {
+            return response()->json(['erro' => 'Registro não encontrado'], 404);
+        }
+        $request->merge([
+            'description' => $request->description === 'null' ? NULL : $request->description,
+        ]);
+        $update = $area->update($request->all());
+        $area->users()->detach();
+        $users = $request->users;
+        if (!empty($users)) {
+            $users = explode(',', $users);
+            $managers = explode(',', $request->managers);
+            $this->ligaUserArea($area, $users, $managers);
+        }
+        if ($update) {
+            $this->areaRepository->storeLog($area, 'update');
+            return response()->json($area, 200);
+        } else {
+            return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
+        }
     }
 
     public function destroy(int $id)

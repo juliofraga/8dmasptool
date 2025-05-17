@@ -157,7 +157,7 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <select class="form-control" id="membros" name="membros" placeholder="Membros da Área" v-model="selectedUserIds" multiple style="height: auto;" @change="onUserSelectionChange">
+                                <select class="form-control" id="membrosUpdate" name="membrosUpdate" placeholder="Membros da Área" v-model="selectedUserIds" multiple style="height: auto;">
                                     <option value="">Selecione...</option>
                                     <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
                                         {{ usuario.name }}
@@ -170,7 +170,7 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <select class="form-control" id="manager" name="manager" placeholder="Área" v-model="selectedManagerIds" multiple style="height: auto;">
+                                <select class="form-control" id="managerUpdate" name="managerUpdate" placeholder="Área" v-model="selectedManagerIds" multiple style="height: auto;">
                                     <option value="">Selecione...</option>
                                     <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
                                         {{ usuario.name }}
@@ -327,6 +327,8 @@
                         formData.append('_method', 'patch');
                         formData.append('name', this.$store.state.item.name);
                         formData.append('description', this.$store.state.item.description);
+                        formData.append('users', this.selectedUserIds);
+                        formData.append('managers', this.selectedManagerIds);
 
                         let config = {
                             headers: {
@@ -453,12 +455,6 @@
             },
             showModal(modal) {
                 utils.showModal(modal);
-            },
-            onUserSelectionChange() {
-                const selectedUsers = this.usuarios.filter(user =>
-                    this.selectedUserIds.includes(user.id)
-                )
-                this.$store.state.item.users = selectedUsers
             }
         },
         mounted() {

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Http\Controllers\LogController as Log;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 abstract class AbstractRepository {
@@ -48,8 +49,7 @@ abstract class AbstractRepository {
         $request->validate($this->model->rules(), $this->model->feedback());
         $model = $this->model->create($request->all());
         if ($model) {
-            $user = Auth::user()->id;
-            Log::store($model, $user, 'insert');
+            $this->storeLog($model, 'insert');
             return response()->json($model, 201);
         } else {
             return response()->json(['erro' => 'Falha ao criar o registro.'], 500);
@@ -77,8 +77,7 @@ abstract class AbstractRepository {
             $update = $model->update($request->except($except));
         }
         if ($update) {
-            $user = Auth::user()->id;
-            Log::store($model, $user, 'update');
+            $this->storeLog($model, 'update');
             return response()->json($model, 200);
         } else {
             return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
@@ -93,8 +92,7 @@ abstract class AbstractRepository {
         }
         $delete = $model->delete();
         if ($delete) {
-            $user = Auth::user()->id;
-            Log::store($model, $user, 'delete');
+            $this->storeLog($model, 'delete');
             return response()->json(['msg' => 'Registro deletado com sucesso'], 200);
         } else {
             return response()->json(['erro' => 'Falha ao deletar o registro.'], 500);
@@ -127,11 +125,16 @@ abstract class AbstractRepository {
         }
         $update = $model::where('id', $id)->update(['status' => $status]);
         if ($update) {
-            $user = Auth::user()->id;
-            Log::store($model, $user, 'update');
+            $this->storeLog($model, 'update');
             return response()->json($model, 200);
         } else {
             return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
         }
+    }
+
+    public function storeLog($model, string $tipo)
+    {
+        $user = Auth::user()->id;
+        Log::store($model, $user, $tipo);
     }
 }
