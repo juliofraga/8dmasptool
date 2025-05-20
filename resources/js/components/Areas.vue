@@ -6,7 +6,7 @@
                 num: '2'
             }"
         ></breadcrumb-component>
-        <buscar-component 
+        <search-component 
             titulo="Áreas" 
             :botoes=" {
                 adicionar: {
@@ -26,9 +26,9 @@
             }" 
             placeholder="Buscar por nome ou descrição"
             classe="area"
-        ></buscar-component>
+        ></search-component>
         <div v-if="Object.keys(areas.data).length > 0">
-            <lista-component
+            <list-component
                 :titulos="{
                     id: {title: 'ID', length:'hidden', type:'text'},
                     name: {title: 'Nome', length: '2', type:'text'},
@@ -42,7 +42,7 @@
                 :status="status"
                 :mensagem="mensagemFeedback"
                 :titulo="tituloFeedback"
-            ></lista-component>
+            ></list-component>
         </div>
         <div v-else-if="loaded === true">
             <no-itens-component></no-itens-component>

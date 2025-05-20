@@ -1,5 +1,5 @@
 @extends('layouts.app_admin')
 
 @section('content')
-    <novo-incidente-component :user='@json(Auth::user())'></novo-incidente-component>
+    <new-incident-component :user='@json(Auth::user())'></new-incident-component>
 @endsection

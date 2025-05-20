@@ -29,9 +29,9 @@ const store = new Vuex.Store({
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('login-component', require('./components/Login.vue').default);
-Vue.component('buscar-component', require('./components/Buscar.vue').default);
-Vue.component('lista-component', require('./components/Lista.vue').default);
-Vue.component('usuarios-component', require('./components/Usuarios.vue').default);
+Vue.component('search-component', require('./components/Search.vue').default);
+Vue.component('list-component', require('./components/List.vue').default);
+Vue.component('users-component', require('./components/Users.vue').default);
 Vue.component('alert-component', require('./components/Alert.vue').default);
 Vue.component('modal-component', require('./components/Modal.vue').default);
 Vue.component('paginate-component', require('./components/Paginate.vue').default);
@@ -39,8 +39,8 @@ Vue.component('breadcrumb-component', require('./components/Breadcrumb.vue').def
 Vue.component('areas-component', require('./components/Areas.vue').default);
 Vue.component('no-itens-component', require('./components/NoItens.vue').default);
 Vue.component('spinner-component', require('./components/Spinner.vue').default);
-Vue.component('perfil-component', require('./components/Perfil.vue').default);
-Vue.component('novo-incidente-component', require('./components/NovoIncidente.vue').default);
+Vue.component('profile-component', require('./components/Profile.vue').default);
+Vue.component('new-incident-component', require('./components/NewIncident.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
