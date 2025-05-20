@@ -36,17 +36,7 @@ class UserController extends Controller
         if ($user->getStatusCode() === 500) {
             return $user;
         }
-        $user_id = $user->getData(true)['id'];
-        $user_object = $this->user->find($user_id);
-        $areas = $request->area;
-
-        if (!empty($areas)) {
-            $areas = explode(',', $areas);
-            $this->ligaUserArea($user_object, $areas);
-            return $user;
-        } else {
-            return $user;
-        }
+        return $user;
     }
 
     public function show(int $id)

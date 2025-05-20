@@ -276,7 +276,6 @@
         data() {
             return {
                 usuarios: {data: {}},
-                areas: {data: {}},
                 urlBase: utils.API_URL + '/api/v1/user',
                 urlPaginacao: '',
                 urlFiltro: '',
