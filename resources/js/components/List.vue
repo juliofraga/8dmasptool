@@ -11,24 +11,24 @@
             </div>
         </div>
         <hr>
-        <div class="row mt-4 border-bottom resultado-consultas-row" v-for="obj, chave in filteredData" :key="chave">
-            <div :class="`col-sm-${title[chaveValor].length}`" v-for="valor, chaveValor in obj" :key="chaveValor">
+        <div class="row mt-4 border-bottom resultado-consultas-row" v-for="obj, key in filteredData" :key="key">
+            <div :class="`col-sm-${title[keyValue].length}`" v-for="value, keyValue in obj" :key="keyValue">
                 <span 
                     v-if="
-                        title[chaveValor].type == 'text' && 
-                        title[chaveValor].length != 'hidden' && 
-                        chaveValor != 'profile'
+                        title[keyValue].type == 'text' && 
+                        title[keyValue].length != 'hidden' && 
+                        keyValue != 'profile'
                     ">
-                     {{ valor }}
+                     {{ value }}
                 </span>
-                <span v-if="chaveValor == 'profile'"> {{ valor | formatProfile }}</span>
-                <span v-if="title[chaveValor].type == 'datetime' && title[chaveValor].length != 'hidden'"> {{ valor | formatDateTime }}</span>
-                <span v-if="title[chaveValor].type == 'ativoInativo' && title[chaveValor].length != 'hidden'"> {{ valor | formatStatus }}</span>
-                <button v-if="title[chaveValor].type == 'buttonModal' && title[chaveValor].length != 'hidden'" class="btn btn-outline-dark w-100" data-bs-toggle="modal" :data-bs-target="title[chaveValor].modalId" @click="setStore(obj)">
+                <span v-if="keyValue == 'profile'"> {{ value | formatProfile }}</span>
+                <span v-if="title[keyValue].type == 'datetime' && title[keyValue].length != 'hidden'"> {{ value | formatDateTime }}</span>
+                <span v-if="title[keyValue].type == 'ativoInativo' && title[keyValue].length != 'hidden'"> {{ value | formatStatus }}</span>
+                <button v-if="title[keyValue].type == 'buttonModal' && title[keyValue].length != 'hidden'" class="btn btn-outline-dark w-100" data-bs-toggle="modal" :data-bs-target="title[keyValue].modalId" @click="setStore(obj)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                     </svg>
-                    {{ title[chaveValor].title }}
+                    {{ title[keyValue].title }}
                 </button>
             </div>
         </div>
@@ -46,16 +46,16 @@
         computed: {
             filteredData(){
                 if (Array.isArray(this.data)) {
-                    let campos = Object.keys(this.title);
-                    let dadosFiltrados = [];
-                    this.data.map((item, chave) => {
-                        let itemFiltrado = {};
-                        campos.forEach(campo => {
-                            itemFiltrado[campo] = item[campo]
+                    let fields = Object.keys(this.title);
+                    let filteredData = [];
+                    this.data.map((item, key) => {
+                        let filteredItem = {};
+                        fields.forEach(field => {
+                            filteredItem[field] = item[field]
                         });
-                        dadosFiltrados.push(itemFiltrado);
+                        filteredData.push(filteredItem);
                     });
-                    return dadosFiltrados;
+                    return filteredData;
                 }
             }
         },
