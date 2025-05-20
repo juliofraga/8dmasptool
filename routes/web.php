@@ -29,17 +29,17 @@ Route::middleware('auth')->group(function() {
         Route::prefix('cadastro')->group(function () {
             Route::get('/usuarios', function () {
                 return view('/admin/cadastro/usuarios');
-            })->name('cadastro-de-usuarios');
+            })->name('user-registration');
             Route::get('/areas', function () {
                 return view('/admin/cadastro/areas');
-            })->name('cadastro-de-areas');
+            })->name('area-registration');
         });
         Route::get('/meu-perfil', function () {
             return view('/admin/meu-perfil');
-        })->name('admin-perfil');
-        Route::get('/novo-incidente', function () {
+        })->name('admin-profile');
+        Route::get('/new-incident', function () {
             return view('/admin/incidente/novo');
-        })->name('novo-incidente');
+        })->name('new-incident');
     });
 });
 

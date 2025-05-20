@@ -67,8 +67,8 @@
                                         Cadastros
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('cadastro-de-usuarios') }}">Usuários</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('cadastro-de-areas') }}">Áreas</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('user-registration') }}">Usuários</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('area-registration') }}">Áreas</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item dropdown">
@@ -94,7 +94,7 @@
                                         Incidentes
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('novo-incidente') }}">Novo</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('new-incident') }}">Novo</a></li>
                                         <li><a class="dropdown-item" href="politica-privacidade.html">Consultar</a></li>
                                     </ul>
                                 </li>
@@ -116,7 +116,7 @@
                                         Perfil
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('admin-perfil') }}">Minha Conta</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('admin-profile') }}">Minha Conta</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
@@ -156,8 +156,8 @@
 function returnActive($menu, $currentPage)
 {
     if (
-        (in_array($currentPage, ['cadastro-de-usuarios']) && $menu == 'Cadastros') ||
-        (in_array($currentPage, ['cadastro-de-areas']) && $menu == 'Cadastros') ||
+        (in_array($currentPage, ['user-registration']) && $menu == 'Cadastros') ||
+        (in_array($currentPage, ['area-registration']) && $menu == 'Cadastros') ||
         (in_array($currentPage, ['admin-home']) && $menu == 'Home')
         ) {
         return 'active';
