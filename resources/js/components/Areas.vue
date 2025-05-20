@@ -84,7 +84,7 @@
             </div>
         </div>
         <!-- Modal para adicionar áreas -->
-        <modal-component id="modalAdicionarArea" titulo="Adicionar Área">
+        <modal-component id="modalAdicionarArea" title="Adicionar Área">
             <template v-slot:conteudo>
                 <div class="form-group">
                     <div class="row mt-2">
@@ -140,7 +140,7 @@
             </template>
         </modal-component>
         <!-- Modal para atualizar áreas -->
-        <modal-component id="modalAtualizarArea" titulo="Atualizar Área">
+        <modal-component id="modalAtualizarArea" title="Atualizar Área">
             <template v-slot:conteudo>
                 <div class="form-group">
                     <div class="row mt-2">
@@ -209,7 +209,7 @@
             </template>
         </modal-component>
         <!-- Modal para confirmar remoção de área -->
-        <modal-component id="modalConfirmarDeletar" titulo="Você tem certeza?">
+        <modal-component id="modalConfirmarDeletar" title="Você tem certeza?">
             <template v-slot:conteudo>
                 <div class="row">
                     <div class="col col-6">

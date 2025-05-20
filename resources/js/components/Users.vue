@@ -87,7 +87,7 @@
             </div>
         </div>
         <!-- Modal para adicionar usuários -->
-        <modal-component id="modalAdicionarUsuario" titulo="Adicionar Usuário">
+        <modal-component id="modalAdicionarUsuario" title="Adicionar Usuário">
             <template v-slot:conteudo>
                 <div class="form-group">
                     <div class="row mt-2">
@@ -159,7 +159,7 @@
             </template>
         </modal-component>
         <!-- Modal para atualizar usuários -->
-        <modal-component id="modalAtualizarUsuario" titulo="Atualizar Usuário">
+        <modal-component id="modalAtualizarUsuario" title="Atualizar Usuário">
             <template v-slot:conteudo>
                 <div class="form-group">
                     <div class="row mt-2">
@@ -254,7 +254,7 @@
             </template>
         </modal-component>
         <!-- Modal para confirmar remoção de usuário -->
-        <modal-component id="modalConfirmarDeletar" titulo="Você tem certeza?">
+        <modal-component id="modalConfirmarDeletar" title="Você tem certeza?">
             <template v-slot:conteudo>
                 <div class="row">
                     <div class="col col-6">
