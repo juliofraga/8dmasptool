@@ -10,8 +10,8 @@
             <input type="hidden" class="form-control" id="id" name="id" v-model="id">
             <div class="row mt-2">
                 <div class="col-sm-12 mt-3">
-                    <alert-component tipo="danger" :detalhes="mensagem" :titulo="titulo" v-if="status == 'erro'"></alert-component>
-                    <alert-component tipo="success" :detalhes="mensagem" :titulo="titulo" v-if="status == 'sucesso'"></alert-component>
+                    <alert-component type="danger" :details="mensagem" :title="titulo" v-if="status == 'erro'"></alert-component>
+                    <alert-component type="success" :details="mensagem" :title="titulo" v-if="status == 'sucesso'"></alert-component>
                     <div class="form-floating">
                         <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto" placeholder="Nome Completo*" v-model="nome">
                         <label class="form-label">Nome Completo*</label>

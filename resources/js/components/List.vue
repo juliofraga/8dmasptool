@@ -1,10 +1,10 @@
 <template>
     <div class="mt-3" v-if="(Array.isArray(dados) && dados.length === 0)">
-        <alert-component tipo="warning" titulo="Não foram encontratos resultados"></alert-component>
+        <alert-component type="warning" title="Não foram encontratos resultados"></alert-component>
     </div>
     <div class="mt-2" v-else>
-        <alert-component tipo="danger" :detalhes="mensagem" :titulo="titulo" v-if="status == 'erro'"></alert-component>
-        <alert-component tipo="success" :detalhes="mensagem" :titulo="titulo" v-if="status == 'sucesso'"></alert-component>
+        <alert-component type="danger" :details="mensagem" :title="titulo" v-if="status == 'erro'"></alert-component>
+        <alert-component type="success" :details="mensagem" :title="titulo" v-if="status == 'sucesso'"></alert-component>
         <div class="row mt-3">
             <div v-for="t, key in titulos" :key="key" :class="`col-sm-${t.length}`" >
                 <b v-if="t.type != 'buttonModal' && t.length != 'hidden'">{{ t.title }}</b>

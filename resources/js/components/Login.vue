@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="form-group row mb-0 mt-2">
-                                <alert-component tipo="danger" :detalhes="detalhes" titulo="Erro ao tentar acessar o sistema" v-if="statusLogin == 'erro'"></alert-component>
+                                <alert-component type="danger" :details="detalhes" title="Erro ao tentar acessar o sistema" v-if="statusLogin == 'erro'"></alert-component>
                             </div>
                         </form>
                     </div>

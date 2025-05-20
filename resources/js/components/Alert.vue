@@ -1,10 +1,10 @@
 <template>
     <div :class="style" role="alert">
-        {{ titulo }}
-        <div v-if="tipo =='danger'">
+        {{ title }}
+        <div v-if="type =='danger'">
             <hr>
-            <p>{{ detalhes.mensagem }}</p>
-            <li v-for="d, key in detalhes.dados" :key="key">
+            <p>{{ details.mensagem }}</p>
+            <li v-for="d, key in details.dados" :key="key">
                 {{ d[0]}}
             </li>
         </div>
@@ -13,10 +13,10 @@
 
 <script>
     export default {
-        props: ['tipo', 'titulo', 'detalhes'],
+        props: ['type', 'title', 'details'],
         computed: {
             style() {
-                return 'alert alert-' + this.tipo;
+                return 'alert alert-' + this.type;
             }
         }
     }
