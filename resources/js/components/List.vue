@@ -1,34 +1,34 @@
 <template>
-    <div class="mt-3" v-if="(Array.isArray(dados) && dados.length === 0)">
+    <div class="mt-3" v-if="(Array.isArray(data) && data.length === 0)">
         <alert-component type="warning" title="Não foram encontratos resultados"></alert-component>
     </div>
     <div class="mt-2" v-else>
-        <alert-component type="danger" :details="mensagem" :title="titulo" v-if="status == 'erro'"></alert-component>
-        <alert-component type="success" :details="mensagem" :title="titulo" v-if="status == 'sucesso'"></alert-component>
+        <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'erro'"></alert-component>
+        <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'sucesso'"></alert-component>
         <div class="row mt-3">
-            <div v-for="t, key in titulos" :key="key" :class="`col-sm-${t.length}`" >
+            <div v-for="t, key in title" :key="key" :class="`col-sm-${t.length}`" >
                 <b v-if="t.type != 'buttonModal' && t.length != 'hidden'">{{ t.title }}</b>
             </div>
         </div>
         <hr>
         <div class="row mt-4 border-bottom resultado-consultas-row" v-for="obj, chave in filteredData" :key="chave">
-            <div :class="`col-sm-${titulos[chaveValor].length}`" v-for="valor, chaveValor in obj" :key="chaveValor">
+            <div :class="`col-sm-${title[chaveValor].length}`" v-for="valor, chaveValor in obj" :key="chaveValor">
                 <span 
                     v-if="
-                        titulos[chaveValor].type == 'text' && 
-                        titulos[chaveValor].length != 'hidden' && 
+                        title[chaveValor].type == 'text' && 
+                        title[chaveValor].length != 'hidden' && 
                         chaveValor != 'profile'
                     ">
                      {{ valor }}
                 </span>
                 <span v-if="chaveValor == 'profile'"> {{ valor | formatProfile }}</span>
-                <span v-if="titulos[chaveValor].type == 'datetime' && titulos[chaveValor].length != 'hidden'"> {{ valor | formatDateTime }}</span>
-                <span v-if="titulos[chaveValor].type == 'ativoInativo' && titulos[chaveValor].length != 'hidden'"> {{ valor | formatStatus }}</span>
-                <button v-if="titulos[chaveValor].type == 'buttonModal' && titulos[chaveValor].length != 'hidden'" class="btn btn-outline-dark w-100" data-bs-toggle="modal" :data-bs-target="titulos[chaveValor].modalId" @click="setStore(obj)">
+                <span v-if="title[chaveValor].type == 'datetime' && title[chaveValor].length != 'hidden'"> {{ valor | formatDateTime }}</span>
+                <span v-if="title[chaveValor].type == 'ativoInativo' && title[chaveValor].length != 'hidden'"> {{ valor | formatStatus }}</span>
+                <button v-if="title[chaveValor].type == 'buttonModal' && title[chaveValor].length != 'hidden'" class="btn btn-outline-dark w-100" data-bs-toggle="modal" :data-bs-target="title[chaveValor].modalId" @click="setStore(obj)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                     </svg>
-                    {{ titulos[chaveValor].title }}
+                    {{ title[chaveValor].title }}
                 </button>
             </div>
         </div>
@@ -37,7 +37,7 @@
 
 <script>
     export default {
-        props: ['titulos', 'dados', 'status', 'titulo', 'mensagem'],
+        props: ['title', 'data', 'status', 'feedbackTitle', 'feedbackMessage'],
         methods: {
             setStore(obj) {
                 this.$store.state.item = obj;
@@ -45,10 +45,10 @@
         },
         computed: {
             filteredData(){
-                if (Array.isArray(this.dados)) {
-                    let campos = Object.keys(this.titulos);
+                if (Array.isArray(this.data)) {
+                    let campos = Object.keys(this.title);
                     let dadosFiltrados = [];
-                    this.dados.map((item, chave) => {
+                    this.data.map((item, chave) => {
                         let itemFiltrado = {};
                         campos.forEach(campo => {
                             itemFiltrado[campo] = item[campo]

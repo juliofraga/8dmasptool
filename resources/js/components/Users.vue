@@ -29,7 +29,7 @@
         ></search-component>
         <div v-if="Object.keys(usuarios.data).length > 0">
             <list-component
-                :titulos="{
+                :title="{
                     id: {title: 'ID', length:'hidden', type:'text'},
                     email: {title: 'E-mail', length: '2', type:'text'},
                     name: {title: 'Nome', length: '2', type:'text'},
@@ -41,10 +41,10 @@
                     created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetime'},
                     first_login: {title: 'Primeiro Acesso', length: 'hidden', type: 'datetime'}
                 }" 
-                :dados="usuarios.data"
+                :data="usuarios.data"
                 :status="status"
-                :mensagem="mensagemFeedback"
-                :titulo="tituloFeedback"
+                :feedbackMessage="mensagemFeedback"
+                :feedbackTitle="tituloFeedback"
             ></list-component>
         </div>
         <div v-else-if="loaded === true">
