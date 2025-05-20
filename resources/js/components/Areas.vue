@@ -40,8 +40,8 @@
                 }" 
                 :data="areas.data"
                 :status="status"
-                :feedbackMessage="mensagemFeedback"
-                :feedbackTitle="tituloFeedback"
+                :feedbackMessage="feedbackMessage"
+                :feedbackTitle="feedbackTitle"
             ></list-component>
         </div>
         <div v-else-if="loaded === true">
@@ -90,9 +90,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome*" v-model="nome">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Nome*" v-model="name">
                                 <label class="form-label">Nome*</label>
-                                <div id="invalidFeedbackNome" class="invalid-feedback">
+                                <div id="invalidFeedbackName" class="invalid-feedback">
                                     Informe o nome da área.
                                 </div>
                             </div>
@@ -101,10 +101,10 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <select class="form-control" id="membros" name="membros" placeholder="Membros da Área" v-model="membros" multiple style="height: auto;">
+                                <select class="form-control" id="members" name="members" placeholder="Membros da Área" v-model="members" multiple style="height: auto;">
                                     <option value="">Selecione...</option>
-                                    <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
-                                        {{ usuario.name }}
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
                                     </option>
                                 </select>
                                 <label class="form-label">Membros da Área</label>
@@ -116,8 +116,8 @@
                             <div class="form-floating">
                                 <select class="form-control" id="manager" name="manager" placeholder="Área" v-model="managers" multiple style="height: auto;">
                                     <option value="">Selecione...</option>
-                                    <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
-                                        {{ usuario.name }}
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
                                     </option>
                                 </select>
                                 <label class="form-label">Gestor da Área</label>
@@ -127,7 +127,7 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <textarea class="form-control" id="descricao" name="descricao" rows="10" v-model="descricao" style="height: auto;"></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="10" v-model="description" style="height: auto;"></textarea>
                                 <label class="form-label">Descrição</label>
                             </div>
                         </div>
@@ -146,9 +146,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="nomeUpdate" name="nomeUpdate" placeholder="Nome*" v-model="$store.state.item.name">
+                                <input type="text" class="form-control" id="nameUpdate" name="nameUpdate" placeholder="Nome*" v-model="$store.state.item.name">
                                 <label class="form-label">Nome*</label>
-                                <div id="invalidFeedbackNomeUpdate" class="invalid-feedback">
+                                <div id="invalidFeedbackNameUpdate" class="invalid-feedback">
                                     Informe o nome do setor.
                                 </div>
                             </div>
@@ -157,10 +157,10 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <select class="form-control" id="membrosUpdate" name="membrosUpdate" placeholder="Membros da Área" v-model="selectedUserIds" multiple style="height: auto;">
+                                <select class="form-control" id="membersUpdate" name="membersUpdate" placeholder="Membros da Área" v-model="selectedUserIds" multiple style="height: auto;">
                                     <option value="">Selecione...</option>
-                                    <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
-                                        {{ usuario.name }}
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
                                     </option>
                                 </select>
                                 <label class="form-label">Membros da Área</label>
@@ -172,8 +172,8 @@
                             <div class="form-floating">
                                 <select class="form-control" id="managerUpdate" name="managerUpdate" placeholder="Área" v-model="selectedManagerIds" multiple style="height: auto;">
                                     <option value="">Selecione...</option>
-                                    <option v-for="usuario in usuarios" :key="usuario.id" :value="usuario.id">
-                                        {{ usuario.name }}
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
                                     </option>
                                 </select>
                                 <label class="form-label">Gestor da Área</label>
@@ -183,7 +183,7 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <textarea class="form-control" id="descricaoUpdate" name="descricaoUpdate" rows="10" style="height: auto;" v-model="$store.state.item.description">{{ $store.state.item.description }}</textarea>
+                                <textarea class="form-control" id="descriptionUpdate" name="descriptionUpdate" rows="10" style="height: auto;" v-model="$store.state.item.description">{{ $store.state.item.description }}</textarea>
                                 <label class="form-label">Descrição</label>
                             </div>
                         </div>
@@ -232,20 +232,20 @@
         data() {
             return {
                 areas: {data: {}},
-                usuarios: {data: {}},
+                users: {data: {}},
                 urlBase: utils.API_URL + '/api/v1/area',
                 urlUser: utils.API_URL + '/api/v1/user',
-                urlPaginacao: '',
-                urlFiltro: '',
+                urlPaginate: '',
+                urlFilter: '',
                 status: '',
-                mensagemFeedback: {},
-                nome: '',
-                nomeUpdate:'',
-                descricao: '',
-                descricaoUpdate: '',
-                tituloFeedback: '',
+                feedbackMessage: {},
+                name: '',
+                nameUpdate:'',
+                description: '',
+                descriptionUpdate: '',
+                feedbackTitle: '',
                 loaded: false,
-                membros: [],
+                members: [],
                 managers: [],
                 selectedUserIds: [],
                 selectedManagerIds: []
@@ -259,15 +259,15 @@
                 axios.post(url, formData)
                     .then(response => {
                         this.status = 'sucesso';
-                        this.tituloFeedback = "Área ativada com sucesso";
+                        this.feedbackTitle = "Área ativada com sucesso";
                         utils.closeModal('modalAtualizarArea');
                         this.loadAreaList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
-                        this.tituloFeedback = "Erro ao ativar área";
+                        this.feedbackTitle = "Erro ao ativar área";
                         utils.closeModal('modalAtualizarArea');
-                        this.mensagemFeedback = {
+                        this.feedbackMessage = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
                         };
@@ -280,15 +280,15 @@
                 axios.post(url, formData)
                     .then(response => {
                         this.status = 'sucesso';
-                        this.tituloFeedback = "Área inativada com sucesso";
+                        this.feedbackTitle = "Área inativada com sucesso";
                         utils.closeModal('modalAtualizarArea');
                         this.loadAreaList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
-                        this.tituloFeedback = "Erro ao inativar área";
+                        this.feedbackTitle = "Erro ao inativar área";
                         utils.closeModal('modalAtualizarArea');
-                        this.mensagemFeedback = {
+                        this.feedbackMessage = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
                         };
@@ -302,15 +302,15 @@
                 axios.post(url, formData)
                     .then(response => {
                         this.status = 'sucesso';
-                        this.tituloFeedback = "Área deletada com sucesso";
+                        this.feedbackTitle = "Área deletada com sucesso";
                         utils.closeModal('modalConfirmarDeletar');
                         this.loadAreaList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
-                        this.tituloFeedback = "Erro ao deletar área";
+                        this.feedbackTitle = "Erro ao deletar área";
                         utils.closeModal('modalConfirmarDeletar');
-                        this.mensagemFeedback = {
+                        this.feedbackMessage = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
                         };
@@ -318,10 +318,10 @@
             },
             update() {
                     if (this.$store.state.item.name == ''){
-                        document.getElementById('nomeUpdate').classList.add('is-invalid');
+                        document.getElementById('nameUpdate').classList.add('is-invalid');
                     } else {
-                        if (document.getElementById('nomeUpdate').classList.contains('is-invalid')) {
-                            document.getElementById('nomeUpdate').classList.remove('is-invalid');
+                        if (document.getElementById('nameUpdate').classList.contains('is-invalid')) {
+                            document.getElementById('nameUpdate').classList.remove('is-invalid');
                         }
                         let formData = new FormData();
                         formData.append('_method', 'patch');
@@ -339,15 +339,15 @@
                         axios.post(url, formData, config)
                             .then(response => {
                                 this.status = 'sucesso';
-                                this.tituloFeedback = "Área atualizada com sucesso";
+                                this.feedbackTitle = "Área atualizada com sucesso";
                                 utils.closeModal('modalAtualizarArea');
                                 this.loadAreaList();
                             })
                             .catch(errors => {
                                 this.status = 'erro';
-                                this.tituloFeedback = "Erro ao atualizar área";
+                                this.feedbackTitle = "Erro ao atualizar área";
                                 utils.closeModal('modalAtualizarArea');
-                                this.mensagemFeedback = {
+                                this.feedbackMessage = {
                                     mensagem: errors.response.data.message,
                                     dados: errors.response.data.errors
                                 };
@@ -356,41 +356,41 @@
             },
             paginate(l) {
                 if (l.url){
-                    this.urlPaginacao = l.url.split('?')[1];
+                    this.urlPaginate = l.url.split('?')[1];
                     this.loadAreaList();
                 }
             },
             cleanAddAreaFormData() {
-                this.nome = '';
-                this.descricao = '';
-                this.membros = [],
+                this.name = '';
+                this.description = '';
+                this.members = [],
                 this.managers = []
             },
             setUrlFilter(url) {
-                this.urlFiltro = url;
+                this.urlFilter = url;
             },
             loadAreaList() {
-                let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro;
+                let url = this.urlBase + '?' + this.urlPaginate + this.urlFilter;
                 axios.get(url)
                     .then(response => {
                         this.areas = response.data;
                         setTimeout(() => {
-                            this.tituloFeedback = "";
+                            this.feedbackTitle = "";
                             this.status = '';
-                            this.mensagemFeedback = {};
+                            this.feedbackMessage = {};
                         }, 10000);
                         this.loadActiveUsers();
                         this.loaded = true;
                     })
                     .catch(errors => {
                         if (errors.response.status == 500) {
-                            this.tituloFeedback = "Erro no servidor";
+                            this.feedbackTitle = "Erro no servidor";
                             this.status = 'erro';
-                            this.mensagemFeedback = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
                         } else {
-                            this.tituloFeedback = "Houve um erro";
+                            this.feedbackTitle = "Houve um erro";
                             this.status = 'erro';
-                            this.mensagemFeedback = errors;
+                            this.feedbackMessage = errors;
                         }
                     })
                     
@@ -399,31 +399,31 @@
                 let url = this.urlUser + '/all/active';
                 axios.get(url)
                     .then(response => {
-                        this.usuarios = response.data;
+                        this.users = response.data;
                         setTimeout(() => {
-                            this.tituloFeedback = "";
+                            this.feedbackTitle = "";
                             this.status = '';
-                            this.mensagemFeedback = {};
+                            this.feedbackMessage = {};
                         }, 10000);
                     })
                     .catch(errors => {
                         if (errors.response.status == 500) {
-                            this.tituloFeedback = "Erro no servidor";
+                            this.feedbackTitle = "Erro no servidor";
                             this.status = 'erro';
-                            this.mensagemFeedback = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
                         } else {
-                            this.tituloFeedback = "Houve um erro";
+                            this.feedbackTitle = "Houve um erro";
                             this.status = 'erro';
-                            this.mensagemFeedback = errors;
+                            this.feedbackMessage = errors;
                         }
                     })
             },
             save() {
-                if (utils.fieldsValidate(['nome'], this)) {
+                if (utils.fieldsValidate(['name'], this)) {
                     let formData = new FormData();
-                    formData.append('name', this.nome);
-                    formData.append('description', this.descricao);
-                    formData.append('users', this.membros);
+                    formData.append('name', this.name);
+                    formData.append('description', this.description);
+                    formData.append('users', this.members);
                     formData.append('managers', this.managers);
 
                     let config = {
@@ -436,7 +436,7 @@
                     axios.post(url, formData, config)
                         .then(response => {
                             this.status = 'sucesso';
-                            this.tituloFeedback = "Área adicionada com sucesso";
+                            this.feedbackTitle = "Área adicionada com sucesso";
                             utils.closeModal('modalAdicionarArea');
                             this.loadAreaList();
                             this.cleanAddAreaFormData();
@@ -444,9 +444,9 @@
                         .catch(errors => {
                             console.log('error: ', errors);
                             this.status = 'erro';
-                            this.tituloFeedback = "Erro ao adicionar área";
+                            this.feedbackTitle = "Erro ao adicionar área";
                             utils.closeModal('modalAdicionarArea');
-                            this.mensagemFeedback = {
+                            this.feedbackMessage = {
                                 mensagem: errors.response.data.message,
                                 dados: errors.response.data.errors
                             };
