@@ -10,12 +10,12 @@
             <input type="hidden" class="form-control" id="id" name="id" v-model="id">
             <div class="row mt-2">
                 <div class="col-sm-12 mt-3">
-                    <alert-component type="danger" :details="mensagem" :title="titulo" v-if="status == 'erro'"></alert-component>
-                    <alert-component type="success" :details="mensagem" :title="titulo" v-if="status == 'sucesso'"></alert-component>
+                    <alert-component type="danger" :details="message" :title="title" v-if="status == 'erro'"></alert-component>
+                    <alert-component type="success" :details="message" :title="title" v-if="status == 'sucesso'"></alert-component>
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto" placeholder="Nome Completo*" v-model="nome">
+                        <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Nome Completo*" v-model="name">
                         <label class="form-label">Nome Completo*</label>
-                        <div id="invalidFeedbackNomeCompleto" class="invalid-feedback">
+                        <div id="invalidFeedbackFullName" class="invalid-feedback">
                             Informe o nome completo.
                         </div>
                     </div>
@@ -35,9 +35,9 @@
             <div class="row mt-2">
                 <div class="col-sm-12 mt-2">
                     <div class="form-floating">
-                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" v-model="senha">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Senha" v-model="password">
                         <label class="form-label">Senha</label>
-                        <div id="invalidFeedbackSenha" class="invalid-feedback">
+                        <div id="invalidFeedbackPassword" class="invalid-feedback">
                             Informe a senha.
                         </div>
                     </div>
@@ -46,9 +46,9 @@
             <div class="row mt-2">
                 <div class="col-sm-12 mt-2">
                     <div class="form-floating">
-                        <input type="password" class="form-control" id="repeteSenha" name="repeteSenha" placeholder="Repetir Senha" v-model="repeteSenha">
+                        <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" placeholder="Repetir Senha" v-model="repeatPassword">
                         <label class="form-label">Repetir Senha</label>
-                        <div id="invalidFeedbackSenha" class="invalid-feedback">
+                        <div id="invalidFeedbackPassword" class="invalid-feedback">
                             Esta senha não confere com a senha digitada no campo anterior ou está vazio.
                         </div>
                     </div>
@@ -89,35 +89,35 @@
         props: ['user'],
         data() {
             return {
-                nome: this.user.name,
+                name: this.user.name,
                 email: this.user.email,
                 id: this.user.id,
-                senha: '',
-                repeteSenha: '',
+                password: '',
+                repeatPassword: '',
                 urlBase: utils.API_URL + '/api/v1/user',
-                mensagem: {},
-                titulo: '',
+                message: {},
+                title: '',
                 status: ''
             }
         },
         methods: {
             update() {
                 if (this.$store.state.item.name == ''){
-                    document.getElementById('nomeCompleto').classList.add('is-invalid');
-                } else if (this.senha != this.repeteSenha) {
-                    document.getElementById('repeteSenha').classList.add('is-invalid');
+                    document.getElementById('fullName').classList.add('is-invalid');
+                } else if (this.password != this.repeatPassword) {
+                    document.getElementById('repeatPassword').classList.add('is-invalid');
                 } else {
-                    if (document.getElementById('nomeCompleto').classList.contains('is-invalid')) {
-                        document.getElementById('nomeCompleto').classList.remove('is-invalid');
+                    if (document.getElementById('fullName').classList.contains('is-invalid')) {
+                        document.getElementById('fullName').classList.remove('is-invalid');
                     }
-                    if (document.getElementById('repeteSenha').classList.contains('is-invalid')) {
-                        document.getElementById('repeteSenha').classList.remove('is-invalid');
+                    if (document.getElementById('repeatPassword').classList.contains('is-invalid')) {
+                        document.getElementById('repeatPassword').classList.remove('is-invalid');
                     }
                     let formData = new FormData();
                     formData.append('_method', 'patch');
-                    formData.append('name', this.nome);
+                    formData.append('name', this.name);
                     formData.append('email', this.email);
-                    formData.append('password', this.senha);
+                    formData.append('password', this.password);
 
                     let config = {
                         headers: {
@@ -128,14 +128,14 @@
                     axios.post(url, formData, config)
                         .then(response => {
                             this.status = 'sucesso';
-                            this.titulo = "Usuário atualizado com sucesso";
-                            this.senha = '';
-                            this.repeteSenha = '';
+                            this.title = "Usuário atualizado com sucesso";
+                            this.password = '';
+                            this.repeatPassword = '';
                         })
                         .catch(errors => {
                             this.status = 'erro';
-                            this.titulo = "Erro ao atualizar usuário";
-                            this.mensagem = {
+                            this.title = "Erro ao atualizar usuário";
+                            this.message = {
                                 mensagem: errors.response.data.message,
                                 dados: errors.response.data.errors
                             };
