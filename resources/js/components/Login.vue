@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="form-group row mb-0 mt-2">
-                                <alert-component type="danger" :details="detalhes" title="Erro ao tentar acessar o sistema" v-if="statusLogin == 'erro'"></alert-component>
+                                <alert-component type="danger" :details="details" title="Erro ao tentar acessar o sistema" v-if="statusLogin == 'erro'"></alert-component>
                             </div>
                         </form>
                     </div>
@@ -71,21 +71,21 @@
             return {
                 email: '',
                 password: '',
-                detalhes: {mensagem: 'erro'},
+                details: {message: 'erro'},
                 statusLogin: ''
             }
         },
         methods: {
             login(e) {
                 let url = utils.API_URL + '/api/login'
-                let configuracoes = {
+                let settings = {
                     method:'post',
                     body: new URLSearchParams({
                         'email': this.email,
                         'password': this.password
                     })
                 }
-                fetch(url, configuracoes)
+                fetch(url, settings)
                     .then(response => response.json())
                     .then(data => {
                         if (data.error) {
@@ -93,7 +93,7 @@
                                 window.location.href = "/login/update-password";
                             } else {
                                 this.statusLogin = 'erro';
-                                this.detalhes.mensagem = data.error;
+                                this.details.message = data.error;
                             }
                         } else {
                             if (data.token) {
