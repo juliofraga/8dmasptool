@@ -36,7 +36,7 @@ class AreaController extends Controller
         if (!empty($users)) {
             $users = explode(',', $users);
             $managers = explode(',', $request->managers);
-            $this->ligaUserArea($area_object, $users, $managers);
+            $this->connectUserArea($area_object, $users, $managers);
         }
         $this->areaRepository->storeLog($area, 'insert');
         return $area;
@@ -62,7 +62,7 @@ class AreaController extends Controller
         if (!empty($users)) {
             $users = explode(',', $users);
             $managers = explode(',', $request->managers);
-            $this->ligaUserArea($area, $users, $managers);
+            $this->connectUserArea($area, $users, $managers);
         }
         if ($update) {
             $this->areaRepository->storeLog($area, 'update');
@@ -92,7 +92,7 @@ class AreaController extends Controller
         return $this->areaRepository->getAllRecords($request, $status);
     }
 
-    public function ligaUserArea(Area $area, array $users, array $managers)
+    public function connectUserArea(Area $area, array $users, array $managers)
     {
         foreach ($users as $user_id) {
             $user = User::find($user_id);
