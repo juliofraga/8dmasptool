@@ -94,7 +94,7 @@
                                         Incidentes
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Novo</a></li>
+                                        <li><a class="dropdown-item" href="{{ route('novo-incidente') }}">Novo</a></li>
                                         <li><a class="dropdown-item" href="politica-privacidade.html">Consultar</a></li>
                                     </ul>
                                 </li>

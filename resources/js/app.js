@@ -40,6 +40,7 @@ Vue.component('areas-component', require('./components/Areas.vue').default);
 Vue.component('no-itens-component', require('./components/NoItens.vue').default);
 Vue.component('spinner-component', require('./components/Spinner.vue').default);
 Vue.component('perfil-component', require('./components/Perfil.vue').default);
+Vue.component('novo-incidente-component', require('./components/NovoIncidente.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

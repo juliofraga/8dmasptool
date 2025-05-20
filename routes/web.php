@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function() {
         Route::get('/meu-perfil', function () {
             return view('/admin/meu-perfil');
         })->name('admin-perfil');
+        Route::get('/novo-incidente', function () {
+            return view('/admin/incidente/novo');
+        })->name('novo-incidente');
     });
 });
 
