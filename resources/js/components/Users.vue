@@ -7,25 +7,25 @@
             }"
         ></breadcrumb-component>
         <search-component 
-            titulo="Usuários" 
-            :botoes=" {
-                adicionar: {
+            title="Usuários" 
+            :buttons=" {
+                add: {
                     show: true,
                     type: 'modal',
                     modalId: '#modalAdicionarUsuario'
                 },
-                buscar: {
+                search: {
                     show: true,
                     type: 'apply',
                     fields: ['name', 'email']
                 },
-                limpar: {
+                clear: {
                     show: true,
                     type: 'apply'
                 }
             }" 
             placeholder="Buscar por nome ou e-mail"
-            classe="user"
+            classSearch="user"
         ></search-component>
         <div v-if="Object.keys(usuarios.data).length > 0">
             <list-component

@@ -7,25 +7,25 @@
             }"
         ></breadcrumb-component>
         <search-component 
-            titulo="Áreas" 
-            :botoes=" {
-                adicionar: {
+            title="Áreas" 
+            :buttons=" {
+                add: {
                     show: true,
                     type: 'modal',
                     modalId: '#modalAdicionarArea'
                 },
-                buscar: {
+                search: {
                     show: true,
                     type: 'apply',
                     fields: ['name', 'description']
                 },
-                limpar: {
+                clear: {
                     show: true,
                     type: 'apply'
                 }
             }" 
             placeholder="Buscar por nome ou descrição"
-            classe="area"
+            classSearch="area"
         ></search-component>
         <div v-if="Object.keys(areas.data).length > 0">
             <list-component
