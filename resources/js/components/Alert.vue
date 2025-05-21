@@ -3,8 +3,8 @@
         {{ title }}
         <div v-if="type =='danger'">
             <hr>
-            <p>{{ details.mensagem }}</p>
-            <li v-for="d, key in details.dados" :key="key">
+            <p>{{ details.message }}</p>
+            <li v-for="d, key in details.data" :key="key">
                 {{ d[0]}}
             </li>
         </div>

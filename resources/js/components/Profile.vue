@@ -136,8 +136,8 @@
                             this.status = 'erro';
                             this.title = "Erro ao atualizar usuário";
                             this.message = {
-                                mensagem: errors.response.data.message,
-                                dados: errors.response.data.errors
+                                message: errors.response.data.message,
+                                data: errors.response.data.errors
                             };
                         })
                 }
