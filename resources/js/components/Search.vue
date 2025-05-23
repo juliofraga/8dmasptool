@@ -140,7 +140,7 @@
                 });
                 if (filter) {
                     paginate = 'page=1';
-                    urlFilter = `&filtro=${encodeURIComponent(filter)}`;
+                    urlFilter = `&filter=${encodeURIComponent(filter)}`;
                     EventBus.$emit("setUrlFilter", urlFilter);
                 } else {
                     urlFilter = '';

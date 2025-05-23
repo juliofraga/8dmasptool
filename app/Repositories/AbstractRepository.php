@@ -23,8 +23,8 @@ abstract class AbstractRepository {
     {
         $qtd = $qtd ?? self::NUM_RESULTS_PAGE;
         $data = [];
-        if($request->has('filtro')) {
-            $this->filter($request->filtro);
+        if($request->has('filter')) {
+            $this->filter($request->filter);
         }
         $data = $this->model->paginate($qtd);
         return response()->json($data, 200);
@@ -32,8 +32,8 @@ abstract class AbstractRepository {
 
     public function getAllRecords(Request $request, string $status = null) 
     {
-        if($request->has('filtro')) {
-            $this->filter($request->filtro);
+        if($request->has('filter')) {
+            $this->filter($request->filter);
         }
         if ($status) {
             $status = 'active' ? 1 : 0;

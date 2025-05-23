@@ -15,8 +15,8 @@ class AreaRepository extends AbstractRepository {
     {
         $qtd = $qtd ?? self::NUM_RESULTS_PAGE;
         $data = [];
-        if($request->has('filtro')) {
-            $this->filter($request->filtro);
+        if($request->has('filter')) {
+            $this->filter($request->filter);
         }
         $data = $this->model->with('users')->paginate($qtd);
         return response()->json($data, 200);
