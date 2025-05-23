@@ -27,7 +27,7 @@
             placeholder="Buscar por nome ou e-mail"
             classSearch="user"
         ></search-component>
-        <div v-if="Object.keys(usuarios.data).length > 0">
+        <div v-if="Object.keys(users.data).length > 0">
             <list-component
                 :title="{
                     id: {title: 'ID', length:'hidden', type:'text'},
@@ -41,10 +41,10 @@
                     created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetime'},
                     first_login: {title: 'Primeiro Acesso', length: 'hidden', type: 'datetime'}
                 }" 
-                :data="usuarios.data"
+                :data="users.data"
                 :status="status"
-                :feedbackMessage="mensagemFeedback"
-                :feedbackTitle="tituloFeedback"
+                :feedbackMessage="feedbackMessage"
+                :feedbackTitle="feedbackTitle"
             ></list-component>
         </div>
         <div v-else-if="loaded === true">
@@ -56,29 +56,29 @@
         <div class="row mt-4">
             <div class="col col-10">
                 <paginate-component>
-                    <li v-for="l, key in usuarios.links" :key="key" :class="l.active ? 'page-item active' : 'page-item'" @click="paginate(l)">
+                    <li v-for="l, key in users.links" :key="key" :class="l.active ? 'page-item active' : 'page-item'" @click="paginate(l)">
                         <div v-if="l.active">
                             <a class="page-link paginate_link_activated" v-html="l.label" 
                             v-if="
-                                key == usuarios.current_page || 
-                                key == usuarios.current_page - 1 || 
-                                key == usuarios.current_page + 1 || 
+                                key == users.current_page || 
+                                key == users.current_page - 1 || 
+                                key == users.current_page + 1 || 
                                 key == 0 ||
-                                (usuarios.current_page == 1 && key == 3) ||
-                                key == usuarios.last_page + 1 || 
-                                (usuarios.current_page == usuarios.last_page && key == usuarios.last_page - 2)"
+                                (users.current_page == 1 && key == 3) ||
+                                key == users.last_page + 1 || 
+                                (users.current_page == users.last_page && key == users.last_page - 2)"
                         ></a>
                         </div>
                         <div v-else>
                             <a class="page-link paginate_link" 
                             v-if="
-                                key == usuarios.current_page || 
-                                key == usuarios.current_page - 1 || 
-                                key == usuarios.current_page + 1 || 
+                                key == users.current_page || 
+                                key == users.current_page - 1 || 
+                                key == users.current_page + 1 || 
                                 key == 0 ||
-                                (usuarios.current_page == 1 && key == 3) ||
-                                key == usuarios.last_page + 1 || 
-                                (usuarios.current_page == usuarios.last_page && key == usuarios.last_page - 2)"
+                                (users.current_page == 1 && key == 3) ||
+                                key == users.last_page + 1 || 
+                                (users.current_page == users.last_page && key == users.last_page - 2)"
                         >{{ l.label | formatNextPrevButton }}</a>
                         </div>
                         
@@ -93,9 +93,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="nomeCompleto" name="nomeCompleto" placeholder="Nome Completo*" v-model="nomeCompleto">
+                                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Nome Completo*" v-model="fullname">
                                 <label class="form-label">Nome Completo*</label>
-                                <div id="invalidFeedbackNomeCompleto" class="invalid-feedback">
+                                <div id="invalidFeedbackFullname" class="invalid-feedback">
                                     Informe o nome completo.
                                 </div>
                             </div>
@@ -115,7 +115,7 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <select class="form-control" id="perfil" name="perfil" placeholder="Perfil*" v-model="perfil">
+                                <select class="form-control" id="profile" name="profile" placeholder="Perfil*" v-model="profile">
                                     <option value="">Selecione...</option>
                                     <option value="superadmin">Super Administrador</option>
                                     <option value="administrator">Administrador</option>
@@ -123,7 +123,7 @@
                                     <option value="user">Usuário</option>
                                 </select>
                                 <label class="form-label">Perfil*</label>
-                                <div id="invalidFeedbackPerfil" class="invalid-feedback">
+                                <div id="invalidFeedbackProfile" class="invalid-feedback">
                                     Informe o perfil do usuário
                                 </div>
                             </div>
@@ -132,9 +132,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha*" v-model="senha">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Senha*" v-model="password">
                                 <label class="form-label">Senha*</label>
-                                <div id="invalidFeedbackSenha" class="invalid-feedback">
+                                <div id="invalidFeedbackPassword" class="invalid-feedback">
                                     Informe a senha.
                                 </div>
                             </div>
@@ -143,9 +143,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <input type="password" class="form-control" id="repeteSenha" name="repeteSenha" placeholder="Repetir Senha*" v-model="repeteSenha">
+                                <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" placeholder="Repetir Senha*" v-model="repeatPassword">
                                 <label class="form-label">Repetir Senha*</label>
-                                <div id="invalidFeedbackSenha" class="invalid-feedback">
+                                <div id="invalidFeedbackRepeatPassword" class="invalid-feedback">
                                     Esta senha não confere com a senha digitada no campo anterior ou está vazio.
                                 </div>
                             </div>
@@ -165,9 +165,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="nomeCompletoUpdate" name="nomeCompletoUpdate" placeholder="Nome Completo*" v-model="$store.state.item.name">
+                                <input type="text" class="form-control" id="fullnameUpdate" name="fullnameUpdate" placeholder="Nome Completo*" v-model="$store.state.item.name">
                                 <label class="form-label">Nome Completo*</label>
-                                <div id="invalidFeedbackNomeCompletoUpdate" class="invalid-feedback">
+                                <div id="invalidFeedbackFullnameUpdate" class="invalid-feedback">
                                     Informe o nome completo.
                                 </div>
                             </div>
@@ -187,7 +187,7 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <select class="form-control" id="perfilUpdate" name="perfilUpdate" placeholder="Perfil*" v-model="$store.state.item.profile">
+                                <select class="form-control" id="profileUpdate" name="profileUpdate" placeholder="Perfil*" v-model="$store.state.item.profile">
                                     <option value="">Selecione...</option>
                                     <option value="superadmin">Super Administrador</option>
                                     <option value="administrator">Administrador</option>
@@ -195,7 +195,7 @@
                                     <option value="user">Usuário</option>
                                 </select>
                                 <label class="form-label">Perfil*</label>
-                                <div id="invalidFeedbackPerfilUpdate" class="invalid-feedback">
+                                <div id="invalidFeedbackProfileUpdate" class="invalid-feedback">
                                     Informe o perfil do usuário
                                 </div>
                             </div>
@@ -204,9 +204,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <input type="password" class="form-control" id="senhaUpdate" name="senhaUpdate" placeholder="Senha*" v-model="senhaUpdate">
+                                <input type="password" class="form-control" id="passwordUpdate" name="passwordUpdate" placeholder="Senha*" v-model="passwordUpdate">
                                 <label class="form-label">Senha*</label>
-                                <div id="invalidFeedbackSenhaUpdate" class="invalid-feedback">
+                                <div id="invalidFeedbackPasswordUpdate" class="invalid-feedback">
                                     Informe a senha.
                                 </div>
                             </div>
@@ -215,9 +215,9 @@
                     <div class="row mt-2">
                         <div class="col-sm-12 mt-2">
                             <div class="form-floating">
-                                <input type="password" class="form-control" id="repeteSenhaUpdate" name="repeteSenhaUpdate" placeholder="Repetir Senha*" v-model="repeteSenhaUpdate">
+                                <input type="password" class="form-control" id="repeatPasswordUpdate" name="repeatPasswordUpdate" placeholder="Repetir Senha*" v-model="repeatPasswordUpdate">
                                 <label class="form-label">Repetir Senha*</label>
-                                <div id="invalidFeedbackSenhaUpdate" class="invalid-feedback">
+                                <div id="invalidFeedbackRepeatPasswordUpdate" class="invalid-feedback">
                                     Esta senha não confere com a senha digitada no campo anterior ou está vazio.
                                 </div>
                             </div>
@@ -275,21 +275,21 @@
     export default {
         data() {
             return {
-                usuarios: {data: {}},
+                users: {data: {}},
                 urlBase: utils.API_URL + '/api/v1/user',
-                urlPaginacao: '',
-                urlFiltro: '',
+                urlPaginate: '',
+                urlFilter: '',
                 status: '',
-                mensagemFeedback: {},
-                nomeCompleto: '',
+                feedbackMessage: {},
+                fullname: '',
                 email: '',
-                senha: '',
-                repeteSenha: '',
-                senhaUpdate: '',
-                repeteSenhaUpdate: '',
-                perfil: '',
-                perfilUpdate: '',
-                tituloFeedback: '',
+                password: '',
+                repeatPassword: '',
+                passwordUpdate: '',
+                repeatPasswordUpdate: '',
+                profile: '',
+                profileUpdate: '',
+                feedbackTitle: '',
                 loaded: false
             }
         },
@@ -301,17 +301,17 @@
                 axios.post(url, formData)
                     .then(response => {
                         this.status = 'sucesso';
-                        this.tituloFeedback = "Usuário ativado com sucesso";
+                        this.feedbackTitle = "Usuário ativado com sucesso";
                         utils.closeModal('modalAtualizarUser');
                         this.loadUserList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
-                        this.tituloFeedback = "Erro ao ativar usuário";
+                        this.feedbackTitle = "Erro ao ativar usuário";
                         utils.closeModal('modalAtualizarUser');
-                        this.mensagemFeedback = {
-                            mensagem: errors.response.data.message,
-                            dados: errors.response.data.errors
+                        this.feedbackMessage = {
+                            message: errors.response.data.message,
+                            data: errors.response.data.errors
                         };
                     })
             },
@@ -322,23 +322,23 @@
                 axios.post(url, formData)
                     .then(response => {
                         this.status = 'sucesso';
-                        this.tituloFeedback = "Usuário inativado com sucesso";
+                        this.feedbackTitle = "Usuário inativado com sucesso";
                         utils.closeModal('modalAtualizarUser');
                         this.loadUserList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
-                        this.tituloFeedback = "Erro ao inativar usuário";
+                        this.feedbackTitle = "Erro ao inativar usuário";
                         utils.closeModal('modalAtualizarUser');
-                        this.mensagemFeedback = {
-                            mensagem: errors.response.data.message,
-                            dados: errors.response.data.errors
+                        this.feedbackMessage = {
+                            message: errors.response.data.message,
+                            data: errors.response.data.errors
                         };
                     })
             },
             paginate(l) {
                 if (l.url){
-                    this.urlPaginacao = l.url.split('?')[1];
+                    this.urlPaginate = l.url.split('?')[1];
                     this.loadUserList();
                 }
             },
@@ -350,39 +350,39 @@
                 axios.post(url, formData)
                     .then(response => {
                         this.status = 'sucesso';
-                        this.tituloFeedback = "Usuário deletado com sucesso";
+                        this.feedbackTitle = "Usuário deletado com sucesso";
                         utils.closeModal('modalConfirmarDeletar');
                         this.loadUserList();
                     })
                     .catch(errors => {
                         this.status = 'erro';
-                        this.tituloFeedback = "Erro ao deletar usuário";
+                        this.feedbackTitle = "Erro ao deletar usuário";
                         utils.closeModal('modalConfirmarDeletar');
-                        this.mensagemFeedback = {
-                            mensagem: errors.response.data.message,
-                            dados: errors.response.data.errors
+                        this.feedbackMessage = {
+                            message: errors.response.data.message,
+                            data: errors.response.data.errors
                         };
                     })
             },
             update() {
                     if (this.$store.state.item.name == ''){
-                        document.getElementById('nomeCompletoUpdate').classList.add('is-invalid');
-                    } else if (this.senhaUpdate != this.repeteSenhaUpdate) {
-                        document.getElementById('repeteSenhaUpdate').classList.add('is-invalid');
+                        document.getElementById('fullnameUpdate').classList.add('is-invalid');
+                    } else if (this.passwordUpdate != this.repeatPasswordUpdate) {
+                        document.getElementById('repeatPasswordUpdate').classList.add('is-invalid');
                     } else if (this.$store.state.item.profile == '') {
-                        document.getElementById('perfilUpdate').classList.add('is-invalid');
+                        document.getElementById('profileUpdate').classList.add('is-invalid');
                     } else {
-                        if (document.getElementById('nomeCompletoUpdate').classList.contains('is-invalid')) {
-                            document.getElementById('nomeCompletoUpdate').classList.remove('is-invalid');
+                        if (document.getElementById('fullnameUpdate').classList.contains('is-invalid')) {
+                            document.getElementById('fullnameUpdate').classList.remove('is-invalid');
                         }
-                        if (document.getElementById('repeteSenhaUpdate').classList.contains('is-invalid')) {
-                            document.getElementById('repeteSenhaUpdate').classList.remove('is-invalid');
+                        if (document.getElementById('repeatPasswordUpdate').classList.contains('is-invalid')) {
+                            document.getElementById('repeatPasswordUpdate').classList.remove('is-invalid');
                         }
                         let formData = new FormData();
                         formData.append('_method', 'patch');
                         formData.append('name', this.$store.state.item.name);
                         formData.append('email', this.$store.state.item.email);
-                        formData.append('password', this.senhaUpdate);
+                        formData.append('password', this.passwordUpdate);
                         formData.append('profile', this.$store.state.item.profile);
 
                         let config = {
@@ -394,34 +394,34 @@
                         axios.post(url, formData, config)
                             .then(response => {
                                 this.status = 'sucesso';
-                                this.tituloFeedback = "Usuário atualizado com sucesso";
+                                this.feedbackTitle = "Usuário atualizado com sucesso";
                                 utils.closeModal('modalAtualizarUsuario');
                                 this.loadUserList();
                             })
                             .catch(errors => {
                                 this.status = 'erro';
-                                this.tituloFeedback = "Erro ao atualizar usuário";
+                                this.feedbackTitle = "Erro ao atualizar usuário";
                                 utils.closeModal('modalAtualizarUsuario');
-                                this.mensagemFeedback = {
-                                    mensagem: errors.response.data.message,
-                                    dados: errors.response.data.errors
+                                this.feedbackMessage = {
+                                    message: errors.response.data.message,
+                                    data: errors.response.data.errors
                                 };
                             })
                     }
             },
             save() {
-                if (utils.fieldsValidate(['nomeCompleto', 'email', 'perfil', 'senha', 'repeteSenha'], this)) {
-                    if (this.senha != this.repeteSenha) {
-                        document.getElementById('repeteSenha').classList.add('is-invalid');
+                if (utils.fieldsValidate(['fullname', 'email', 'profile', 'password', 'repeatPassword'], this)) {
+                    if (this.password != this.repeatPassword) {
+                        document.getElementById('repeatPassword').classList.add('is-invalid');
                     } else {
-                        if (document.getElementById('repeteSenha').classList.contains('is-invalid')) {
-                            document.getElementById('repeteSenha').classList.remove('is-invalid');
+                        if (document.getElementById('repeatPassword').classList.contains('is-invalid')) {
+                            document.getElementById('repeatPassword').classList.remove('is-invalid');
                         }
                         let formData = new FormData();
-                        formData.append('name', this.nomeCompleto);
+                        formData.append('name', this.fullname);
                         formData.append('email', this.email);
-                        formData.append('password', this.senha);
-                        formData.append('profile', this.perfil);
+                        formData.append('password', this.password);
+                        formData.append('profile', this.profile);
 
                         let config = {
                             headers: {
@@ -433,54 +433,54 @@
                         axios.post(url, formData, config)
                             .then(response => {
                                 this.status = 'sucesso';
-                                this.tituloFeedback = "Usuário adicionado com sucesso";
+                                this.feedbackTitle = "Usuário adicionado com sucesso";
                                 utils.closeModal('modalAdicionarUsuario');
                                 this.loadUserList();
                                 this.cleanAddUserFormData();
                             })
                             .catch(errors => {
                                 this.status = 'erro';
-                                this.tituloFeedback = "Erro ao adicionar usuário";
+                                this.feedbackTitle = "Erro ao adicionar usuário";
                                 utils.closeModal('modalAdicionarUsuario');
-                                this.mensagemFeedback = {
+                                this.message = {
                                     mensagem: errors.response.data.message,
-                                    dados: errors.response.data.errors
+                                    data: errors.response.data.errors
                                 };
                             })
                     }
                 }
             },
             cleanAddUserFormData() {
-                this.nomeCompleto = '';
+                this.fullname = '';
                 this.email = '';
-                this.senha = '';
-                this.perfil= '';
-                this.repeteSenha = '';
+                this.password = '';
+                this.profile= '';
+                this.repeatPassword = '';
             },
             setUrlFilter(url) {
-                this.urlFiltro = url;
+                this.urlFilter = url;
             },
             loadUserList() {
-                let url = this.urlBase + '?' + this.urlPaginacao + this.urlFiltro;
+                let url = this.urlBase + '?' + this.urlPaginate + this.urlFilter;
                 axios.get(url)
                     .then(response => {
-                        this.usuarios = response.data;
+                        this.users = response.data;
                         setTimeout(() => {
-                            this.tituloFeedback = "";
+                            this.feedbackTitle = "";
                             this.status = '';
-                            this.mensagemFeedback = {};
+                            this.feedbackMessage = {};
                         }, 10000);
                         this.loaded = true;
                     })
                     .catch(errors => {
                         if (errors.response.status == 500) {
-                            this.tituloFeedback = "Erro no servidor";
+                            this.feedbackTitle = "Erro no servidor";
                             this.status = 'erro';
-                            this.mensagemFeedback = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                            this.feedbackMessage = {message: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
                         } else {
-                            this.tituloFeedback = "Houve um erro";
+                            this.feedbackTitle = "Houve um erro";
                             this.status = 'erro';
-                            this.mensagemFeedback = errors;
+                            this.feedbackMessage = errors;
                         }
                     })
                     
