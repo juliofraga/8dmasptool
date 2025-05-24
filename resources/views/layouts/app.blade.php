@@ -67,7 +67,7 @@
                                         Perfil
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ route('perfil') }}">Minha Conta</a></li>
+                                        <li><a class="dropdown-item" href="#">Minha Conta</a></li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
