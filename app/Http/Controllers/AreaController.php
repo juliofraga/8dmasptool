@@ -21,7 +21,7 @@ class AreaController extends Controller
 
     public function index(Request $request)
     {
-        return $this->areaRepository->paginate($request);
+        return $this->areaRepository->paginate($request, null, ['name', 'asc']);
     }
 
     public function store(Request $request)

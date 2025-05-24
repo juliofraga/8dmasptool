@@ -19,14 +19,16 @@ abstract class AbstractRepository {
         $this->model = $model;
     }
 
-    public function paginate(Request $request, int $qtd = null) 
+    public function paginate(Request $request, int $qtd = null, array $order) 
     {
+        $by = $order[0];
+        $direction = $order[1];
         $qtd = $qtd ?? self::NUM_RESULTS_PAGE;
         $data = [];
         if($request->has('filter')) {
             $this->filter($request->filter);
         }
-        $data = $this->model->paginate($qtd);
+        $data = $this->model->orderby($by, $direction)->paginate($qtd);
         return response()->json($data, 200);
     }
 

@@ -22,7 +22,7 @@ class UserController extends Controller
     
     public function index(Request $request)
     {
-        return $this->userRepository->paginate($request);
+        return $this->userRepository->paginate($request, null, ['name', 'asc']);
     }
 
     public function store(Request $request)
