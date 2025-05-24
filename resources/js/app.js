@@ -41,6 +41,7 @@ Vue.component('no-itens-component', require('./components/NoItens.vue').default)
 Vue.component('spinner-component', require('./components/Spinner.vue').default);
 Vue.component('profile-component', require('./components/Profile.vue').default);
 Vue.component('new-incident-component', require('./components/NewIncident.vue').default);
+Vue.component('orientation-component', require('./components/Orientation.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
