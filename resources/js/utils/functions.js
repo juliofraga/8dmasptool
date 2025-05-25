@@ -45,3 +45,11 @@ export function clearInvalidFeedback(id, value) {
         }
     }
 }
+
+export function clearFeedbackMessage(obj, time = 5000) {
+    setTimeout(() => {
+        obj.status = '';
+        obj.feedbackTitle = '';
+        obj.feedbackMessage = '';
+    }, time);
+}

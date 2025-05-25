@@ -21,6 +21,13 @@ class IncidentController extends Controller
     
     public function store(Request $request)
     {
+        if ($request->input('date_deadline') < $request->input('date_opening')) {
+            return response()->json([
+                'errors' => [
+                    'date_deadline' => ['O prazo estimado para resolução do problema não pode ser menor que a data atual']
+                ]
+            ], 422);
+        }
         $response = $this->incidentRepository->store($request);
         if ($response->getStatusCode() === 500) {
             return $response;

@@ -12,8 +12,8 @@
                 mensagem: 'Ajude-nos a entender sua situação descrevendo o problema e fornecendo todas as informações que julgar importantes.'
             }"
         ></orientation-component>
-        <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle"></alert-component>
-        <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle"></alert-component>
+        <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
+        <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
         <div class="form-group mt-2">
             <div class="row">
                 <div class="col-sm-6">
@@ -163,7 +163,8 @@
                 date_deadline: '',
                 urlBase: utils.API_URL + '/api/v1/incident',
                 status: '',
-                feedbackTitle: ''
+                feedbackTitle: '',
+                feedbackMessage: '',
             }
         },
         methods: {
@@ -184,6 +185,9 @@
                 this.incident_description = '';
                 this.visual_id = '';
                 this.date_deadline = '';
+                this.status = '';
+                this.feedbackTitle = '';
+                this.feedbackMessage = '';
             },
             clearInvalidFeedback(input){
                 utils.clearInvalidFeedback(input.id, input.value);
@@ -226,18 +230,21 @@
                     let url = this.urlBase + '/store';
                     axios.post(url, formData, config)
                         .then(response => {
-                            this.status = 'sucesso';
+                            console.log('aqui: ', response);
+                            this.status = 'success';
                             this.feedbackTitle = "Informações registradas com sucesso";
                             this.visual_id = response.data.visual_id;
                         })
                         .catch(errors => {
-                            this.status = 'erro';
+                            console.log('aqui 2:', errors);
+                            this.status = 'error';
                             this.feedbackTitle = "Erro ao salvar informações";
-                            this.message = {
+                            this.feedbackMessage = {
                                 mensagem: errors.response.data.message,
                                 data: errors.response.data.errors
                             };
                         })
+                        utils.clearFeedbackMessage(this, 10000);
                     utils.goToTop();
                 }
             },
