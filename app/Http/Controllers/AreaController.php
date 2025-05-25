@@ -13,7 +13,7 @@ class AreaController extends Controller
     public $area;
     public $areaRepository;
 
-    public function __construct(Area $area) 
+    public function __construct(area $area) 
     {
         $this->area = $area;
         $this->areaRepository = new AreaRepository($this->area);

@@ -21,5 +21,27 @@ export function fieldsValidate(campos, obj) {
             elemento.classList.remove('is-invalid');
         }
     });
+    goToTop();
     return isValid;
 };
+
+export function returnCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const currentDate = `${year}-${month}-${day}`;
+    return currentDate;
+}
+
+export function goToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+export function clearInvalidFeedback(id, value) {
+    if (value) {
+        if (document.getElementById(id).classList.contains('is-invalid')) {
+            document.getElementById(id).classList.remove('is-invalid');
+        }
+    }
+}

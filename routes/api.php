@@ -39,6 +39,9 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
         Route::post('/activate/{id}', 'AreaController@activate');
         Route::get('/all/{active}', 'AreaController@getAll');
     });
+    Route::prefix('incident')->group(function () {
+        Route::post('/store', 'IncidentController@store');
+    });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');
 });

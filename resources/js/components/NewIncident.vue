@@ -16,10 +16,13 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-floating mt-3">
-                        <input type="date" class="form-control" id="date_deadline" name="date_deadline" placeholder="Prazo estimado para resolução do problema*" v-model="date_deadline">
+                        <input type="date" class="form-control" id="date_deadline" name="date_deadline" placeholder="Prazo estimado para resolução do problema*" v-model="date_deadline" @blur="clearInvalidFeedback($event.target)">
                         <label class="form-label">Prazo estimado para resolução do problema*</label>
-                        <div id="invalidFeedbackdateDeadline" class="invalid-feedback">
+                        <div id="invalidFeedbackDateDeadline" class="invalid-feedback">
                             Informe um prazo estimado para a resolução do problema.
+                        </div>
+                        <div id="invalidFeedbackInvalidDate" class="invalid-feedback ">
+                            A data informada é menor que a data atual, informe uma data valida.
                         </div>
                     </div>
                 </div>
@@ -33,7 +36,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-floating mt-3">
-                        <input type="text" class="form-control" id="item_description" name="item_description" placeholder="Descrição do item que apresentou problema*" v-model="item_description">
+                        <input type="text" class="form-control" id="item_description" name="item_description" placeholder="Descrição do item que apresentou problema*" v-model="item_description"  @blur="clearInvalidFeedback($event.target)">
                         <label class="form-label">Descrição do item que apresentou problema*</label>
                         <div id="invalidFeedbackItemDescription" class="invalid-feedback">
                             Informe a descrição do item que apresentou problema.
@@ -98,8 +101,11 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-floating mt-3">
-                        <textarea class="form-control" id="incident_description" name="incident_description" placeholder="Descrição da Não-conformidade*" rows='20' style="height: auto;" v-model="incident_description"></textarea>
+                        <textarea class="form-control" id="incident_description" name="incident_description" placeholder="Descrição da Não-conformidade*" rows='20' style="height: auto;" v-model="incident_description" @blur="clearInvalidFeedback($event.target)"></textarea>
                         <label class="form-label">Descrição da Não-conformidade*</label>
+                        <div id="invalidFeedbackIncidentDescription" class="invalid-feedback">
+                            Informe a descrição da não-conformidade.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,6 +143,7 @@
 </template>
 
 <script>
+    import * as utils from '../utils/functions';
     export default {
         props: ['user'],
         data() {
@@ -151,7 +158,92 @@
                 invoice: '',
                 incident_description: '',
                 visual_id: '',
-                date_deadline: ''
+                date_deadline: '',
+                urlBase: utils.API_URL + '/api/v1/incident',
+                status: '',
+                feedbackTitle: ''
+            }
+        },
+        methods: {
+            cancel() {
+                this.clearFields();
+                this.removeInvalidFeedback(['item_description', 'date_deadline', 'incident_description']);
+                utils.goToTop();
+            },
+            clearFields() {
+                this.item_description = '';
+                this.category = 'Product';
+                this.client_supplier = '';
+                this.internal_code = '';
+                this.quantity_detected = '';
+                this.recidivism = 0;
+                this.batch = '';
+                this.invoice = '';
+                this.incident_description = '';
+                this.visual_id = '';
+                this.date_deadline = '';
+            },
+            clearInvalidFeedback(input){
+                utils.clearInvalidFeedback(input.id, input.value);
+            },
+            save() {
+                const currentDate = new Date(utils.returnCurrentDate());
+                let dateDeadline = new Date(this.date_deadline);
+                if (dateDeadline < currentDate) {
+                    document.getElementById('date_deadline').classList.add('is-invalid');
+                    document.getElementById('invalidFeedbackInvalidDate').style.display = 'block';
+                    document.getElementById('invalidFeedbackDateDeadline').style.display = 'none';
+                    return;
+                } else {
+                    if (document.getElementById('invalidFeedbackDateDeadline').classList.contains('is-invalid')) {
+                        document.getElementById('invalidFeedbackDateDeadline').style.display = 'block';
+                    }
+                    document.getElementById('invalidFeedbackInvalidDate').style.display = 'none';
+                }
+                if (utils.fieldsValidate(['item_description', 'date_deadline', 'incident_description'], this)) {
+                    let formData = new FormData();
+                    formData.append('item_description', this.item_description);
+                    formData.append('category', this.category);
+                    formData.append('client_supplier', this.client_supplier);
+                    formData.append('internal_code', this.internal_code);
+                    formData.append('quantity_detected', this.quantity_detected);
+                    formData.append('recidivism', this.recidivism);
+                    formData.append('batch', this.batch);
+                    formData.append('invoice', this.invoice);
+                    formData.append('incident_description', this.incident_description);
+                    formData.append('date_deadline', this.date_deadline);
+                    formData.append('date_opening', utils.returnCurrentDate());
+                    formData.append('status', 'Not Started');
+                    formData.append('mode', 'Classic');
+
+                    let config = {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            }
+                        }
+                    let url = this.urlBase + '/store';
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.status = 'sucesso';
+                            this.feedbackTitle = "Informações registradas com sucesso";
+                        })
+                        .catch(errors => {
+                            this.status = 'erro';
+                            this.feedbackTitle = "Erro ao salvar informações";
+                            this.message = {
+                                mensagem: errors.response.data.message,
+                                data: errors.response.data.errors
+                            };
+                        })
+                }
+            },
+            removeInvalidFeedback(fields) {
+                fields.forEach(field => {
+                    const el = document.getElementById(field);
+                    if (el.classList.contains('is-invalid')) {
+                        el.classList.remove('is-invalid');
+                    }
+                });
             }
         }
     }
