@@ -18,6 +18,11 @@ class IncidentController extends Controller
         $this->incident = $incident;
         $this->incidentRepository = new IncidentRepository($this->incident);
     }
+
+    public function index(Request $request)
+    {
+        return $this->incidentRepository->paginate($request, null, ['visual_id', 'asc']);
+    }
     
     public function store(Request $request)
     {

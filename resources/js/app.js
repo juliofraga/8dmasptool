@@ -42,6 +42,7 @@ Vue.component('spinner-component', require('./components/Spinner.vue').default);
 Vue.component('profile-component', require('./components/Profile.vue').default);
 Vue.component('new-incident-component', require('./components/NewIncident.vue').default);
 Vue.component('orientation-component', require('./components/Orientation.vue').default);
+Vue.component('incidents-component', require('./components/Incidents.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -73,7 +74,6 @@ Vue.filter('formatDateTimeStamp', function(valor){
     let data = valor[0];
     let hora = valor[1];
     let dataFormatada;
-    let horaFormatada;
 
     // Formatando data
     data = data.split('-');
@@ -85,11 +85,33 @@ Vue.filter('formatDateTimeStamp', function(valor){
     return dataFormatada + ' - ' + hora;
 })
 
+Vue.filter('formatDate', function(valor){
+    if (!valor) {
+        return '-';
+    }
+    valor = valor.split('-');
+    let dataFormatada;
+    dataFormatada = valor[2] + '/' + valor[1] + '/' + valor[0];
+
+    return dataFormatada;
+})
+
 Vue.filter('formatStatus', function(valor) {
     let status= {
         '0': 'Inativo',
         '1': 'Ativo',
         '2': 'Bloqueado'
+    };
+    return status[valor];
+});
+
+Vue.filter('formatStatusIncident', function(valor) {
+    let status= {
+        'Not Started': 'Não iniciado',
+        'In Progress': 'Em andamento',
+        'Canceled': 'Cancelado',
+        'On hold': 'Em espera',
+        'Fnished': 'Concluído'
     };
     return status[valor];
 });
