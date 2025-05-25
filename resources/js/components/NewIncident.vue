@@ -12,6 +12,8 @@
                 mensagem: 'Ajude-nos a entender sua situação descrevendo o problema e fornecendo todas as informações que julgar importantes.'
             }"
         ></orientation-component>
+        <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle"></alert-component>
+        <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle"></alert-component>
         <div class="form-group mt-2">
             <div class="row">
                 <div class="col-sm-6">
@@ -226,6 +228,7 @@
                         .then(response => {
                             this.status = 'sucesso';
                             this.feedbackTitle = "Informações registradas com sucesso";
+                            this.visual_id = response.data.visual_id;
                         })
                         .catch(errors => {
                             this.status = 'erro';
@@ -235,6 +238,7 @@
                                 data: errors.response.data.errors
                             };
                         })
+                    utils.goToTop();
                 }
             },
             removeInvalidFeedback(fields) {
