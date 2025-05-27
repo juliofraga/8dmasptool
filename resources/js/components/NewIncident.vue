@@ -113,7 +113,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-sm-2 mt-3">
-                    <button type="button" class="btn btn-info texto_branco w-100" @click="save()">
+                    <button type="button" class="btn btn-info texto_branco w-100" @click="save()" id="btnSave">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                             <path d="M11 2H9v3h2z"/>
                             <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
@@ -122,7 +122,7 @@
                     </button>
                 </div>
                 <div class="col-sm-2 mt-3">
-                    <button type="button" class="btn btn-success texto_branco w-100" @click="saveContinue()">
+                    <button type="button" class="btn btn-success texto_branco w-100" @click="saveContinue()" id="btnSaveContinue">
                         Salvar & Continuar
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fast-forward" viewBox="0 0 16 16">
                             <path d="M6.804 8 1 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696z"/>
@@ -131,7 +131,7 @@
                     </button>
                 </div>
                 <div class="col-sm-2 mt-3">
-                    <button type="button" class="btn btn-warning w-100" @click="cancel()">
+                    <button type="button" class="btn btn-warning w-100" @click="cancel()"  id="btnCancel">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -147,7 +147,7 @@
 <script>
     import * as utils from '../utils/functions';
     export default {
-        props: ['user'],
+        props: ['user', 'visualid'],
         data() {
             return {
                 item_description: '',
@@ -255,6 +255,46 @@
                         el.classList.remove('is-invalid');
                     }
                 });
+            },
+            loadIncidentData() {
+                let url = this.urlBase + '/' + this.visualid;
+                axios.get(url)
+                    .then(response => {
+                        this.setIncidentData(response.data);
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {message: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                        this.visual_id = this.visualid;
+                        utils.makeFieldsDisabled(['item_description', 'category', 'client_supplier', 'internal_code', 'quantity_detected', 'recidivism', 'batch', 'invoice', 'incident_description', 'date_deadline', 'btnSave', 'btnSaveContinue', 'btnCancel']);
+                        utils.goToTop();
+                    })
+            },
+            setIncidentData(data) {
+                this.item_description = data.item_description;
+                this.category = data.category;
+                this.client_supplier = data.client_supplier;
+                this.internal_code = data.internal_code;
+                this.quantity_detected = data.quantity_detected;
+                this.recidivism = data.recidivism;
+                this.batch = data.batch;
+                this.invoice = data.invoice;
+                this.incident_description = data.incident_description;
+                this.visual_id = this.visualid;
+                this.date_deadline = data.date_deadline;
+                this.status = data.status;
+            }
+        },
+        mounted() {
+            if (this.visualid) {
+                this.loadIncidentData();
             }
         }
     }

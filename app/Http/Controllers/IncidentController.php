@@ -23,6 +23,12 @@ class IncidentController extends Controller
     {
         return $this->incidentRepository->paginate($request, null, ['visual_id', 'asc']);
     }
+
+    public function show(string $visual_id)
+    {
+        $id = incident::where('visual_id', $visual_id)->value('id');
+        return $this->incidentRepository->show($id);
+    }
     
     public function store(Request $request)
     {

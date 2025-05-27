@@ -8,17 +8,17 @@ export function showModal(modal) {
     $('#' + modal).modal('show')
 };
 
-export function fieldsValidate(campos, obj) {
+export function fieldsValidate(fields, obj) {
     let isValid = true;
 
-    campos.forEach(campo => {
-        const elemento = document.getElementById(campo);
-        const valor = obj[campo];
-        if (!valor || String(valor).trim() === '') {
-            elemento.classList.add('is-invalid');
+    fields.forEach(field => {
+        const element = document.getElementById(field);
+        const value = obj[field];
+        if (!value || String(value).trim() === '') {
+            element.classList.add('is-invalid');
             isValid = false;
-        } else if (elemento.classList.contains('is-invalid')) {
-            elemento.classList.remove('is-invalid');
+        } else if (element.classList.contains('is-invalid')) {
+            element.classList.remove('is-invalid');
         }
     });
     goToTop();
@@ -52,4 +52,10 @@ export function clearFeedbackMessage(obj, time = 5000) {
         obj.feedbackTitle = '';
         obj.feedbackMessage = '';
     }, time);
+}
+
+export function makeFieldsDisabled(fields) {
+    fields.forEach(field => {
+        document.getElementById(field).disabled = true;
+    });
 }
