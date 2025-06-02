@@ -55,6 +55,12 @@ class IncidentController extends Controller
         return response()->json($incident);
     }
 
+    public function update(Request $request, string $visual_id)
+    {
+        $id = incident::where('visual_id', $visual_id)->value('id');
+        return $this->incidentRepository->update($request, $id);
+    }
+
     private function generateVisualId(int $id)
     {
         return 'ID' . str_pad($id, 8, '0', STR_PAD_LEFT);

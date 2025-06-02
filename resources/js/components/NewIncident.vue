@@ -169,7 +169,11 @@
         },
         methods: {
             cancel() {
-                this.clearFields();
+                if (this.visualid) {
+                    this.loadIncidentData();
+                } else {
+                    this.clearFields();
+                }
                 this.removeInvalidFeedback(['item_description', 'date_deadline', 'incident_description']);
                 utils.goToTop();
             },
@@ -192,6 +196,30 @@
             clearInvalidFeedback(input){
                 utils.clearInvalidFeedback(input.id, input.value);
             },
+            update() {
+                let formData = this.generateIncidentFormData('update');                    
+                let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                let url = this.urlBase + '/' + this.visual_id;
+                axios.post(url, formData, config)
+                    .then(response => {
+                        this.status = 'success';
+                        this.feedbackTitle = "Informações atualizadas com sucesso";
+                    })
+                    .catch(errors => {
+                        this.status = 'error';
+                        this.feedbackTitle = "Erro ao atualizar informações";
+                        this.feedbackMessage = {
+                            mensagem: errors.response.data.message,
+                            data: errors.response.data.errors
+                        };
+                    })
+                utils.clearFeedbackMessage(this, 10000);
+                utils.goToTop();
+            },
             save() {
                 const currentDate = new Date(utils.returnCurrentDate());
                 let dateDeadline = new Date(this.date_deadline);
@@ -207,21 +235,11 @@
                     document.getElementById('invalidFeedbackInvalidDate').style.display = 'none';
                 }
                 if (utils.fieldsValidate(['item_description', 'date_deadline', 'incident_description'], this)) {
-                    let formData = new FormData();
-                    formData.append('item_description', this.item_description);
-                    formData.append('category', this.category);
-                    formData.append('client_supplier', this.client_supplier);
-                    formData.append('internal_code', this.internal_code);
-                    formData.append('quantity_detected', this.quantity_detected);
-                    formData.append('recidivism', this.recidivism);
-                    formData.append('batch', this.batch);
-                    formData.append('invoice', this.invoice);
-                    formData.append('incident_description', this.incident_description);
-                    formData.append('date_deadline', this.date_deadline);
-                    formData.append('date_opening', utils.returnCurrentDate());
-                    formData.append('status', 'Not Started');
-                    formData.append('mode', 'Classic');
-
+                    if (this.visualid) {
+                        this.update();
+                        return;
+                    }
+                    let formData = this.generateIncidentFormData('save');                    
                     let config = {
                             headers: {
                                 'Content-Type': 'multipart/form-data',
@@ -230,13 +248,11 @@
                     let url = this.urlBase + '/store';
                     axios.post(url, formData, config)
                         .then(response => {
-                            console.log('aqui: ', response);
                             this.status = 'success';
                             this.feedbackTitle = "Informações registradas com sucesso";
                             this.visual_id = response.data.visual_id;
                         })
                         .catch(errors => {
-                            console.log('aqui 2:', errors);
                             this.status = 'error';
                             this.feedbackTitle = "Erro ao salvar informações";
                             this.feedbackMessage = {
@@ -244,9 +260,29 @@
                                 data: errors.response.data.errors
                             };
                         })
-                        utils.clearFeedbackMessage(this, 10000);
+                    utils.clearFeedbackMessage(this, 10000);
                     utils.goToTop();
                 }
+            },
+            generateIncidentFormData(type) {
+                let formData = new FormData();
+                if (type == 'update') {
+                    formData.append('_method', 'patch');
+                }
+                formData.append('item_description', this.item_description);
+                formData.append('category', this.category);
+                formData.append('client_supplier', this.client_supplier);
+                formData.append('internal_code', this.internal_code);
+                formData.append('quantity_detected', this.quantity_detected);
+                formData.append('recidivism', this.recidivism);
+                formData.append('batch', this.batch);
+                formData.append('invoice', this.invoice);
+                formData.append('incident_description', this.incident_description);
+                formData.append('date_deadline', this.date_deadline);
+                formData.append('date_opening', utils.returnCurrentDate());
+                formData.append('status', 'Not Started');
+                formData.append('mode', 'Classic');
+                return formData;
             },
             removeInvalidFeedback(fields) {
                 fields.forEach(field => {
@@ -293,8 +329,23 @@
             }
         },
         mounted() {
+            const [navEntry] = performance.getEntriesByType("navigation");
+            const isReload = navEntry && navEntry.type === "reload";
+            const isOnIncidenteNovo = window.location.pathname.includes("/incidente/novo");
+            const savedVisualId = sessionStorage.getItem('saved_visual_id');
+            if (isOnIncidenteNovo && !isReload) {
+                sessionStorage.removeItem('saved_visual_id');
+            }
+            if (isReload && isOnIncidenteNovo && savedVisualId) {
+                window.location.href = utils.API_URL + '/admin/incidente/' + savedVisualId;
+            }
             if (this.visualid) {
                 this.loadIncidentData();
+            }
+        },
+        watch: {
+            visual_id(newVal) {
+                sessionStorage.setItem('saved_visual_id', newVal);
             }
         }
     }

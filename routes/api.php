@@ -43,6 +43,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
         Route::post('/store', 'IncidentController@store');
         Route::get('/', 'IncidentController@index');
         Route::get('/{visual_id}', 'IncidentController@show');
+        Route::patch('/{visual_id}', 'IncidentController@update');
     });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');

@@ -67,7 +67,7 @@ abstract class AbstractRepository {
         return response()->json($model, 200);
     }
 
-    public function update(Request $request, int $id, array $except)
+    public function update(Request $request, int $id, array $except = null)
     {
         $model = $this->model->find($id);
         if (!$model) {
