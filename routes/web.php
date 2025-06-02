@@ -46,6 +46,9 @@ Route::middleware('auth')->group(function() {
         Route::get('/incidente/{visual_id}', function () {
             return view('/admin/incident/new');
         })->name('incident-stage1');
+        Route::get('/incidente/time/{visual_id}', function () {
+            return view('/admin/incident/team');
+        })->name('incident-stage2');
     });
 });
 

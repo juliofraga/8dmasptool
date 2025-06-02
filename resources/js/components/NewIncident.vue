@@ -130,6 +130,15 @@
                         </svg>
                     </button>
                 </div>
+                <div class="col-sm-2 mt-3" v-if="visual_id != ''">
+                    <button type="button" class="btn btn-secondary texto_branco w-100" @click="forward()" id="btnContinue">
+                        Continuar
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fast-forward" viewBox="0 0 16 16">
+                            <path d="M6.804 8 1 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696z"/>
+                            <path d="M14.804 8 9 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C8.713 12.69 8 12.345 8 11.692V4.308c0-.653.713-.998 1.233-.696z"/>
+                        </svg>
+                    </button>
+                </div>
                 <div class="col-sm-2 mt-3">
                     <button type="button" class="btn btn-warning w-100" @click="cancel()"  id="btnCancel">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
@@ -165,6 +174,7 @@
                 status: '',
                 feedbackTitle: '',
                 feedbackMessage: '',
+                continueForward: false,
             }
         },
         methods: {
@@ -208,6 +218,7 @@
                     .then(response => {
                         this.status = 'success';
                         this.feedbackTitle = "Informações atualizadas com sucesso";
+                        this.continueForward = true;
                     })
                     .catch(errors => {
                         this.status = 'error';
@@ -251,6 +262,7 @@
                             this.status = 'success';
                             this.feedbackTitle = "Informações registradas com sucesso";
                             this.visual_id = response.data.visual_id;
+                            this.continueForward = true;
                         })
                         .catch(errors => {
                             this.status = 'error';
@@ -263,6 +275,17 @@
                     utils.clearFeedbackMessage(this, 10000);
                     utils.goToTop();
                 }
+            },
+            saveContinue() {
+                this.save();
+                setTimeout(() => {
+                    if (this.continueForward == true) {
+                        this.forward();
+                    }
+                }, 2000);  
+            },
+            forward() {
+                window.location.href = utils.API_URL + '/admin/incidente/time/' + this.visual_id
             },
             generateIncidentFormData(type) {
                 let formData = new FormData();

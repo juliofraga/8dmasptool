@@ -58,6 +58,11 @@ class IncidentController extends Controller
     public function update(Request $request, string $visual_id)
     {
         $id = incident::where('visual_id', $visual_id)->value('id');
+        if ($request->quantity_detected == 'null' || $request->quantity_detected == "null" || $request->quantity_detected === 'null' || $request->quantity_detected === "null") {
+            $request->merge([
+                'quantity_detected' => null
+            ]);
+        }
         return $this->incidentRepository->update($request, $id);
     }
 
