@@ -40,7 +40,7 @@ Vue.component('areas-component', require('./components/Areas.vue').default);
 Vue.component('no-itens-component', require('./components/NoItens.vue').default);
 Vue.component('spinner-component', require('./components/Spinner.vue').default);
 Vue.component('profile-component', require('./components/Profile.vue').default);
-Vue.component('new-incident-component', require('./components/NewIncident.vue').default);
+Vue.component('new-incident-component', require('./components/IncidentNew.vue').default);
 Vue.component('orientation-component', require('./components/Orientation.vue').default);
 Vue.component('incidents-component', require('./components/Incidents.vue').default);
 Vue.component('incident-team-component', require('./components/IncidentTeam.vue').default);
