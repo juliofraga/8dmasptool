@@ -29,4 +29,10 @@ class incident extends Model
             'required' => 'O campo :attribute é obrigatório',
         ];
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'users_has_incidents', 'incident_id', 'user_id')
+                    ->withPivot('leader');
+    }
 }

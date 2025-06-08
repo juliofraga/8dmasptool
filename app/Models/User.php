@@ -49,4 +49,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Area::class, 'users_has_area', 'user_id', 'area_id')
                     ->withPivot('manager');
     }
+
+    public function incidents()
+    {
+        return $this->belongsToMany(Area::class, 'users_has_incidents', 'user_id', 'incident_id')
+                    ->withPivot('leader');
+    }
 }

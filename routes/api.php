@@ -41,6 +41,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
     });
     Route::prefix('incident')->group(function () {
         Route::post('/store', 'IncidentController@store');
+        Route::post('/storeteam', 'IncidentController@storeteam');
         Route::get('/', 'IncidentController@index');
         Route::get('/{visual_id}', 'IncidentController@show');
         Route::patch('/{visual_id}', 'IncidentController@update');

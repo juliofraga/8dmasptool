@@ -62,7 +62,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="col-sm-2 mt-3" v-if="visual_id != ''">
+            <div class="col-sm-2 mt-3">
                 <button type="button" class="btn btn-dark texto_branco w-100" @click="backward()" id="btnBack">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-backward" viewBox="0 0 16 16">
                         <path d="M.5 3.5A.5.5 0 0 1 1 4v3.248l6.267-3.636c.52-.302 1.233.043 1.233.696v2.94l6.267-3.636c.52-.302 1.233.043 1.233.696v7.384c0 .653-.713.998-1.233.696L8.5 8.752v2.94c0 .653-.713.998-1.233.696L1 8.752V12a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m7 1.133L1.696 8 7.5 11.367zm7.5 0L9.196 8 15 11.367z"/>
@@ -70,7 +70,7 @@
                     Voltar
                 </button>
             </div>
-            <div class="col-sm-2 mt-3" v-if="visual_id != ''">
+            <div class="col-sm-2 mt-3">
                 <button type="button" class="btn btn-secondary texto_branco w-100" @click="forward()" id="btnContinue">
                     Continuar
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-forward" viewBox="0 0 16 16">
@@ -105,7 +105,8 @@
                 leader: '',
                 members: [],
                 usersLeader: {data: {}},
-                usersMembers: {data: {}}
+                usersMembers: {data: {}},
+                continueForward: false
             }
         },
         methods: {
@@ -171,6 +172,43 @@
             loadTeamData() {
                 this.usersLeader = {data: {}},
                 this.usersMembers = {data: {}}
+            },
+            save() {
+                if (utils.fieldsValidate(['leader'], this)) {
+                    let formData = this.generateIncidentTeamFormData('save');                    
+                    let config = {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            }
+                        }
+                    let url = this.urlBase + '/storeteam';
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.status = 'success';
+                            this.feedbackTitle = "Informações registradas com sucesso";
+                            this.continueForward = true;
+                        })
+                        .catch(errors => {
+                            this.status = 'error';
+                            this.feedbackTitle = "Erro ao salvar informações";
+                            this.feedbackMessage = {
+                                mensagem: errors.response.data.message,
+                                data: errors.response.data.errors
+                            };
+                        })
+                    utils.clearFeedbackMessage(this, 10000);
+                    utils.goToTop();
+                }
+            },
+            generateIncidentTeamFormData(type) {
+                let formData = new FormData();
+                if (type == 'update') {
+                    formData.append('_method', 'patch');
+                }
+                formData.append('leader', this.leader);
+                formData.append('members', this.members);
+                formData.append('visual_id', this.visualid);
+                return formData;
             },
         },
         async created() {
