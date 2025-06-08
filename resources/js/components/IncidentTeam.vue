@@ -34,16 +34,12 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-floating mt-3">
-                        <select class="form-control" id="members" name="members" placeholder="Informe os membros do time*" v-model="members" multiple style="height: auto;">
+                        <select class="form-control" id="members" name="members" placeholder="Informe os membros do time" v-model="members" multiple style="height: auto;">
                             <option value=""></option>
                             <option v-for="user in usersMembers" :key="user.id" :value="user.id">
                                 {{ user.name }}
                             </option>
                         </select>
-                        <label class="form-label">Informe os membros do time*</label>
-                        <div id="invalidFeedbackInvalidMembers" class="invalid-feedback ">
-                            Informe os membros do time
-                        </div>
                     </div>
                 </div>
             </div>
@@ -67,7 +63,7 @@
                 </button>
             </div>
             <div class="col-sm-2 mt-3" v-if="visual_id != ''">
-                <button type="button" class="btn btn-dark texto_branco w-100" @click="forward()" id="btnContinue">
+                <button type="button" class="btn btn-dark texto_branco w-100" @click="backward()" id="btnBack">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-backward" viewBox="0 0 16 16">
                         <path d="M.5 3.5A.5.5 0 0 1 1 4v3.248l6.267-3.636c.52-.302 1.233.043 1.233.696v2.94l6.267-3.636c.52-.302 1.233.043 1.233.696v7.384c0 .653-.713.998-1.233.696L8.5 8.752v2.94c0 .653-.713.998-1.233.696L1 8.752V12a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m7 1.133L1.696 8 7.5 11.367zm7.5 0L9.196 8 15 11.367z"/>
                     </svg>
@@ -157,6 +153,24 @@
                             this.feedbackMessage = errors;
                         }
                     })
+            },
+            forward() {
+                window.location.href = utils.API_URL + '/admin/incidente/acao-contencao/' + this.visualid
+            },
+            backward() {
+                window.location.href = utils.API_URL + '/admin/incidente/' + this.visualid
+            },
+            cancel() {
+                if (this.visualid) {
+                    this.loadTeamData();
+                    this.loadActiveUsers();
+                }
+                utils.removeInvalidFeedback(['leader']);
+                utils.goToTop();
+            },
+            loadTeamData() {
+                this.usersLeader = {data: {}},
+                this.usersMembers = {data: {}}
             },
         },
         async created() {

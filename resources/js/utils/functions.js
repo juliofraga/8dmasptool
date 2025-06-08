@@ -59,3 +59,12 @@ export function makeFieldsDisabled(fields) {
         document.getElementById(field).disabled = true;
     });
 }
+
+export function removeInvalidFeedback(fields) {
+    fields.forEach(field => {
+        const el = document.getElementById(field);
+        if (el.classList.contains('is-invalid')) {
+            el.classList.remove('is-invalid');
+        }
+    });
+}

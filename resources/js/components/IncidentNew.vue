@@ -182,7 +182,7 @@
                 } else {
                     this.clearFields();
                 }
-                this.removeInvalidFeedback(['item_description', 'date_deadline', 'incident_description']);
+                utils.removeInvalidFeedback(['item_description', 'date_deadline', 'incident_description']);
                 utils.goToTop();
             },
             clearFields() {
@@ -304,14 +304,6 @@
                 formData.append('status', 'Not Started');
                 formData.append('mode', 'Classic');
                 return formData;
-            },
-            removeInvalidFeedback(fields) {
-                fields.forEach(field => {
-                    const el = document.getElementById(field);
-                    if (el.classList.contains('is-invalid')) {
-                        el.classList.remove('is-invalid');
-                    }
-                });
             },
             loadIncidentData() {
                 let url = this.urlBase + '/' + this.visualid;
