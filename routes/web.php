@@ -49,6 +49,9 @@ Route::middleware('auth')->group(function() {
         Route::get('/incidente/time/{visual_id}', function () {
             return view('/admin/incident/team');
         })->name('incident-stage2');
+        Route::get('/incidente/acao-contencao/{visual_id}', function () {
+            return view('/admin/incident/containment_action');
+        })->name('incident-stage3');
     });
 });
 

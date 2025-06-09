@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h3><b>Etapa {{ sentence.etapa }}:</b> {{ sentence.mensagem }}</h3>
+        <h3 style="text-align: justify;"><b>Etapa {{ sentence.etapa }}:</b> {{ sentence.mensagem }}</h3>
     </div>
 </template>
 

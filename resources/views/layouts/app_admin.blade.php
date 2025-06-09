@@ -162,7 +162,8 @@ function returnActive($menu, $currentPage)
         (in_array($currentPage, ['incidents']) && $menu == 'Incidentes') ||
         (in_array($currentPage, ['new-incident']) && $menu == 'Incidentes') ||
         (in_array($currentPage, ['incident-stage1']) && $menu == 'Incidentes') ||
-        (in_array($currentPage, ['incident-stage2']) && $menu == 'Incidentes')
+        (in_array($currentPage, ['incident-stage2']) && $menu == 'Incidentes') ||
+        (in_array($currentPage, ['incident-stage3']) && $menu == 'Incidentes')
         ) {
         return 'active';
     }
