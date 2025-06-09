@@ -74,6 +74,7 @@ class IncidentController extends Controller
         }
         $incident_object = $this->incident->find($incidentId);
         $members = explode(',', $request->members);
+        $incident_object->users()->detach();
         if ($this->connectUserIncident($incident_object, $members, $request->leader)) {
             $incident_object = $this->incident
                 ->with(['users' => function ($query) {
@@ -132,6 +133,22 @@ class IncidentController extends Controller
             $success = true;
         }
         return $success;
+    }
+
+    public function getteam(string $visual_id)
+    {
+        $id = incident::where('visual_id', $visual_id)->value('id');
+        if (!$id) {
+            return response()->json([
+                'errors' => [
+                    'visual_id' => ['Não existem incidentes com o id informado, verifique novamente!']
+                ]
+            ], 422);
+        }
+        $incident_object = $this->incident->with(['users' => function ($query) {
+            $query->withPivot('leader');
+        }])->find($id);
+        return response()->json($incident_object, 201);
     }
 
     private function generateVisualId(int $id)

@@ -146,11 +146,11 @@
                     .catch(errors => {
                         if (errors.response.status == 500) {
                             this.feedbackTitle = "Erro no servidor";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
                         } else {
                             this.feedbackTitle = "Houve um erro";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = errors;
                         }
                     })
@@ -170,8 +170,32 @@
                 utils.goToTop();
             },
             loadTeamData() {
-                this.usersLeader = {data: {}},
-                this.usersMembers = {data: {}}
+                let url = this.urlBase + '/team/' + this.visualid;
+                axios.get(url)
+                    .then(response => {
+                        let users = response.data.users;
+                        this.members = users.
+                                        filter(obj => obj.pivot && obj.pivot.leader === 0).
+                                        map(obj => obj.id);
+
+                        this.leader = users.find(obj => obj.pivot && obj.pivot.leader === 1).id;
+                        setTimeout(() => {
+                            this.feedbackTitle = "";
+                            this.status = '';
+                            this.feedbackMessage = {};
+                        }, 10000);
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                    })
             },
             save() {
                 if (utils.fieldsValidate(['leader'], this)) {
@@ -219,6 +243,7 @@
         },
         mounted() {
             this.loadActiveUsers();
+            this.loadTeamData();
         }
     }
 </script>
