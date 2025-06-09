@@ -234,6 +234,14 @@
                 formData.append('visual_id', this.visualid);
                 return formData;
             },
+            saveContinue() {
+                this.save();
+                setTimeout(() => {
+                    if (this.continueForward == true) {
+                        this.forward();
+                    }
+                }, 2000);  
+            },
         },
         async created() {
             const exists = await this.idExists();
