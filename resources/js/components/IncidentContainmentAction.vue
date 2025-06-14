@@ -12,6 +12,27 @@
                 mensagem: 'Nessa etapa você implementará medidas temporárias e imediatas para conter o problema identificado, evitando que ele continue a afetar o cliente, o processo ou o produto até que uma solução definitiva seja implementada.'
             }"
         ></orientation-component>
+        <search-component 
+            title="Áreas" 
+            :buttons=" {
+                add: {
+                    show: true,
+                    type: 'modal',
+                    modalId: '#modalAdicionarAcaoContencao'
+                },
+                search: {
+                    show: false,
+                    type: '',
+                    fields: []
+                },
+                clear: {
+                    show: false,
+                    type: ''
+                }
+            }" 
+            placeholder=""
+            classSearch="containmentAction"
+        ></search-component>
         <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
         <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
         <div class="form-group mt-2">
