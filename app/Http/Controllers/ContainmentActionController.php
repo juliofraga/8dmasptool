@@ -53,7 +53,9 @@ class ContainmentActionController extends Controller
                     'id' => $item->id,
                     'description' => $item->description,
                     'user_name' => $item->user->name,
+                    'user_id' => $item->user->id,
                     'created_at' => $item->created_at,
+                    'updated_at' => $item->updated_at,
                     'status' => $item->status
                 ];
             });
@@ -67,12 +69,23 @@ class ContainmentActionController extends Controller
 
     public function update(Request $request, int $id)
     {
-
+        $action = $this->containmentAction->find($id);
+        if (!$action) {
+            return response()->json(['erro' => 'Registro não encontrado'], 404);
+        }
+        $request->merge([
+            'description' => $request->description === 'null' ? NULL : $request->description,
+        ]);
+        $update = $action->update($request->all());
+        if ($update) {
+            return response()->json($action, 200);
+        } else {
+            return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
+        }
     }
 
-    public function destroy(string $visual_id)
+    public function destroy(int $id)
     {
-        $id = incident::where('visual_id', $visual_id)->value('id');
-        return $this->containmentAction->delete($id);
+        return $this->containmentActionRepository->delete($id);
     }
 }
