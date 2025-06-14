@@ -306,7 +306,7 @@
                         this.loadUserList();
                     })
                     .catch(errors => {
-                        this.status = 'erro';
+                        this.status = 'error';
                         this.feedbackTitle = "Erro ao ativar usuário";
                         utils.closeModal('modalAtualizarUser');
                         this.feedbackMessage = {
@@ -327,7 +327,7 @@
                         this.loadUserList();
                     })
                     .catch(errors => {
-                        this.status = 'erro';
+                        this.status = 'error';
                         this.feedbackTitle = "Erro ao inativar usuário";
                         utils.closeModal('modalAtualizarUser');
                         this.feedbackMessage = {
@@ -355,7 +355,7 @@
                         this.loadUserList();
                     })
                     .catch(errors => {
-                        this.status = 'erro';
+                        this.status = 'error';
                         this.feedbackTitle = "Erro ao deletar usuário";
                         utils.closeModal('modalConfirmarDeletar');
                         this.feedbackMessage = {
@@ -399,7 +399,7 @@
                                 this.loadUserList();
                             })
                             .catch(errors => {
-                                this.status = 'erro';
+                                this.status = 'error';
                                 this.feedbackTitle = "Erro ao atualizar usuário";
                                 utils.closeModal('modalAtualizarUsuario');
                                 this.feedbackMessage = {
@@ -439,7 +439,7 @@
                                 this.cleanAddUserFormData();
                             })
                             .catch(errors => {
-                                this.status = 'erro';
+                                this.status = 'error';
                                 this.feedbackTitle = "Erro ao adicionar usuário";
                                 utils.closeModal('modalAdicionarUsuario');
                                 this.message = {
@@ -475,11 +475,11 @@
                     .catch(errors => {
                         if (errors.response.status == 500) {
                             this.feedbackTitle = "Erro no servidor";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = {message: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
                         } else {
                             this.feedbackTitle = "Houve um erro";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = errors;
                         }
                     })

@@ -264,7 +264,7 @@
                         this.loadAreaList();
                     })
                     .catch(errors => {
-                        this.status = 'erro';
+                        this.status = 'error';
                         this.feedbackTitle = "Erro ao ativar área";
                         utils.closeModal('modalAtualizarArea');
                         this.feedbackMessage = {
@@ -285,7 +285,7 @@
                         this.loadAreaList();
                     })
                     .catch(errors => {
-                        this.status = 'erro';
+                        this.status = 'error';
                         this.feedbackTitle = "Erro ao inativar área";
                         utils.closeModal('modalAtualizarArea');
                         this.feedbackMessage = {
@@ -307,7 +307,7 @@
                         this.loadAreaList();
                     })
                     .catch(errors => {
-                        this.status = 'erro';
+                        this.status = 'error';
                         this.feedbackTitle = "Erro ao deletar área";
                         utils.closeModal('modalConfirmarDeletar');
                         this.feedbackMessage = {
@@ -344,7 +344,7 @@
                                 this.loadAreaList();
                             })
                             .catch(errors => {
-                                this.status = 'erro';
+                                this.status = 'error';
                                 this.feedbackTitle = "Erro ao atualizar área";
                                 utils.closeModal('modalAtualizarArea');
                                 this.feedbackMessage = {
@@ -363,8 +363,8 @@
             cleanAddAreaFormData() {
                 this.name = '';
                 this.description = '';
-                this.members = [],
-                this.managers = []
+                this.members = [];
+                this.managers = [];
             },
             setUrlFilter(url) {
                 this.urlFilter = url;
@@ -385,11 +385,11 @@
                     .catch(errors => {
                         if (errors.response.status == 500) {
                             this.feedbackTitle = "Erro no servidor";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
                         } else {
                             this.feedbackTitle = "Houve um erro";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = errors;
                         }
                     })
@@ -409,11 +409,11 @@
                     .catch(errors => {
                         if (errors.response.status == 500) {
                             this.feedbackTitle = "Erro no servidor";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
                         } else {
                             this.feedbackTitle = "Houve um erro";
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackMessage = errors;
                         }
                     })
@@ -443,7 +443,7 @@
                         })
                         .catch(errors => {
                             console.log('error: ', errors);
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.feedbackTitle = "Erro ao adicionar área";
                             utils.closeModal('modalAdicionarArea');
                             this.feedbackMessage = {

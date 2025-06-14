@@ -133,7 +133,7 @@
                             this.repeatPassword = '';
                         })
                         .catch(errors => {
-                            this.status = 'erro';
+                            this.status = 'error';
                             this.title = "Erro ao atualizar usuário";
                             this.message = {
                                 message: errors.response.data.message,

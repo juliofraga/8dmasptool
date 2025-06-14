@@ -113,7 +113,7 @@ Vue.filter('formatStatusIncident', function(valor) {
         'In Progress': 'Em andamento',
         'Canceled': 'Cancelado',
         'On hold': 'Em espera',
-        'Fnished': 'Concluído'
+        'Finished': 'Concluído'
     };
     return status[valor];
 });

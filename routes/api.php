@@ -47,6 +47,8 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
         Route::get('/{visual_id}', 'IncidentController@show');
         Route::patch('/{visual_id}', 'IncidentController@update');
         Route::get('/exists/{visual_id}', 'IncidentController@exists');
+        Route::get('/containmentaction/{visual_id}', 'ContainmentActionController@show');
+        Route::post('/containmentaction/store', 'ContainmentActionController@store');
     });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');

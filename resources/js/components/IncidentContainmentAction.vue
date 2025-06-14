@@ -33,29 +33,89 @@
             placeholder=""
             classSearch="containmentAction"
         ></search-component>
-        <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
-        <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
-        <div class="form-group mt-2">
-
+        <div class="mt-2">
+            <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
+            <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
         </div>
+        <div v-if="Object.keys(actions.data).length > 0">
+            <list-component
+                :title="{
+                    id: {title: 'ID', length:'hidden', type:'text'},
+                    description: {title: 'Descrição', length: '7', type:'text'},
+                    status: {title: 'Status', length: '1', type:'status-incident'},
+                    created_at: {title: 'Data de Criação', length: '2', type: 'datetimestamp'},
+                    user_name: {title: 'Responsável', length: '1', type:'text'},
+                    editar: {title: 'Editar', length: '1', type: 'buttonModal', modalId: '#modalAtualizarAcaoContencao'}
+                }" 
+                :data="actions.data"
+                :status="status"
+                :feedbackMessage="feedbackMessage"
+                :feedbackTitle="feedbackTitle"
+            ></list-component>
+        </div>
+        <div v-else-if="loaded === true">
+            <no-itens-component></no-itens-component>
+        </div>
+        <div v-else-if="loaded === false">
+            <spinner-component></spinner-component>
+        </div>
+        <!-- Modal para adicionar Ação de Contenção -->
+        <modal-component id="modalAdicionarAcaoContencao" title="Adicionar Ação de Contenção">
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="description" name="description" rows="10" v-model="description" style="height: auto;"></textarea>
+                                <label class="form-label">Descrição</label>
+                                <div id="invalidFeedbackDescription" class="invalid-feedback">
+                                    Informe a descrição da ação de contenção.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="userResponsible" name="userResponsible" placeholder="Responsável*" v-model="userResponsible">
+                                    <option value="">Selecione...</option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
+                                    </option>
+                                </select>
+                                <label class="form-label">Responsável*</label>
+                                <div id="invalidFeedbackResponsible" class="invalid-feedback">
+                                    Informe o responsável por esta ação de contenção.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="statusAction" name="statusAction" placeholder="Status*" v-model="statusAction">
+                                    <option value="">Selecione...</option>
+                                    <option value="Not Started">Não iniciado</option>
+                                    <option value="In Progress">Em andamento</option>
+                                    <option value="Canceled">Cancelado</option>
+                                    <option value="On hold">Em espera</option>
+                                    <option value="Finished">Concluído</option>
+                                </select>
+                                <label class="form-label">Status*</label>
+                                <div id="invalidFeedbackStatus" class="invalid-feedback">
+                                    Informe o status dessa ação de contenção.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success texto_branco" @click="save()">Salvar</button>
+            </template>
+        </modal-component>
         <div class="row mb-3 mt-4">
-            <div class="col-sm-2 mt-3">
-                <button type="button" class="btn btn-info texto_branco w-100" @click="save()" id="btnSave">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
-                        <path d="M11 2H9v3h2z"/>
-                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-                    </svg>
-                    Salvar
-                </button>
-            </div>
-            <div class="col-sm-2 mt-3">
-                <button type="button" class="btn btn-success texto_branco w-100" @click="saveContinue()" id="btnSaveContinue">
-                    Salvar & Continuar
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-forward" viewBox="0 0 16 16">
-                        <path d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.752l-6.267 3.636c-.52.302-1.233-.043-1.233-.696v-2.94l-6.267 3.636C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696L7.5 7.248v-2.94c0-.653.713-.998 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5M1 4.633v6.734L6.804 8zm7.5 0v6.734L14.304 8z"/>
-                    </svg>
-                </button>
-            </div>
             <div class="col-sm-2 mt-3">
                 <button type="button" class="btn btn-dark texto_branco w-100" @click="previous()" id="btnPrevious">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-backward" viewBox="0 0 16 16">
@@ -70,15 +130,6 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-forward" viewBox="0 0 16 16">
                         <path d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.752l-6.267 3.636c-.52.302-1.233-.043-1.233-.696v-2.94l-6.267 3.636C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696L7.5 7.248v-2.94c0-.653.713-.998 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5M1 4.633v6.734L6.804 8zm7.5 0v6.734L14.304 8z"/>
                     </svg>
-                </button>
-            </div>
-            <div class="col-sm-2 mt-3">
-                <button type="button" class="btn btn-warning w-100" @click="cancel()"  id="btnCancel">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                    </svg>
-                    Cancelar
                 </button>
             </div>
         </div>
@@ -96,20 +147,54 @@
                 feedbackMessage: '',
                 urlBase: utils.API_URL + '/api/v1/incident',
                 urlUser: utils.API_URL + '/api/v1/user',
-                continueForward: false
+                continueForward: false,
+                actions: {data: {}},
+                loaded: false,
+                description: '',
+                users: {data: {}},
+                statusAction: '',
+                userResponsible: ''
             }
         },
         methods: {
-            saveContinue() {
-                this.save();
-                setTimeout(() => {
-                    if (this.continueForward == true) {
-                        this.next();
-                    }
-                }, 2000); 
-            },
             save() {
+                if (utils.fieldsValidate(['description', 'statusAction', 'userResponsible'], this)) {
+                    let formData = new FormData();
+                    formData.append('description', this.description);
+                    formData.append('users_id', this.userResponsible);
+                    formData.append('status', this.statusAction);
+                    formData.append('incidents_id', this.visualid);
 
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+
+                    let url = this.urlBase + '/containmentaction/store';
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.status = 'sucesso';
+                            this.feedbackTitle = "Ação de contenção adicionada com sucesso";
+                            utils.closeModal('modalAdicionarAcaoContencao');
+                            this.loadActionList();
+                            this.cleanAddAreaFormData();
+                        })
+                        .catch(errors => {
+                            this.status = 'error';
+                            this.feedbackTitle = "Erro ao adicionar ação de contenção";
+                            utils.closeModal('modalAdicionarAcaoContencao');
+                            this.feedbackMessage = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                        })
+                }
+            },
+            cleanAddAreaFormData() {
+                this.description = '';
+                this.statusAction = '';
+                this.userResponsible = [];
             },
             previous() {
                 window.location.href = utils.API_URL + '/admin/incidente/time/' + this.visualid
@@ -117,12 +202,59 @@
             next() {
                 window.location.href = utils.API_URL + '/admin/incidente/causa-raiz/' + this.visualid
             },
-            cancel() {
-
-            }
+            loadActionList() {
+                let url = this.urlBase + '/containmentaction/' + this.visualid;
+                axios.get(url)
+                    .then(response => {
+                        this.actions = response.data;
+                        setTimeout(() => {
+                            this.feedbackTitle = "";
+                            this.status = '';
+                            this.feedbackMessage = {};
+                        }, 10000);
+                        this.loaded = true;
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                    })
+                    
+            },
+            loadActiveUsers() {
+                let url = this.urlUser + '/all/active';
+                axios.get(url)
+                    .then(response => {
+                        this.users = response.data;
+                        setTimeout(() => {
+                            this.feedbackTitle = "";
+                            this.status = '';
+                            this.feedbackMessage = {};
+                        }, 10000);
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                    })
+            },
         },
         mounted() {
-
+            this.loadActiveUsers();
+            this.loadActionList();
+            
         }
     }
 </script>

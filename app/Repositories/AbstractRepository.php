@@ -54,7 +54,7 @@ abstract class AbstractRepository {
             $this->storeLog($model, 'insert');
             return response()->json($model, 201);
         } else {
-            return response()->json(['erro' => 'Falha ao criar o registro.'], 500);
+            return response()->json(['error' => 'Falha ao criar o registro.'], 500);
         }
     }
 
@@ -62,7 +62,7 @@ abstract class AbstractRepository {
     {
         $model = $this->model->find($id);
         if (!$model) {
-            return response()->json(['erro' => self::ERROR_NOT_FOUND], 404);
+            return response()->json(['error' => self::ERROR_NOT_FOUND], 404);
         }
         return response()->json($model, 200);
     }
@@ -71,7 +71,7 @@ abstract class AbstractRepository {
     {
         $model = $this->model->find($id);
         if (!$model) {
-            return response()->json(['erro' => self::ERROR_NOT_FOUND], 404);
+            return response()->json(['error' => self::ERROR_NOT_FOUND], 404);
         }
         if (empty($except)) {
             $update = $model->update($request->all());
@@ -82,7 +82,7 @@ abstract class AbstractRepository {
             $this->storeLog($model, 'update');
             return response()->json($model, 200);
         } else {
-            return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
+            return response()->json(['error' => 'Falha ao atualizar o registro.'], 500);
         }
     }
 
@@ -90,14 +90,14 @@ abstract class AbstractRepository {
     {
         $model = $this->model->find($id);
         if (!$model) {
-            return response()->json(['erro' => self::ERROR_NOT_FOUND], 404);
+            return response()->json(['error' => self::ERROR_NOT_FOUND], 404);
         }
         $delete = $model->delete();
         if ($delete) {
             $this->storeLog($model, 'delete');
             return response()->json(['msg' => 'Registro deletado com sucesso'], 200);
         } else {
-            return response()->json(['erro' => 'Falha ao deletar o registro.'], 500);
+            return response()->json(['error' => 'Falha ao deletar o registro.'], 500);
         }
     }
 
@@ -123,14 +123,14 @@ abstract class AbstractRepository {
         $status = $action === 'active' ? 1 : 0;
         $model = $this->model->find($id);
         if (!$model) {
-            return response()->json(['erro' => self::ERROR_NOT_FOUND], 404);
+            return response()->json(['error' => self::ERROR_NOT_FOUND], 404);
         }
         $update = $model::where('id', $id)->update(['status' => $status]);
         if ($update) {
             $this->storeLog($model, 'update');
             return response()->json($model, 200);
         } else {
-            return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
+            return response()->json(['error' => 'Falha ao atualizar o registro.'], 500);
         }
     }
 

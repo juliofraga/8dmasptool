@@ -9,7 +9,7 @@ class containment_action extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['description', 'incidents_id', 'users_id'];
+    protected $fillable = ['description', 'incidents_id', 'users_id', 'status'];
 
     public function rules() 
     {
@@ -17,6 +17,7 @@ class containment_action extends Model
             'description' => 'required',
             'incidents_id' => 'required',
             'users_id' => 'required',
+            'status' => 'required'
         ];
     }
 
@@ -25,5 +26,10 @@ class containment_action extends Model
         return [
             'required' => 'O campo :attribute é obrigatório',
         ];
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
     }
 }

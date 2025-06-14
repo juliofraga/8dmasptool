@@ -18,11 +18,14 @@
                         title[keyValue].type == 'text' && 
                         title[keyValue].length != 'hidden' && 
                         keyValue != 'profile'
-                    ">
+                    "
+                    style="display: block; text-align: justify;"
+                    >
                      {{ value }}
                 </span>
                 <span v-if="keyValue == 'profile'"> {{ value | formatProfile }}</span>
                 <span v-if="title[keyValue].type == 'datetime' && title[keyValue].length != 'hidden'"> {{ value | formatDateTime }}</span>
+                <span v-if="title[keyValue].type == 'datetimestamp' && title[keyValue].length != 'hidden'"> {{ value | formatDateTimeStamp }}</span>
                 <span v-if="title[keyValue].type == 'ativoInativo' && title[keyValue].length != 'hidden'"> {{ value | formatStatus }}</span>
                 <span v-if="title[keyValue].type == 'date' && title[keyValue].length != 'hidden'"> {{ value | formatDate }}</span>
                 <span v-if="title[keyValue].type == 'status-incident'"> {{ value | formatStatusIncident }}</span>

@@ -27,7 +27,7 @@ class IncidentController extends Controller
 
     public function show(string $visual_id)
     {
-        $id = incident::where('visual_id', $visual_id)->value('id');
+        $id = $this->getIncidentId($visual_id);
         return $this->incidentRepository->show($id);
     }
     
@@ -93,7 +93,7 @@ class IncidentController extends Controller
 
     public function update(Request $request, string $visual_id)
     {
-        $id = incident::where('visual_id', $visual_id)->value('id');
+        $id = $this->getIncidentId($visual_id);
         if ($request->quantity_detected == 'null' || $request->quantity_detected == "null" || $request->quantity_detected === 'null' || $request->quantity_detected === "null") {
             $request->merge([
                 'quantity_detected' => null
@@ -137,7 +137,7 @@ class IncidentController extends Controller
 
     public function getteam(string $visual_id)
     {
-        $id = incident::where('visual_id', $visual_id)->value('id');
+        $id = $this->getIncidentId($visual_id);
         if (!$id) {
             return response()->json([
                 'errors' => [
@@ -151,9 +151,13 @@ class IncidentController extends Controller
         return response()->json($incident_object, 201);
     }
 
+    public static function getIncidentId(string $visual_id)
+    {
+        return incident::where('visual_id', $visual_id)->value('id');
+    }
+
     private function generateVisualId(int $id)
     {
         return 'ID' . str_pad($id, 8, '0', STR_PAD_LEFT);
     }
-
 }
