@@ -45,4 +45,9 @@ class RootCausePotentialController extends Controller
             return response()->json(['error' => 'Não há ações de contenções cadastradas para este incidente'], 404);
         }
     }
+
+    public function destroy(int $id)
+    {
+        return $this->rootCausePotentialRepository->delete($id);
+    }
 }

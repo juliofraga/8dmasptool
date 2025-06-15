@@ -74,7 +74,7 @@
                             </span>
                             <button
                                 class="btn-close-custom"
-                                @click="removeRootCausePotential(item.id)"
+                                @click="deleteRootCausePotential(item.id)"
                                 >✕
                             </button>
                         </div>
@@ -93,7 +93,7 @@
                             </span>
                             <button
                                 class="btn-close-custom"
-                                @click="removeRootCausePotential(item.id)"
+                                @click="deleteRootCausePotential(item.id)"
                                 >✕
                             </button>
                         </div>
@@ -112,7 +112,7 @@
                             </span>
                             <button
                                 class="btn-close-custom"
-                                @click="removeRootCausePotential(item.id)"
+                                @click="deleteRootCausePotential(item.id)"
                                 >✕
                             </button>
                         </div>
@@ -133,7 +133,7 @@
                             </span>
                             <button
                                 class="btn-close-custom"
-                                @click="removeRootCausePotential(item.id)"
+                                @click="deleteRootCausePotential(item.id)"
                                 >✕
                             </button>
                         </div>
@@ -152,7 +152,7 @@
                             </span>
                             <button
                                 class="btn-close-custom"
-                                @click="removeRootCausePotential(item.id)"
+                                @click="deleteRootCausePotential(item.id)"
                                 >✕
                             </button>
                         </div>
@@ -171,13 +171,17 @@
                             </span>
                             <button
                                 class="btn-close-custom"
-                                @click="removeRootCausePotential(item.id)"
+                                @click="deleteRootCausePotential(item.id)"
                                 >✕
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <hr class="divisor_horizontal">
+        <div class="row mt-3">
+            <h3>Após análise, indique a mais provável causa raiz do problema</h3>
         </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
@@ -223,8 +227,23 @@
             }
         },
         methods: {
-            removeRootCausePotential(id) {
-                
+            deleteRootCausePotential(id) {
+                let url = this.urlBase + '/' + id;
+                let formData = new FormData();
+                formData.append('_method', 'delete');                
+
+                axios.post(url, formData)
+                    .then(response => {
+                        this.loadRootCausePotentialList();
+                    })
+                    .catch(errors => {
+                        this.status = 'error';
+                        this.feedbackTitle = "Erro ao deletar potencial causa raiz";
+                        this.feedbackMessage = {
+                            mensagem: errors.response.data.message,
+                            dados: errors.response.data.errors
+                        };
+                    })
             },
             addRootCausePotential() {
                 if (utils.fieldsValidate(['description', 'category'], this)) {
