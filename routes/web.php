@@ -52,6 +52,9 @@ Route::middleware('auth')->group(function() {
         Route::get('/incidente/acao-contencao/{visual_id}', function () {
             return view('/admin/incident/containment_action');
         })->name('incident-stage3');
+        Route::get('/incidente/causa-raiz/{visual_id}', function () {
+            return view('/admin/incident/root-cause-potential');
+        })->name('incident-stage4');
     });
 });
 

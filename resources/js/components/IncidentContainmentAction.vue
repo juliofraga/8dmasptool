@@ -223,9 +223,8 @@
                 status: '',
                 feedbackTitle: '',
                 feedbackMessage: '',
-                urlBase: utils.API_URL + '/api/v1/incident',
+                urlBase: utils.API_URL + '/api/v1/incident/containmentaction',
                 urlUser: utils.API_URL + '/api/v1/user',
-                continueForward: false,
                 actions: {data: {}},
                 loaded: false,
                 description: '',
@@ -255,7 +254,7 @@
                         }
                     }
 
-                    let url = this.urlBase + '/containmentaction/store';
+                    let url = this.urlBase + '/store';
                     axios.post(url, formData, config)
                         .then(response => {
                             this.status = 'sucesso';
@@ -293,7 +292,7 @@
                                 'Content-Type': 'multipart/form-data',
                             }
                         }
-                        let url = this.urlBase + '/containmentaction/' + this.$store.state.item.id;
+                        let url = this.urlBase + '/' + this.$store.state.item.id;
                         axios.post(url, formData, config)
                             .then(response => {
                                 this.status = 'sucesso';
@@ -313,7 +312,7 @@
                     }
             },
             deleteContainmentAction() {
-                let url = this.urlBase + '/containmentaction/' + this.$store.state.item.id;
+                let url = this.urlBase + '/' + this.$store.state.item.id;
                 let formData = new FormData();
                 formData.append('_method', 'delete');                
 
@@ -346,7 +345,7 @@
                 window.location.href = utils.API_URL + '/admin/incidente/causa-raiz/' + this.visualid
             },
             loadActionList() {
-                let url = this.urlBase + '/containmentaction/' + this.visualid;
+                let url = this.urlBase + '/' + this.visualid;
                 axios.get(url)
                     .then(response => {
                         this.actions = response.data;

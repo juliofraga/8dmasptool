@@ -45,6 +45,7 @@ Vue.component('orientation-component', require('./components/Orientation.vue').d
 Vue.component('incidents-component', require('./components/Incidents.vue').default);
 Vue.component('incident-team-component', require('./components/IncidentTeam.vue').default);
 Vue.component('incident-containment-action-component', require('./components/IncidentContainmentAction.vue').default);
+Vue.component('root-cause-potential-component', require('./components/IncidentRootCausePotential.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
