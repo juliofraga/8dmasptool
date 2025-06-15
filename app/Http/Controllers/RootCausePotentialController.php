@@ -4,83 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\root_cause_potential;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\IncidentController;
 use Illuminate\Http\Request;
+use App\Repositories\RootCausaPotentialRepository;
 
 class RootCausePotentialController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    public $rootCausePotential;
+    public $rootCausePotentialRepository;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function __construct(root_cause_potential $rootCausePotential) 
     {
-        //
+        $this->rootCausePotential = $rootCausePotential;
+        $this->rootCausePotentialRepository = new RootCausaPotentialRepository($this->rootCausePotential);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-        //
+        $incident_id = IncidentController::getIncidentId($request->incidents_id);
+        $request->merge([
+            'incidents_id' => $incident_id
+        ]);
+        $rootCausePotential = $this->rootCausePotentialRepository->store($request);
+        if ($rootCausePotential->getStatusCode() === 500) {
+            return $rootCausePotential;
+        }
+        return $rootCausePotential;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\root_cause_potential  $root_cause_potential
-     * @return \Illuminate\Http\Response
-     */
-    public function show(root_cause_potential $root_cause_potential)
+    public function show(string $visual_id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\root_cause_potential  $root_cause_potential
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(root_cause_potential $root_cause_potential)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\root_cause_potential  $root_cause_potential
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, root_cause_potential $root_cause_potential)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\root_cause_potential  $root_cause_potential
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(root_cause_potential $root_cause_potential)
-    {
-        //
+        $incident_id = IncidentController::getIncidentId($visual_id);
+        if (!$incident_id) {
+            return response()->json(['error' => 'Incidente não encontrado'], 404);
+        }
+        $data = $this->rootCausePotential->where('incidents_id', $incident_id)->get();
+        if ($data) {
+            return response()->json(['data' => $data, 200]);
+        } else {
+            return response()->json(['error' => 'Não há ações de contenções cadastradas para este incidente'], 404);
+        }
     }
 }

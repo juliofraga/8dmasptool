@@ -6,8 +6,6 @@ use App\Models\containment_action;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\IncidentController;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\incident;
 use App\Repositories\ContainmentActionRepository;
 
 class ContainmentActionController extends Controller
@@ -64,7 +62,6 @@ class ContainmentActionController extends Controller
         } else {
             return response()->json(['error' => 'Não há ações de contenções cadastradas para este incidente'], 404);
         }
-        
     }
 
     public function update(Request $request, int $id)

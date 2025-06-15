@@ -367,7 +367,6 @@
                             this.feedbackMessage = errors;
                         }
                     })
-                    
             },
             loadActiveUsers() {
                 let url = this.urlUser + '/all/active';
@@ -396,7 +395,6 @@
         mounted() {
             this.loadActiveUsers();
             this.loadActionList();
-            
         }
     }
 </script>

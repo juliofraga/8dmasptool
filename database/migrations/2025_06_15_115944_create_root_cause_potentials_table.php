@@ -12,6 +12,7 @@ class CreateRootCausePotentialsTable extends Migration
             $table->id();
             $table->text('description');
             $table->string('category', 45)->comment('method, machine, workforce, material, environment, measurement');
+            $table->tinyInteger('is_root_cause')->default(0)->comment('0 - No 1 - Yes');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
             $table->unsignedBigInteger('incidents_id');

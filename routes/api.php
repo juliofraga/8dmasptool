@@ -47,10 +47,16 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
         Route::get('/{visual_id}', 'IncidentController@show');
         Route::patch('/{visual_id}', 'IncidentController@update');
         Route::get('/exists/{visual_id}', 'IncidentController@exists');
-        Route::get('/containmentaction/{visual_id}', 'ContainmentActionController@show');
-        Route::post('/containmentaction/store', 'ContainmentActionController@store');
-        Route::patch('/containmentaction/{id}', 'ContainmentActionController@update');
-        Route::delete('/containmentaction/{id}', 'ContainmentActionController@destroy');
+        Route::prefix('containmentaction')->group(function () {
+            Route::get('/{visual_id}', 'ContainmentActionController@show');
+            Route::post('/store', 'ContainmentActionController@store');
+            Route::patch('/{id}', 'ContainmentActionController@update');
+            Route::delete('/{id}', 'ContainmentActionController@destroy');
+        });
+        Route::prefix('rootcausepotential')->group(function () {
+            Route::post('/store', 'RootCausePotentialController@store');
+            Route::get('/{visual_id}', 'RootCausePotentialController@show');
+        });
     });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');
