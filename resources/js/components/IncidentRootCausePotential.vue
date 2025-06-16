@@ -12,7 +12,15 @@
                 mensagem: 'Nessa etapa você deverá identificar por que o problema ocorreu (causa raiz) e por que não foi detectado antes de chegar ao cliente ou causar impacto.'
             }"
         ></orientation-component>
-        <div class="form-group row mt-4 mb-4">
+        <div class="mt-2">
+            <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
+            <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
+        </div>
+        <hr class="divisor_horizontal">
+        <div class="row mt-3">
+            <h3>Possíveis Causas Raiz</h3>
+        </div>
+        <div class="form-group row mt-2 mb-4">
             <div class="col-md-8 mt-2">
                 <div class="form-floating">
                     <input type="text" id="description" class="form-control" name="description" v-model="description" placeholder="Insira uma possível causa do problema*">
@@ -50,14 +58,6 @@
                     </button>
                 </div>
             </div>
-        </div>
-        <div class="mt-2">
-            <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
-            <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
-        </div>
-        <hr class="divisor_horizontal">
-        <div class="row mt-3">
-            <h3>Possíveis Causas Raiz</h3>
         </div>
         <div class="mt-4 mb-2">
             <div class="row">
@@ -181,7 +181,7 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3>Após análise, indique a mais provável causa raiz do problema</h3>
+            <h3>Após análise, indique a causa potencial mais provável</h3>
         </div>
         <div class="row">
             <div class="col-md-12 mt-2">
@@ -195,6 +195,69 @@
                     <label class="form-label">Causa Raiz*</label>
                 </div>
             </div>
+        </div>
+        <div class="row mt-3">
+            <h3>E agora informe os 5 porquês</h3>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mt-2">
+                <div class="form-floating">
+                    <input type="text" id="primeiropq" name="primeiropq" class="form-control" v-model="primeiropq" placeholder="1º Porquê">
+                    <label class="form-label">1º Porquê</label>
+                </div>
+            </div>
+            <div class="col-md-4 mt-2">
+                <div class="form-floating">
+                    <input type="text" id="segundopq" name="segundopq" class="form-control" v-model="segundopq" placeholder="2º Porquê">
+                    <label class="form-label">2º Porquê</label>
+                </div>
+            </div>
+            <div class="col-md-4 mt-2">
+                <div class="form-floating">
+                    <input type="text" id="terceiropq" name="terceiropq" class="form-control" v-model="terceiropq" placeholder="3º Porquê">
+                    <label class="form-label">3º Porquê</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mt-2">
+                <div class="form-floating">
+                    <input type="text" id="quartopq" name="quartopq" class="form-control" v-model="quartopq" placeholder="4º Porquê">
+                    <label class="form-label">4º Porquê</label>
+                </div>
+            </div>
+            <div class="col-md-4 mt-2">
+                <div class="form-floating">
+                    <input type="text" id="quintopq" name="quintopq" class="form-control" v-model="quintopq" placeholder="5º Porquê">
+                    <label class="form-label">5º Porquê</label>
+                </div>
+            </div>
+            <div class="col-md-2 mt-2">
+                <div class="form-floating">
+                    <select class="form-control" id="step_number" name="step_number" placeholder="Selecione a causa raíz*" v-model="step_number">
+                        <option value="">Selecione...</option>
+                        <option value="1">1º Porquê</option>
+                        <option value="2">2º Porquê</option>
+                        <option value="3">3º Porquê</option>
+                        <option value="4">4º Porquê</option>
+                        <option value="5">5º Porquê</option>
+                    </select>
+                    <label class="form-label">Selecione a causa raíz*</label>
+                </div>
+            </div>
+            <div class="col-md-2 mt-2">
+                <button type="button" class="btn btn-info texto_branco w-100" @click="save()" id="btnSave">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                        <path d="M11 2H9v3h2z"/>
+                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                    </svg>
+                    Salvar
+                </button>
+            </div>
+        </div>
+        <hr class="divisor_horizontal">
+        <div class="row mt-3">
+            <h3>Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os resultados</h3>
         </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
@@ -237,7 +300,13 @@
                 description: '',
                 category: '',
                 rootCauses: {data: {}},
-                rootCause: ''
+                rootCause: '',
+                primeiropq: '',
+                segundopq: '',
+                terceiropq: '',
+                quartopq: '',
+                quintopq: '',
+                step_number: ''
             }
         },
         methods: {
