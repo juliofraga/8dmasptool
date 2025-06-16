@@ -32,6 +32,13 @@ class RootCausePotentialController extends Controller
         return $rootCausePotential;
     }
 
+    public function setascausaraiz(Request $request, int $id)
+    {
+        $incident_id = IncidentController::getIncidentId($request->incidents_id);
+        $this->rootCausePotential::where('incidents_id', $incident_id)->update(['is_root_cause' => 0]);
+        $this->rootCausePotential::where('id', $id)->update(['is_root_cause' => 1]);
+    }
+
     public function show(string $visual_id)
     {
         $incident_id = IncidentController::getIncidentId($visual_id);

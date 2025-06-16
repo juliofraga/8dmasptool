@@ -57,6 +57,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
             Route::post('/store', 'RootCausePotentialController@store');
             Route::get('/{visual_id}', 'RootCausePotentialController@show');
             Route::delete('/{id}', 'RootCausePotentialController@destroy');
+            Route::patch('/{id}', 'RootCausePotentialController@setascausaraiz');
         });
     });
     Route::post('logout', 'AuthController@logout');

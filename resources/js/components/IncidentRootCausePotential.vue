@@ -183,6 +183,19 @@
         <div class="row mt-3">
             <h3>Após análise, indique a mais provável causa raiz do problema</h3>
         </div>
+        <div class="row">
+            <div class="col-md-12 mt-2">
+                <div class="form-floating">
+                    <select class="form-control" id="rootCause" name="rootCause" placeholder="Causa Raiz*" v-model="rootCause" @change="setRootCause()">
+                        <option value="">Selecione...</option>
+                        <option v-for="cause in rootCauses.data" :key="cause.id" :value="cause.id">
+                            {{ cause.description }}
+                        </option>
+                    </select>
+                    <label class="form-label">Causa Raiz*</label>
+                </div>
+            </div>
+        </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
                 <button type="button" class="btn btn-dark texto_branco w-100" @click="previous()" id="btnPrevious">
@@ -224,9 +237,32 @@
                 description: '',
                 category: '',
                 rootCauses: {data: {}},
+                rootCause: ''
             }
         },
         methods: {
+            setRootCause() {
+                let formData = new FormData();
+                formData.append('_method', 'patch');
+                formData.append('incidents_id', this.visualid);
+                let config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                }
+                let url = this.urlBase + '/' + this.rootCause;
+                axios.post(url, formData, config)
+                    .then(response => {})
+                    .catch(errors => {
+                        this.status = 'error';
+                        this.feedbackTitle = "Erro ao atualizar ação de contenção ";
+                        utils.closeModal('modalAtualizarAcaoContencao');
+                        this.feedbackMessage = {
+                            mensagem: errors.response.data.message,
+                            dados: errors.response.data.errors
+                        };
+                    })
+            },
             deleteRootCausePotential(id) {
                 let url = this.urlBase + '/' + id;
                 let formData = new FormData();
@@ -238,7 +274,7 @@
                     })
                     .catch(errors => {
                         this.status = 'error';
-                        this.feedbackTitle = "Erro ao deletar potencial causa raiz";
+                        this.feedbackTitle = "Erro ao definir causa raiz";
                         this.feedbackMessage = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
