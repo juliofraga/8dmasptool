@@ -193,6 +193,9 @@
                         </option>
                     </select>
                     <label class="form-label">Causa Raiz*</label>
+                    <div id="invalidFeedbackRootCause" class="invalid-feedback">
+                        Informe a causa raiz mais provável
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,6 +207,9 @@
                 <div class="form-floating">
                     <input type="text" id="primeiropq" name="primeiropq" class="form-control" v-model="primeiropq" placeholder="1º Porquê">
                     <label class="form-label">1º Porquê</label>
+                    <div id="invalidFeedbackPrimeiroPorque" class="invalid-feedback">
+                        Informe pelo menos um porquê
+                    </div>
                 </div>
             </div>
             <div class="col-md-4 mt-2">
@@ -243,6 +249,9 @@
                         <option value="5">5º Porquê</option>
                     </select>
                     <label class="form-label">Selecione a causa raíz*</label>
+                    <div id="invalidFeedbackStepNumber" class="invalid-feedback">
+                        Selecione a causa raíz
+                    </div>
                 </div>
             </div>
             <div class="col-md-2 mt-2">
@@ -254,6 +263,10 @@
                     Salvar
                 </button>
             </div>
+        </div>
+        <div class="mt-2">
+            <alert-component type="danger" :details="feedbackMessageFiveWhy" :title="feedbackTitleFiveWhy" v-if="statusFiveWhy == 'error'"></alert-component>
+            <alert-component type="success" :details="feedbackMessageFiveWhy" :title="feedbackTitleFiveWhy" v-if="statusFiveWhy == 'success'"></alert-component>
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
@@ -289,6 +302,9 @@
                 status: '',
                 feedbackTitle: '',
                 feedbackMessage: '',
+                statusFiveWhy: '',
+                feedbackTitleFiveWhy: '',
+                feedbackMessageFiveWhy: '',
                 urlBase: utils.API_URL + '/api/v1/incident/rootcausepotential',
                 urlUser: utils.API_URL + '/api/v1/user',
                 urlFiveWhy: utils.API_URL + '/api/v1/incident/fivewhy',
@@ -312,7 +328,46 @@
         },
         methods: {
             saveFiveWhys() {
-                
+                if (utils.fieldsValidate(['rootCause', 'primeiropq', 'step_number'], this)) {
+                    let whys = [];
+                    whys.push(this.primeiropq);
+                    if (this.segundopq) {
+                        whys.push(this.segundopq);
+                    }
+                    if (this.terceiropq) {
+                        whys.push(this.terceiropq);
+                    }
+                    if (this.quartopq) {
+                        whys.push(this.quartopq);
+                    }
+                    if (this.quintopq) {
+                        whys.push(this.quintopq);
+                    }
+                    let formData = new FormData();
+                    formData.append('whys', whys);
+                    formData.append('root_cause_potentials_id', this.rootCause);
+                    formData.append('root_cause_potentials_incidents_id', this.visualid);
+                    formData.append('step_number', this.step_number);
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                    let url = this.urlFiveWhy + '/store';
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.statusFiveWhy = 'sucesso';
+                            this.feedbackTitleFiveWhy = "Análise dos porquês salva com sucesso!";
+                        })
+                        .catch(errors => {
+                            this.statusFiveWhy = 'error';
+                            this.feedbackTitleFiveWhy = "Erro ao salvar análise dos 5 porquês";
+                            this.feedbackMessageFiveWhy = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                        })
+                }
             },
             setRootCause() {
                 let formData = new FormData();

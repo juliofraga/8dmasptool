@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class five_why extends Model
 {
     use HasFactory;
-
+    protected $table = 'five_whys';
     protected $fillable = ['step_number', 'why', 'is_root_cause', 'root_cause_potentials_id', 'root_cause_potentials_incidents_id'];
 
     public function rules() 
