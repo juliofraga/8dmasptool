@@ -59,6 +59,9 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
             Route::delete('/{id}', 'RootCausePotentialController@destroy');
             Route::patch('/{id}', 'RootCausePotentialController@setascausaraiz');
         });
+        Route::prefix('fivewhy')->group(function () {
+            Route::post('/store', 'FiveWhyController@store');
+        });
     });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');
