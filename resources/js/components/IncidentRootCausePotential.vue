@@ -272,6 +272,18 @@
         <div class="row mt-3">
             <h3>Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os resultados</h3>
         </div>
+        <h5 class="mt-4">Causa raiz identificada: <b>{{ step_number_text }}</b></h5>
+        <div class="row">
+            <div class="col-md-2 mt-2">
+                <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalAdicionarTeste">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                    Adicionar Teste
+                </button>
+            </div>
+        </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
                 <button type="button" class="btn btn-dark texto_branco w-100" @click="previous()" id="btnPrevious">
@@ -290,6 +302,69 @@
                 </button>
             </div>
         </div>
+        <!-- Modal para adicionar Testes -->
+        <modal-component id="modalAdicionarTeste" title="Adicionar Teste">
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <h4>Causa raiz: {{ step_number_text }}</h4>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="testDescription" name="testDescription" rows="10" v-model="testDescription" style="height: auto;"></textarea>
+                                <label class="form-label">Descrição do teste</label>
+                                <div id="invalidFeedbackTestDescription" class="invalid-feedback">
+                                    Informe a descrição do teste.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="testResult" name="testResult" rows="10" v-model="testResult" style="height: auto;"></textarea>
+                                <label class="form-label">Resultado do teste</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="userResponsible" name="userResponsible" placeholder="Responsável pelo teste*" v-model="userResponsible">
+                                    <option value="">Selecione...</option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
+                                    </option>
+                                </select>
+                                <label class="form-label">Responsável pelo teste*</label>
+                                <div id="invalidFeedbackResponsible" class="invalid-feedback">
+                                    Informe o responsável pelo teste.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="testApproved" name="testApproved" placeholder="Teste Aprovado?" v-model="testApproved">
+                                    <option value="2">Não testado</option>
+                                    <option value="0">Reprovado</option>
+                                    <option value="1">Aprovado</option>
+                                </select>
+                                <label class="form-label">Teste Aprovado?</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success texto_branco" @click="saveTest()">Salvar</button>
+            </template>
+        </modal-component>
     </div>
 </template>
 
@@ -323,7 +398,13 @@
                 terceiropq: '',
                 quartopq: '',
                 quintopq: '',
-                step_number: ''
+                step_number: '',
+                step_number_text: '',
+                testDescription: '',
+                userResponsible: '',
+                users: {data: {}},
+                testApproved: '2',
+                testResult: ''
             }
         },
         methods: {
@@ -389,7 +470,6 @@
                     .catch(errors => {
                         this.status = 'error';
                         this.feedbackTitle = "Erro ao atualizar ação de contenção ";
-                        utils.closeModal('modalAtualizarAcaoContencao');
                         this.feedbackMessage = {
                             mensagem: errors.response.data.message,
                             dados: errors.response.data.errors
@@ -520,6 +600,7 @@
                         this.quartopq = fourthpq ? fourthpq.why : '';
                         this.quintopq = fifthpq ? fifthpq.why : '';
                         this.step_number = stepNumber ? stepNumber.step_number : '';
+                        this.step_number_text = stepNumber.why
 
                         setTimeout(() => {
                             this.feedbackTitle = "";
@@ -556,9 +637,33 @@
             next() {
                 window.location.href = utils.API_URL + '/admin/incidente/acao-corretiva-permanente/' + this.visualid
             },
+            loadActiveUsers() {
+                let url = this.urlUser + '/all/active';
+                axios.get(url)
+                    .then(response => {
+                        this.users = response.data;
+                        setTimeout(() => {
+                            this.feedbackTitle = "";
+                            this.status = '';
+                            this.feedbackMessage = {};
+                        }, 10000);
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                    })
+            },
         },
         mounted() {
             this.loadRootCausePotentialList();
+            this.loadActiveUsers();
         }
     }
 </script>
