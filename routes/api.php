@@ -61,6 +61,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
         });
         Route::prefix('fivewhy')->group(function () {
             Route::post('/store', 'FiveWhyController@store');
+            Route::get('/{visual_id}/{root_cause_id}', 'FiveWhyController@show');
         });
     });
     Route::post('logout', 'AuthController@logout');

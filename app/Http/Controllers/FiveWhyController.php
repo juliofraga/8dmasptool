@@ -30,10 +30,11 @@ class FiveWhyController extends Controller
         if (!is_array($validated)) {
             return response()->json([$validated], 500);
         }
+        $incident_id = IncidentController::getIncidentId($request->root_cause_potentials_incidents_id);
+        $root_cause_potentials_id = $request->root_cause_potentials_id;
+        $this->delete($root_cause_potentials_id, $incident_id);
 
         $whys = explode(',', $request->whys);
-        $root_cause_potentials_id = $request->root_cause_potentials_id;
-        $incident_id = IncidentController::getIncidentId($request->root_cause_potentials_incidents_id);
         $is_root_cause = $request->step_number;
         foreach ($whys as $step_number => $why) {
             $rightStepNumber = $step_number + 1;
@@ -52,6 +53,25 @@ class FiveWhyController extends Controller
             return response()->json(['data' => $data, 200]);
         } else {
             return response()->json(['error' => 'Não há análises de porquês registradas'], 404);
+        }
+    }
+
+    public function delete(int $root_cause_potentials_id, int $incident_id)
+    {
+        $this->fiveWhy::where('root_cause_potentials_id', $root_cause_potentials_id)->where('root_cause_potentials_incidents_id', $incident_id)->delete();
+    }
+
+    public function show(string $visual_id, int $root_cause_id)
+    {
+        $incident_id = IncidentController::getIncidentId($visual_id);
+        if (!$incident_id) {
+            return response()->json(['error' => 'Incidente não encontrado'], 404);
+        }
+        $data = $this->fiveWhy::where('root_cause_potentials_incidents_id', $incident_id)->where('root_cause_potentials_id', $root_cause_id)->get();
+        if ($data) {
+            return response()->json(['data' => $data, 200]);
+        } else {
+            return response()->json(['error' => 'Não há ações de contenções cadastradas para este incidente'], 404);
         }
     }
 }

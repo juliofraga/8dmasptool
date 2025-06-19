@@ -356,7 +356,7 @@
                     let url = this.urlFiveWhy + '/store';
                     axios.post(url, formData, config)
                         .then(response => {
-                            this.statusFiveWhy = 'sucesso';
+                            this.statusFiveWhy = 'success';
                             this.feedbackTitleFiveWhy = "Análise dos porquês salva com sucesso!";
                         })
                         .catch(errors => {
@@ -367,6 +367,11 @@
                                 dados: errors.response.data.errors
                             };
                         })
+                    setTimeout(() => {
+                        this.feedbackTitleFiveWhy = "";
+                        this.statusFiveWhy = '';
+                        this.feedbackMessageFiveWhy = {};
+                    }, 10000);
                 }
             },
             setRootCause() {
@@ -390,6 +395,7 @@
                             dados: errors.response.data.errors
                         };
                     })
+                this.loadFiveWhys();
             },
             deleteRootCausePotential(id) {
                 let url = this.urlBase + '/' + id;
@@ -447,6 +453,7 @@
                     .then(response => {
                         this.rootCauses = response.data;
                         this.splitCategories();
+                        this.setRootCauseLoaded();
                         setTimeout(() => {
                             this.feedbackTitle = "";
                             this.status = '';
@@ -496,6 +503,48 @@
                     console.warn('Categoria não tratada:', item.category);
                 }
                 });
+            },
+            loadFiveWhys() {
+                let url = this.urlFiveWhy + '/' + this.visualid + '/' + this.rootCause;
+                axios.get(url)
+                    .then(response => {
+                        const firstpq = response.data.data.find(item => item.step_number === 1);
+                        const secondpq = response.data.data.find(item => item.step_number === 2);
+                        const thirdpq = response.data.data.find(item => item.step_number === 3);
+                        const fourthpq = response.data.data.find(item => item.step_number === 4);
+                        const fifthpq = response.data.data.find(item => item.step_number === 5);
+                        const stepNumber = response.data.data.find(item => item.is_root_cause === 1);
+                        this.primeiropq = firstpq ? firstpq.why : '';
+                        this.segundopq = secondpq ? secondpq.why : '';
+                        this.terceiropq = thirdpq ? thirdpq.why : '';
+                        this.quartopq = fourthpq ? fourthpq.why : '';
+                        this.quintopq = fifthpq ? fifthpq.why : '';
+                        this.step_number = stepNumber ? stepNumber.step_number : '';
+
+                        setTimeout(() => {
+                            this.feedbackTitle = "";
+                            this.status = '';
+                            this.feedbackMessage = {};
+                        }, 10000);
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                    })
+            },
+            setRootCauseLoaded() {
+                const rootCause = this.rootCauses.data.find(item => item.is_root_cause === 1);
+                if (rootCause) {
+                    this.rootCause = rootCause.id;
+                    this.loadFiveWhys();
+                }
             },
             cleanAddRootCausaPotencial() {
                 this.description = '';
