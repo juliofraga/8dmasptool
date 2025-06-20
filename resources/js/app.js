@@ -142,3 +142,12 @@ const app = new Vue({
     el: '#app',
     store
 });
+
+Vue.filter('formatTestResult', function(valor) {
+    let profile = {
+        '0': 'Reprovado',
+        '1': 'Aprovado',
+        '2': 'Não Testado'
+    };
+    return profile[valor];
+});

@@ -273,6 +273,10 @@
             <h3>Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os resultados</h3>
         </div>
         <h5 class="mt-4">Causa raiz identificada: <b>{{ step_number_text }}</b></h5>
+        <div class="mt-2">
+            <alert-component type="danger" :details="feedbackMessageRootCauseStore" :title="feedbackTitleRootCauseStore" v-if="statusRootCauseStore == 'error'"></alert-component>
+            <alert-component type="success" :details="feedbackMessageRootCauseStore" :title="feedbackTitleRootCauseStore" v-if="statusRootCauseStore == 'success'"></alert-component>
+        </div>
         <div class="row">
             <div class="col-md-2 mt-2">
                 <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalAdicionarTeste">
@@ -282,6 +286,52 @@
                     </svg>
                     Adicionar Teste
                 </button>
+            </div>
+        </div>
+        <div class="test-results" v-for="test in rootCauseTestList.data" :key="test.id" :value="test.id">
+            <hr class="divisor_horizontal">
+            <div class="row">
+                <div class="col-md-12">
+                    <b>Teste Número:</b> {{ test.id }} | <b>Causa raiz testada:</b> {{ test.five_why.why }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mt-1">
+                    <b>Responsável pelo teste: </b> {{ test.user.name }}
+                </div>
+                <div class="col-md-6 mt-1">
+                    <b>Resultado do teste: </b>{{ test.approved | formatTestResult }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mt-3">
+                    <h5><b>Descrição do teste</b></h5>
+                    <p style="text-align: justify;">{{ test.description }}</p>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <div class="form-floating">
+                        <h5><b>Resultados do teste</b></h5>
+                        <p style="text-align: justify;"> {{ test.result }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mt-1">
+                    <i><b>Criado em:</b> {{ test.created_at | formatDateTimeStamp}}</i>
+                </div>
+                <div class="col-md-6 mt-1">
+                <i><b>Testado em:</b> {{ test.approved_at | formatDateTime }}</i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 mt-2">
+                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalAdicionarTeste">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                        </svg>
+                        Editar Teste
+                    </button>
+                </div>
             </div>
         </div>
         <div class="row mb-3 mt-4">
@@ -380,9 +430,13 @@
                 statusFiveWhy: '',
                 feedbackTitleFiveWhy: '',
                 feedbackMessageFiveWhy: '',
+                statusRootCauseStore: '',
+                feedbackTitleRootCauseStore: '',
+                feedbackMessageRootCauseStore: '',
                 urlBase: utils.API_URL + '/api/v1/incident/rootcausepotential',
                 urlUser: utils.API_URL + '/api/v1/user',
                 urlFiveWhy: utils.API_URL + '/api/v1/incident/fivewhy',
+                urlRootCauseTest: utils.API_URL + '/api/v1/incident/rootcausetest',
                 environment: [],
                 workforce: [],
                 method: [],
@@ -404,10 +458,50 @@
                 userResponsible: '',
                 users: {data: {}},
                 testApproved: '2',
-                testResult: ''
+                testResult: '',
+                why_id: '',
+                rootCauseTestList: {data: {}},
             }
         },
         methods: {
+            saveTest() {
+                if (utils.fieldsValidate(['testDescription', 'userResponsible'], this)) {
+                    let formData = new FormData();
+                    formData.append('description', this.testDescription);
+                    formData.append('result', this.testResult);
+                    formData.append('user_id', this.userResponsible);
+                    formData.append('approved', this.testApproved);
+                    formData.append('five_whys_id', this.why_id);
+                    formData.append('incident_id', this.visualid);
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                    let url = this.urlRootCauseTest + '/store';
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.statusRootCauseStore = 'success';
+                            this.feedbackTitleRootCauseStore = "Teste da causa raiz adicionado com sucesso!";
+                            utils.closeModal('modalAdicionarTeste');
+                            this.loadTestList();
+                        })
+                        .catch(errors => {
+                            this.statusRootCauseStore = 'error';
+                            this.feedbackTitleRootCauseStore = "Erro ao adicionar teste da causa raíz";
+                            this.feedbackMessageRootCauseStore = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                            utils.closeModal('modalAdicionarTeste');
+                        })
+                    setTimeout(() => {
+                        this.feedbackTitleRootCauseStore = "";
+                        this.statusRootCauseStore = '';
+                        this.feedbackMessageRootCauseStore = {};
+                    }, 10000);
+                }
+            },
             saveFiveWhys() {
                 if (utils.fieldsValidate(['rootCause', 'primeiropq', 'step_number'], this)) {
                     let whys = [];
@@ -439,6 +533,7 @@
                         .then(response => {
                             this.statusFiveWhy = 'success';
                             this.feedbackTitleFiveWhy = "Análise dos porquês salva com sucesso!";
+                            this.loadFiveWhys();
                         })
                         .catch(errors => {
                             this.statusFiveWhy = 'error';
@@ -552,6 +647,30 @@
                         }
                     })
             },
+            loadTestList() {
+                let url = this.urlRootCauseTest + '/' + this.visualid;
+                axios.get(url)
+                    .then(response => {
+                        this.rootCauseTestList = response.data;
+                        setTimeout(() => {
+                            this.feedbackTitleRootCauseStore = "";
+                            this.statusRootCauseStore = '';
+                            this.feedbackMessageRootCauseStore = {};
+                        }, 10000);
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitleRootCauseStore = "Erro no servidor";
+                            this.statusRootCauseStore = 'error';
+                            this.feedbackMessageRootCauseStore = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitleRootCauseStore = "Houve um erro";
+                            this.statusRootCauseStore = 'error';
+                            this.feedbackMessageRootCauseStore = errors;
+                        }
+                    })
+                
+            },
             splitCategories() {
                 this.environment = [];
                 this.workforce = [];
@@ -599,8 +718,12 @@
                         this.terceiropq = thirdpq ? thirdpq.why : '';
                         this.quartopq = fourthpq ? fourthpq.why : '';
                         this.quintopq = fifthpq ? fifthpq.why : '';
-                        this.step_number = stepNumber ? stepNumber.step_number : '';
-                        this.step_number_text = stepNumber.why
+                        if (stepNumber) {
+                            this.step_number = stepNumber.step_number;
+                            this.step_number_text = stepNumber.why
+                            this.why_id = stepNumber.id;
+                        }
+                        
 
                         setTimeout(() => {
                             this.feedbackTitle = "";
@@ -619,6 +742,7 @@
                             this.feedbackMessage = errors;
                         }
                     })
+                    this.loadTestList();
             },
             setRootCauseLoaded() {
                 const rootCause = this.rootCauses.data.find(item => item.is_root_cause === 1);

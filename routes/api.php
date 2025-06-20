@@ -63,6 +63,10 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
             Route::post('/store', 'FiveWhyController@store');
             Route::get('/{visual_id}/{root_cause_id}', 'FiveWhyController@show');
         });
+        Route::prefix('rootcausetest')->group(function () {
+            Route::post('/store', 'RootCauseTestController@store');
+            Route::get('/{visual_id}', 'RootCauseTestController@show');
+        });
     });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');
