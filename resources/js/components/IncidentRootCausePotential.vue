@@ -18,7 +18,7 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3>Possíveis Causas Raiz</h3>
+            <h3>PASSO 1 - Identifique as possíveis causas raiz</h3>
         </div>
         <div class="form-group row mt-2 mb-4">
             <div class="col-md-8 mt-2">
@@ -181,7 +181,7 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3>Após análise, indique a causa potencial mais provável</h3>
+            <h3>PASSO 2 - Após identificar as possíveis causas raiz, indique a causa potencial mais provável</h3>
         </div>
         <div class="row">
             <div class="col-md-12 mt-2">
@@ -200,7 +200,7 @@
             </div>
         </div>
         <div class="row mt-3">
-            <h3>E agora informe os 5 porquês</h3>
+            <h3>PASSO 3 - E agora informe os 5 porquês</h3>
         </div>
         <div class="row">
             <div class="col-md-4 mt-2">
@@ -270,7 +270,7 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3>Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os resultados</h3>
+            <h3>PASSO 4 - Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os testes realizados e os resultados</h3>
         </div>
         <h5 class="mt-4">Causa raiz identificada: <b>{{ step_number_text }}</b></h5>
         <div class="mt-2">
@@ -279,7 +279,7 @@
         </div>
         <div class="row">
             <div class="col-md-2 mt-2">
-                <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalAdicionarTeste">
+                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddTeste">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
@@ -289,7 +289,7 @@
             </div>
         </div>
         <div class="test-results" v-for="test in rootCauseTestList.data" :key="test.id" :value="test.id">
-            <hr class="divisor_horizontal">
+            <hr class="divisor_horizontal_small">
             <div class="row">
                 <div class="col-md-12">
                     <b>Teste Número:</b> {{ test.id }} | <b>Causa raiz testada:</b> {{ test.five_why.why }}
@@ -325,7 +325,7 @@
             </div>
             <div class="row">
                 <div class="col-md-2 mt-2">
-                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalAdicionarTeste">
+                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalUpdateTest" @click="setTest(test)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                             <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                         </svg>
@@ -353,7 +353,7 @@
             </div>
         </div>
         <!-- Modal para adicionar Testes -->
-        <modal-component id="modalAdicionarTeste" title="Adicionar Teste">
+        <modal-component id="modalAddTeste" title="Adicionar Teste">
             <template v-slot:conteudo>
                 <div class="form-group">
                     <div class="row mt-2">
@@ -415,6 +415,69 @@
                 <button type="button" class="btn btn-success texto_branco" @click="saveTest()">Salvar</button>
             </template>
         </modal-component>
+        <!-- Modal para editar Testes -->
+        <modal-component id="modalUpdateTest" title="Editar Teste">
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <h4>Causa raiz: {{ step_number_text }}</h4>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="testDescriptionUpdate" name="testDescriptionUpdate" rows="10" v-model="testDescriptionUpdate" style="height: auto;"></textarea>
+                                <label class="form-label">Descrição do teste</label>
+                                <div id="invalidFeedbackTestDescriptionUpdate" class="invalid-feedback">
+                                    Informe a descrição do teste.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="testResultUpdate" name="testResultUpdate" rows="10" v-model="testResultUpdate" style="height: auto;"></textarea>
+                                <label class="form-label">Resultado do teste</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="userResponsibleUpdate" name="userResponsibleUpdate" placeholder="Responsável pelo teste*" v-model="userResponsibleUpdate">
+                                    <option value="">Selecione...</option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
+                                    </option>
+                                </select>
+                                <label class="form-label">Responsável pelo teste*</label>
+                                <div id="invalidFeedbackResponsibleUpdate" class="invalid-feedback">
+                                    Informe o responsável pelo teste.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="testApprovedUpdate" name="testApprovedUpdate" placeholder="Teste Aprovado?" v-model="testApprovedUpdate">
+                                    <option value="2">Não testado</option>
+                                    <option value="0">Reprovado</option>
+                                    <option value="1">Aprovado</option>
+                                </select>
+                                <label class="form-label">Teste Aprovado?</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success texto_branco" @click="updateTest()">Salvar</button>
+            </template>
+        </modal-component>
     </div>
 </template>
 
@@ -461,9 +524,58 @@
                 testResult: '',
                 why_id: '',
                 rootCauseTestList: {data: {}},
+                testDescriptionUpdate: '',
+                testResultUpdate: '',
+                userResponsibleUpdate: '',
+                testApprovedUpdate: '',
+                testId: ''
             }
         },
         methods: {
+            setTest(obj) {
+                this.testDescriptionUpdate = obj.description;
+                this.testResultUpdate = obj.result;
+                this.userResponsibleUpdate = obj.user_id;
+                this.testApprovedUpdate = obj.approved;
+                this.testId = obj.id;
+            },
+            updateTest() {
+                if (utils.fieldsValidate(['testDescriptionUpdate', 'userResponsibleUpdate'], this)) {
+                    let formData = new FormData();
+                    formData.append('_method', 'patch');
+                    formData.append('description', this.testDescriptionUpdate);
+                    formData.append('result', this.testResultUpdate);
+                    formData.append('user_id', this.userResponsibleUpdate);
+                    formData.append('approved', this.testApprovedUpdate);
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                    let url = this.urlRootCauseTest + '/' + this.testId;
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.statusRootCauseStore = 'success';
+                            this.feedbackTitleRootCauseStore = "Teste da causa raiz atualizado com sucesso!";
+                            utils.closeModal('modalUpdateTest');
+                            this.loadTestList();
+                        })
+                        .catch(errors => {
+                            this.statusRootCauseStore = 'error';
+                            this.feedbackTitleRootCauseStore = "Erro ao atualizar teste da causa raíz";
+                            this.feedbackMessageRootCauseStore = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                            utils.closeModal('modalUpdateTest');
+                        })
+                    setTimeout(() => {
+                        this.feedbackTitleRootCauseStore = "";
+                        this.statusRootCauseStore = '';
+                        this.feedbackMessageRootCauseStore = {};
+                    }, 10000);
+                }
+            },
             saveTest() {
                 if (utils.fieldsValidate(['testDescription', 'userResponsible'], this)) {
                     let formData = new FormData();
@@ -483,7 +595,7 @@
                         .then(response => {
                             this.statusRootCauseStore = 'success';
                             this.feedbackTitleRootCauseStore = "Teste da causa raiz adicionado com sucesso!";
-                            utils.closeModal('modalAdicionarTeste');
+                            utils.closeModal('modalAddTeste');
                             this.loadTestList();
                         })
                         .catch(errors => {
@@ -493,7 +605,7 @@
                                 mensagem: errors.response.data.message,
                                 dados: errors.response.data.errors
                             };
-                            utils.closeModal('modalAdicionarTeste');
+                            utils.closeModal('modalAddTeste');
                         })
                     setTimeout(() => {
                         this.feedbackTitleRootCauseStore = "";

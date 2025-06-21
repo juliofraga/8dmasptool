@@ -43,4 +43,22 @@ class RootCauseTestController extends Controller
             return response()->json(['error' => 'Não há testes de causa raiz cadastrados para este incidente'], 404);
         }
     }
+
+    public function update(Request $request, int $id)
+    {
+        $test = $this->rootCauseTest->find($id);
+        if (!$test) {
+            return response()->json(['erro' => 'Registro não encontrado'], 404);
+        }
+        $request->merge([
+            'result' => $request->result == 'null' ? NULL : $request->result,
+            'approved_at' => $request->approved == 2 ? NULL : date('Y-m-d H:i:s'),
+        ]);
+        $update = $test->update($request->all());
+        if ($update) {
+            return response()->json($test, 200);
+        } else {
+            return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
+        }
+    }
 }

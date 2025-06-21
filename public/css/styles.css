@@ -33,6 +33,11 @@
     width: 100%;
 }
 
+.divisor_horizontal_small{
+    border: 1px solid;
+    width: 100%;
+}
+
 .background-color-8dmasptool-btn {
     background-color: black;
     border-color: white;
