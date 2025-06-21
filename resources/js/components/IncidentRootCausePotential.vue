@@ -288,7 +288,7 @@
                 </button>
             </div>
         </div>
-        <div class="test-results" v-for="test in rootCauseTestList.data" :key="test.id" :value="test.id">
+        <div id="test-results-section" v-for="test in rootCauseTestList.data" :key="test.id" :value="test.id">
             <hr class="divisor_horizontal_small">
             <div class="row">
                 <div class="col-md-12">
@@ -333,6 +333,18 @@
                     </button>
                 </div>
             </div>
+        </div>
+        <hr class="divisor_horizontal">
+        <div class="row mt-3">
+            <h3 v-if="identifiedRootCause.data.length === 0">PASSO 5</h3>
+            <h3 v-if="identifiedRootCause.data.length === 1">PASSO 5 - Esta é a causa raiz deste incidente</h3>
+            <h3 v-if="identifiedRootCause.data.length > 1">PASSO 5 - Estas são as causas raizes deste incidente</h3>
+        </div>
+        <div id="root-cause-section" v-for="rootCause in identifiedRootCause.data" :key="rootCause.id" :value="rootCause.id">
+            <li class="mt-3" style="text-align: justify;">{{ rootCause.description }}</li>
+        </div>
+        <div class="mt-3" v-if="identifiedRootCause.data.length === 0">
+            <alert-component type="warning" title="Causa raiz ainda não foi identificada"></alert-component>
         </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
@@ -528,10 +540,29 @@
                 testResultUpdate: '',
                 userResponsibleUpdate: '',
                 testApprovedUpdate: '',
-                testId: ''
+                testId: '',
+                identifiedRootCause: {data: {}}
             }
         },
         methods: {
+            setIdentifiedRootCause() {
+                let url = this.urlRootCauseTest + '/' + this.visualid + '/approved';
+                axios.get(url)
+                    .then(response => {
+                        this.identifiedRootCause = response.data;
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                    })
+            },
             setTest(obj) {
                 this.testDescriptionUpdate = obj.description;
                 this.testResultUpdate = obj.result;
@@ -559,6 +590,7 @@
                             this.feedbackTitleRootCauseStore = "Teste da causa raiz atualizado com sucesso!";
                             utils.closeModal('modalUpdateTest');
                             this.loadTestList();
+                            this.setIdentifiedRootCause();
                         })
                         .catch(errors => {
                             this.statusRootCauseStore = 'error';
@@ -597,6 +629,7 @@
                             this.feedbackTitleRootCauseStore = "Teste da causa raiz adicionado com sucesso!";
                             utils.closeModal('modalAddTeste');
                             this.loadTestList();
+                            this.setIdentifiedRootCause();
                         })
                         .catch(errors => {
                             this.statusRootCauseStore = 'error';
@@ -900,6 +933,7 @@
         mounted() {
             this.loadRootCausePotentialList();
             this.loadActiveUsers();
+            this.setIdentifiedRootCause();
         }
     }
 </script>

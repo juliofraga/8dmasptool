@@ -67,6 +67,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
             Route::post('/store', 'RootCauseTestController@store');
             Route::get('/{visual_id}', 'RootCauseTestController@show');
             Route::patch('/{id}', 'RootCauseTestController@update');
+            Route::get('/{visual_id}/{approved}', 'RootCauseTestController@getbystatus');
         });
     });
     Route::post('logout', 'AuthController@logout');

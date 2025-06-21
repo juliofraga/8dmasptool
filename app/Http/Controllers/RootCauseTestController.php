@@ -61,4 +61,20 @@ class RootCauseTestController extends Controller
             return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
         }
     }
+
+    public function getbystatus(string $visual_id, string $status)
+    {
+        if ($status === 'approved') {
+            $status = 1;
+        } elseif ($status === 'reproved') {
+            $status = 0;
+        } elseif ($status === 'not-tested') {
+            $status = 3;
+        } else {
+            return response()->json(['erro' => 'Status inválido'], 404);
+        }
+        $incident_id = IncidentController::getIncidentId($visual_id);
+        $data = $this->rootCauseTest::where('incident_id', $incident_id)->where('approved', $status)->get();
+        return response()->json(['data' => $data, 200]);
+    }
 }
