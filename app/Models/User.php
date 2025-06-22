@@ -52,7 +52,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function incidents()
     {
-        return $this->belongsToMany(Area::class, 'users_has_incidents', 'user_id', 'incident_id')
+        return $this->belongsToMany(Area::class, 'users_has_incidents', 'user_id', 'incidents_id')
                     ->withPivot('leader');
     }
 }

@@ -32,7 +32,7 @@ class incident extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'users_has_incidents', 'incident_id', 'user_id')
+        return $this->belongsToMany(User::class, 'users_has_incidents', 'incidents_id', 'user_id')
                     ->withPivot('leader');
     }
 }

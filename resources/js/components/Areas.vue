@@ -32,8 +32,7 @@
                 :title="{
                     id: {title: 'ID', length:'hidden', type:'text'},
                     name: {title: 'Nome', length: '2', type:'text'},
-                    description: {title: 'Descrição', length: '6', type:'text'},
-                    status: {title: 'Status', length: '2', type:'ativoInativo'},
+                    description: {title: 'Descrição', length: '8', type:'text'},
                     editar: {title: 'Editar', length: '2', type: 'buttonModal', modalId: '#modalAtualizarArea'},
                     created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetime'},
                     users: {title: 'Users', length: 'hidden', type:'text'}

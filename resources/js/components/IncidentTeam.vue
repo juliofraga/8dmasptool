@@ -40,6 +40,7 @@
                                 {{ user.name }}
                             </option>
                         </select>
+                        <label class="form-label">Informe os membros do time</label>
                     </div>
                 </div>
             </div>

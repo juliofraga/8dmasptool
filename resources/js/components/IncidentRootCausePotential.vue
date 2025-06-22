@@ -368,7 +368,7 @@
             <alert-component type="success" :title="rootCause.description"></alert-component>
         </div>
         <div class="mt-3" v-if="identifiedRootCause.data.length === 0">
-            <alert-component type="warning" title="Causa raiz ainda não foi identificada"></alert-component>
+            <alert-component type="warning" title="Causa raiz ainda não foi identificada ainda"></alert-component>
         </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
@@ -740,6 +740,7 @@
                             this.statusRootCauseStore = 'success';
                             this.feedbackTitleRootCauseStore = "Teste da causa raiz adicionado com sucesso!";
                             utils.closeModal('modalAddTest');
+                            this.cleanFormAddTest();
                             this.loadTestList();
                             this.setIdentifiedRootCause();
                         })
@@ -758,6 +759,12 @@
                         this.feedbackMessageRootCauseStore = {};
                     }, 10000);
                 }
+            },
+            cleanFormAddTest() {
+                this.testDescription = '';
+                this.testResult = '';
+                this.userResponsible = '';
+                this.testApproved = '2';
             },
             saveFiveWhys() {
                 if (utils.fieldsValidate(['rootCause', 'primeiropq', 'step_number'], this)) {

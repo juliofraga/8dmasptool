@@ -16,6 +16,7 @@ class LogController extends Controller
 
     public static function store($data, int $user, string $action)
     {
+        return null;
         $description = '';
         if (is_array($data)) {
             $class = $description = $action;
