@@ -27,4 +27,32 @@ class EscapePointController extends Controller
         ]);
         return $this->escapePointRepository->store($request);
     }
+
+    public function show(string $visual_id)
+    {
+        $incident_id = IncidentController::getIncidentId($visual_id);
+        if (!$incident_id) {
+            return response()->json(['error' => 'Incidente não encontrado'], 404);
+        }
+        $data = $this->escapePoint::where('incident_id', $incident_id)->get();
+        if ($data) {
+            return response()->json(['data' => $data, 200]);
+        } else {
+            return response()->json(['error' => 'Não há pontos de escapes cadastrados para este incidente'], 404);
+        }
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $escapePoint = $this->escapePoint->find($id);
+        if (!$escapePoint) {
+            return response()->json(['erro' => 'Registro não encontrado'], 404);
+        }
+        $update = $escapePoint->update($request->all());
+        if ($update) {
+            return response()->json($escapePoint, 200);
+        } else {
+            return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
+        }
+    }
 }

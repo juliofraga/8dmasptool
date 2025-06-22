@@ -72,6 +72,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
         Route::prefix('escapepoint')->group(function () {
             Route::post('/store', 'EscapePointController@store');
             Route::get('/{visual_id}', 'EscapePointController@show');
+            Route::patch('/{id}', 'EscapePointController@update');
         });
     });
     Route::post('logout', 'AuthController@logout');

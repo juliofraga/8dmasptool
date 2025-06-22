@@ -353,9 +353,47 @@
                 </button>
             </div>
         </div>
-        <div class="row mt-2">
+        <div class="row mt-2" v-if="escapePointList.data.length === 0">
             <div class="col-md-12 mt-2">
                 <alert-component type="warning" title="Não foi informado nenhum ponto de escape ainda"></alert-component>
+            </div>
+        </div>
+        <div id="test-escape-point" v-for="escapePoint in escapePointList.data" :key="escapePoint.id" :value="escapePoint.id">
+            <hr class="divisor_horizontal_small">
+            <div class="row">
+                <div class="col-md-12">
+                    <b>Etapa onde o defeito deveria ter sido encontrado:</b> {{ escapePoint.detection_stage }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mt-3">
+                    <h5><b>Por que não foi detectado</b></h5>
+                    <p style="text-align: justify;">{{ escapePoint.why_not }}</p>
+                </div>
+                <div class="col-md-6 mt-3">
+                    <div class="form-floating">
+                        <h5><b>Planos de Melhoria</b></h5>
+                        <p style="text-align: justify;"> {{ escapePoint.improvement_plan }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mt-1">
+                    <i><b>Criado em:</b> {{ escapePoint.created_at | formatDateTimeStamp}}</i>
+                </div>
+                <div class="col-md-6 mt-1">
+                <i><b>Última atualização:</b> {{ escapePoint.updated | formatDateTime }}</i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mt-2">
+                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalUpdateEscapePoint" @click="setEscapePoint(escapePoint)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                        </svg>
+                        Editar Ponto de Escape
+                    </button>
+                </div>
             </div>
         </div>
         <hr class="divisor_horizontal">
@@ -514,7 +552,7 @@
                 <button type="button" class="btn btn-success texto_branco" @click="updateTest()">Salvar</button>
             </template>
         </modal-component>
-        <!-- Modal para adicionar Testes -->
+        <!-- Modal para adicionar Pontos de Escapes -->
         <modal-component id="modalAddEscapePoint" title="Adicionar Ponto de Escape">
             <template v-slot:conteudo>
                 <div class="form-group">
@@ -556,6 +594,50 @@
             <template v-slot:rodape>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-success texto_branco" @click="saveEscapePoint()">Salvar</button>
+            </template>
+        </modal-component>
+        <!-- Modal para atualizar Pontos de Escapes -->
+        <modal-component id="modalUpdateEscapePoint" title="Editar Ponto de Escape">
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="detectionStageUpdate" name="detectionStageUpdate" v-model="detectionStageUpdate">
+                                <label class="form-label">Etapa onde o defeito deveria ter sido detectado*</label>
+                                <div id="invalidFeedbackDetectionStageUpdate" class="invalid-feedback">
+                                    Informe a etapa onde o defeito deveria ter sido detectado
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="whyNotUpdate" name="whyNotUpdate" rows="10" v-model="whyNotUpdate" style="height: auto;"></textarea>
+                                <label class="form-label">Por que não foi detectado?*</label>
+                                <div id="invalidFeedbackWhyNotUpdate" class="invalid-feedback">
+                                    Informe por que não foi detectado?.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="improvementPlanUpdate" name="improvementPlanUpdate" rows="10" v-model="improvementPlanUpdate" style="height: auto;"></textarea>
+                                <label class="form-label">Resuma o Plano de Melhoria*</label>
+                                <div id="invalidFeedbackImprovementPlanUpdate" class="invalid-feedback">
+                                    Resuma o Plano de Melhoria
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success texto_branco" @click="updateEscapePoint()">Salvar</button>
             </template>
         </modal-component>
     </div>
@@ -616,7 +698,12 @@
                 statusEscapePoint: '',
                 improvementPlan: '',
                 whyNot: '',
-                detectionStage: ''
+                detectionStage: '',
+                escapePointList: {data: {}},
+                improvementPlanUpdate: '',
+                whyNotUpdate: '',
+                detectionStageUpdate: '',
+                escapePointId: '',
             }
         },
         methods: {
@@ -644,6 +731,12 @@
                 this.userResponsibleUpdate = obj.user_id;
                 this.testApprovedUpdate = obj.approved;
                 this.testId = obj.id;
+            },
+            setEscapePoint(obj) {
+                this.improvementPlanUpdate = obj.improvement_plan;
+                this.whyNotUpdate = obj.why_not;
+                this.detectionStageUpdate = obj.detection_stage;
+                this.escapePointId = obj.id;
             },
             updateTest() {
                 if (utils.fieldsValidate(['testDescriptionUpdate', 'userResponsibleUpdate'], this)) {
@@ -683,6 +776,42 @@
                     }, 10000);
                 }
             },
+            updateEscapePoint() {
+                if (utils.fieldsValidate(['improvementPlanUpdate', 'whyNotUpdate', 'detectionStageUpdate'], this)) {
+                    let formData = new FormData();
+                    formData.append('_method', 'patch');
+                    formData.append('why_not', this.whyNotUpdate);
+                    formData.append('improvement_plan', this.improvementPlanUpdate);
+                    formData.append('detection_stage', this.detectionStageUpdate);
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                    let url = this.urlEscapePoint + '/' + this.escapePointId;
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.statusEscapePoint = 'success';
+                            this.feedbackTitleEscapePoint = "Ponto de escape atualizado com sucesso!";
+                            utils.closeModal('modalUpdateEscapePoint');
+                            this.loadEscapePointList();
+                        })
+                        .catch(errors => {
+                            this.statusEscapePoint = 'error';
+                            this.feedbackTitleEscapePoint = "Erro ao atualizar ponto de escape";
+                            this.feedbackTitleEscapePoint = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                            utils.closeModal('modalUpdateEscapePoint');
+                        })
+                    setTimeout(() => {
+                        this.feedbackTitleEscapePoint = "";
+                        this.statusEscapePoint = '';
+                        this.feedbackMessageEscapePoint = {};
+                    }, 10000);
+                }
+            },
             saveEscapePoint() {
                 if (utils.fieldsValidate(['improvementPlan', 'whyNot', 'detectionStage'], this)) {
                     let formData = new FormData();
@@ -703,10 +832,11 @@
                             utils.closeModal('modalAddEscapePoint');
                             this.loadTestList();
                             this.setIdentifiedRootCause();
+                            this.loadEscapePointList();
                         })
                         .catch(errors => {
                             this.statusEscapePoint = 'error';
-                            this.feedbackTitleRootCauseStore = "Erro ao adicionar ponto de escape";
+                            this.feedbackTitleEscapePoint = "Erro ao adicionar ponto de escape";
                             this.feedbackTitleEscapePoint = {
                                 mensagem: errors.response.data.message,
                                 dados: errors.response.data.errors
@@ -911,6 +1041,30 @@
                         }
                     })
             },
+            loadEscapePointList() {
+                let url = this.urlEscapePoint + '/' + this.visualid;
+                axios.get(url)
+                    .then(response => {
+                        this.escapePointList = response.data;
+                        setTimeout(() => {
+                            this.feedbackTitleEscapePoint = "";
+                            this.statusEscapePoint = '';
+                            this.feedbackMessageEscapePointe = {};
+                        }, 10000);
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitleEscapePoint = "Erro no servidor";
+                            this.statusEscapePoint = 'error';
+                            this.feedbackMessageEscapePointe = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitleEscapePoint = "Houve um erro";
+                            this.statusEscapePoint = 'error';
+                            this.feedbackMessageEscapePointe = errors;
+                        }
+                    })
+                
+            },
             loadTestList() {
                 let url = this.urlRootCauseTest + '/' + this.visualid;
                 axios.get(url)
@@ -1053,6 +1207,7 @@
             this.loadRootCausePotentialList();
             this.loadActiveUsers();
             this.setIdentifiedRootCause();
+            this.loadEscapePointList();
         }
     }
 </script>
