@@ -69,6 +69,10 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
             Route::patch('/{id}', 'RootCauseTestController@update');
             Route::get('/{visual_id}/{approved}', 'RootCauseTestController@getbystatus');
         });
+        Route::prefix('escapepoint')->group(function () {
+            Route::post('/store', 'EscapePointController@store');
+            Route::get('/{visual_id}', 'EscapePointController@show');
+        });
     });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');

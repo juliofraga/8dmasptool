@@ -18,7 +18,7 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3>PASSO 1 - Identifique as possíveis causas raiz</h3>
+            <h3>PASSO 1: POTENCIAIS CAUSAS RAIZ - Identifique as possíveis causas raiz</h3>
         </div>
         <div class="form-group row mt-2 mb-4">
             <div class="col-md-8 mt-2">
@@ -181,7 +181,7 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3>PASSO 2 - Após identificar as possíveis causas raiz, indique a causa potencial mais provável</h3>
+            <h3>PASSO 2: CAUSA MAIS PROVÁVEL - Após identificar as possíveis causas raiz, indique a causa potencial mais provável</h3>
         </div>
         <div class="row">
             <div class="col-md-12 mt-2">
@@ -200,7 +200,7 @@
             </div>
         </div>
         <div class="row mt-3">
-            <h3>PASSO 3 - E agora informe os 5 porquês</h3>
+            <h3>PASSO 3: 5 PORQUÊS - E agora informe os 5 porquês</h3>
         </div>
         <div class="row">
             <div class="col-md-4 mt-2">
@@ -270,7 +270,7 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3>PASSO 4 - Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os testes realizados e os resultados</h3>
+            <h3>PASSO 4: TESTAR CAUSA IDENTIFICADA - Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os testes realizados e os resultados</h3>
         </div>
         <h5 class="mt-4">Causa raiz identificada: <b>{{ step_number_text }}</b></h5>
         <div class="mt-2">
@@ -279,7 +279,7 @@
         </div>
         <div class="row">
             <div class="col-md-2 mt-2">
-                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddTeste">
+                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddTest">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
@@ -336,12 +336,36 @@
         </div>
         <hr class="divisor_horizontal">
         <div class="row mt-3">
-            <h3 v-if="identifiedRootCause.data.length === 0">PASSO 5</h3>
-            <h3 v-if="identifiedRootCause.data.length === 1">PASSO 5 - Esta é a causa raiz deste incidente</h3>
-            <h3 v-if="identifiedRootCause.data.length > 1">PASSO 5 - Estas são as causas raizes deste incidente</h3>
+            <h3>PASSO 5: PONTO DE ESCAPE - Neste passo você deve identificar por que o problema não foi detectado antes de causar impacto e informar o plano de melhoria</h3>
+        </div>
+        <div class="mt-2">
+            <alert-component type="danger" :details="feedbackMessageEscapePoint" :title="feedbackTitleEscapePoint" v-if="statusEscapePoint == 'error'"></alert-component>
+            <alert-component type="success" :details="feedbackMessageEscapePoint" :title="feedbackTitleEscapePoint" v-if="statusEscapePoint == 'success'"></alert-component>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mt-2">
+                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddEscapePoint">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                    Adicionar Ponto de Escape
+                </button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12 mt-2">
+                <alert-component type="warning" title="Não foi informado nenhum ponto de escape ainda"></alert-component>
+            </div>
+        </div>
+        <hr class="divisor_horizontal">
+        <div class="row mt-3">
+            <h3 v-if="identifiedRootCause.data.length === 0">CONCLUSÃO</h3>
+            <h3 v-if="identifiedRootCause.data.length === 1">CONCLUSÃO - Esta é a causa raiz deste incidente</h3>
+            <h3 v-if="identifiedRootCause.data.length > 1">CONCLUSÃO - Estas são as causas raizes deste incidente</h3>
         </div>
         <div id="root-cause-section" v-for="rootCause in identifiedRootCause.data" :key="rootCause.id" :value="rootCause.id">
-            <li class="mt-3" style="text-align: justify;">{{ rootCause.description }}</li>
+            <alert-component type="success" :title="rootCause.description"></alert-component>
         </div>
         <div class="mt-3" v-if="identifiedRootCause.data.length === 0">
             <alert-component type="warning" title="Causa raiz ainda não foi identificada"></alert-component>
@@ -365,7 +389,7 @@
             </div>
         </div>
         <!-- Modal para adicionar Testes -->
-        <modal-component id="modalAddTeste" title="Adicionar Teste">
+        <modal-component id="modalAddTest" title="Adicionar Teste">
             <template v-slot:conteudo>
                 <div class="form-group">
                     <div class="row mt-2">
@@ -490,6 +514,50 @@
                 <button type="button" class="btn btn-success texto_branco" @click="updateTest()">Salvar</button>
             </template>
         </modal-component>
+        <!-- Modal para adicionar Testes -->
+        <modal-component id="modalAddEscapePoint" title="Adicionar Ponto de Escape">
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="detectionStage" name="detectionStage" v-model="detectionStage">
+                                <label class="form-label">Etapa onde o defeito deveria ter sido detectado*</label>
+                                <div id="invalidFeedbackDetectionStage" class="invalid-feedback">
+                                    Informe a etapa onde o defeito deveria ter sido detectado
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="whyNot" name="whyNot" rows="10" v-model="whyNot" style="height: auto;"></textarea>
+                                <label class="form-label">Por que não foi detectado?*</label>
+                                <div id="invalidFeedbackWhyNot" class="invalid-feedback">
+                                    Informe por que não foi detectado?.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="improvementPlan" name="improvementPlan" rows="10" v-model="improvementPlan" style="height: auto;"></textarea>
+                                <label class="form-label">Resuma o Plano de Melhoria*</label>
+                                <div id="invalidFeedbackImprovementPlan" class="invalid-feedback">
+                                    Resuma o Plano de Melhoria
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success texto_branco" @click="saveEscapePoint()">Salvar</button>
+            </template>
+        </modal-component>
     </div>
 </template>
 
@@ -512,6 +580,7 @@
                 urlUser: utils.API_URL + '/api/v1/user',
                 urlFiveWhy: utils.API_URL + '/api/v1/incident/fivewhy',
                 urlRootCauseTest: utils.API_URL + '/api/v1/incident/rootcausetest',
+                urlEscapePoint: utils.API_URL + '/api/v1/incident/escapepoint',
                 environment: [],
                 workforce: [],
                 method: [],
@@ -541,7 +610,13 @@
                 userResponsibleUpdate: '',
                 testApprovedUpdate: '',
                 testId: '',
-                identifiedRootCause: {data: {}}
+                identifiedRootCause: {data: {}},
+                feedbackMessageEscapePoint: '',
+                feedbackTitleEscapePoint: '',
+                statusEscapePoint: '',
+                improvementPlan: '',
+                whyNot: '',
+                detectionStage: ''
             }
         },
         methods: {
@@ -608,6 +683,43 @@
                     }, 10000);
                 }
             },
+            saveEscapePoint() {
+                if (utils.fieldsValidate(['improvementPlan', 'whyNot', 'detectionStage'], this)) {
+                    let formData = new FormData();
+                    formData.append('why_not', this.whyNot);
+                    formData.append('improvement_plan', this.improvementPlan);
+                    formData.append('detection_stage', this.detectionStage);
+                    formData.append('incident_id', this.visualid);
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                    let url = this.urlEscapePoint + '/store';
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.statusEscapePoint = 'success';
+                            this.feedbackTitleEscapePoint = "Ponto de escape adicionado com sucesso!";
+                            utils.closeModal('modalAddEscapePoint');
+                            this.loadTestList();
+                            this.setIdentifiedRootCause();
+                        })
+                        .catch(errors => {
+                            this.statusEscapePoint = 'error';
+                            this.feedbackTitleRootCauseStore = "Erro ao adicionar ponto de escape";
+                            this.feedbackTitleEscapePoint = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                            utils.closeModal('modalAddEscapePoint');
+                        })
+                    setTimeout(() => {
+                        this.feedbackTitleEscapePoint = "";
+                        this.statusEscapePoint = '';
+                        this.feedbackMessageEscapePoint = {};
+                    }, 10000);
+                }
+            },
             saveTest() {
                 if (utils.fieldsValidate(['testDescription', 'userResponsible'], this)) {
                     let formData = new FormData();
@@ -627,7 +739,7 @@
                         .then(response => {
                             this.statusRootCauseStore = 'success';
                             this.feedbackTitleRootCauseStore = "Teste da causa raiz adicionado com sucesso!";
-                            utils.closeModal('modalAddTeste');
+                            utils.closeModal('modalAddTest');
                             this.loadTestList();
                             this.setIdentifiedRootCause();
                         })
@@ -638,7 +750,7 @@
                                 mensagem: errors.response.data.message,
                                 dados: errors.response.data.errors
                             };
-                            utils.closeModal('modalAddTeste');
+                            utils.closeModal('modalAddTest');
                         })
                     setTimeout(() => {
                         this.feedbackTitleRootCauseStore = "";
