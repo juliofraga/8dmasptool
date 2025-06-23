@@ -16,397 +16,444 @@
             <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
             <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
         </div>
-        <hr class="divisor_horizontal">
-        <div class="row mt-3">
-            <h3>PASSO 1: POTENCIAIS CAUSAS RAIZ - Identifique as possíveis causas raiz</h3>
-        </div>
-        <div class="form-group row mt-2 mb-4">
-            <div class="col-md-8 mt-2">
-                <div class="form-floating">
-                    <input type="text" id="description" class="form-control" name="description" v-model="description" placeholder="Insira uma possível causa do problema*">
-                    <label class="form-label">Insira uma possível causa do problema*</label>
-                    <div id="invalidFeedbackDescription" class="invalid-feedback">
-                        Informe uma possível causa do problema.
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 mt-2">
-                <div class="form-floating">
-                    <select class="form-control" id="category" name="category" placeholder="Categoria*" v-model="category">
-                        <option value="">Selecione...</option>
-                        <option value="environment">Meio ambiente</option>
-                        <option value="workforce">Mão-de-obra</option>
-                        <option value="method">Método</option>
-                        <option value="machine">Máquina</option>
-                        <option value="measurement">Meio de medição</option>
-                        <option value="material">Matéria-prima</option>
-                    </select>
-                    <label class="form-label">Categoria*</label>
-                    <div id="invalidFeedbackCategoria" class="invalid-feedback">
-                        Informe a categoria.
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 mt-2">
-                <div class="form-floating">
-                    <button class="w-100 btn btn-secondary btn-lg" @click="addRootCausePotential()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                        </svg>
-                        Adicionar
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="mt-4 mb-2">
-            <div class="row">
-                <div class="col col-4">
-                    <b>Meio ambiente</b>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div
-                            v-for="item in environment"
-                            :key="item.id"
-                            class="position-relative"
-                        >
-                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
-                                {{ item.description }}
-                            </span>
-                            <button
-                                class="btn-close-custom"
-                                @click="deleteRootCausePotential(item.id)"
-                                >✕
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col col-4">
-                    <b>Mão-de-obra</b>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div
-                            v-for="item in workforce"
-                            :key="item.id"
-                            class="position-relative"
-                        >
-                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
-                                {{ item.description }}
-                            </span>
-                            <button
-                                class="btn-close-custom"
-                                @click="deleteRootCausePotential(item.id)"
-                                >✕
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col col-4">
-                    <b>Método</b>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div
-                            v-for="item in method"
-                            :key="item.id"
-                            class="position-relative"
-                        >
-                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
-                                {{ item.description }}
-                            </span>
-                            <button
-                                class="btn-close-custom"
-                                @click="deleteRootCausePotential(item.id)"
-                                >✕
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col col-4">
-                    <b>Máquina</b>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div
-                            v-for="item in machine"
-                            :key="item.id"
-                            class="position-relative"
-                        >
-                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
-                                {{ item.description }}
-                            </span>
-                            <button
-                                class="btn-close-custom"
-                                @click="deleteRootCausePotential(item.id)"
-                                >✕
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col col-4">
-                    <b>Meio de medição</b>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div
-                            v-for="item in measurement"
-                            :key="item.id"
-                            class="position-relative"
-                        >
-                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
-                                {{ item.description }}
-                            </span>
-                            <button
-                                class="btn-close-custom"
-                                @click="deleteRootCausePotential(item.id)"
-                                >✕
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col col-4">
-                    <b>Matéria-prima</b>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div
-                            v-for="item in material"
-                            :key="item.id"
-                            class="position-relative"
-                        >
-                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
-                                {{ item.description }}
-                            </span>
-                            <button
-                                class="btn-close-custom"
-                                @click="deleteRootCausePotential(item.id)"
-                                >✕
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <hr class="divisor_horizontal">
-        <div class="row mt-3">
-            <h3>PASSO 2: CAUSA MAIS PROVÁVEL - Após identificar as possíveis causas raiz, indique a causa potencial mais provável</h3>
-        </div>
-        <div class="row">
-            <div class="col-md-12 mt-2">
-                <div class="form-floating">
-                    <select class="form-control" id="rootCause" name="rootCause" placeholder="Causa Raiz*" v-model="rootCause" @change="setRootCause()">
-                        <option value="">Selecione...</option>
-                        <option v-for="cause in rootCauses.data" :key="cause.id" :value="cause.id">
-                            {{ cause.description }}
-                        </option>
-                    </select>
-                    <label class="form-label">Causa Raiz*</label>
-                    <div id="invalidFeedbackRootCause" class="invalid-feedback">
-                        Informe a causa raiz mais provável
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <h3>PASSO 3: 5 PORQUÊS - E agora informe os 5 porquês</h3>
-        </div>
-        <div class="row">
-            <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                    <input type="text" id="primeiropq" name="primeiropq" class="form-control" v-model="primeiropq" placeholder="1º Porquê">
-                    <label class="form-label">1º Porquê</label>
-                    <div id="invalidFeedbackPrimeiroPorque" class="invalid-feedback">
-                        Informe pelo menos um porquê
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                    <input type="text" id="segundopq" name="segundopq" class="form-control" v-model="segundopq" placeholder="2º Porquê">
-                    <label class="form-label">2º Porquê</label>
-                </div>
-            </div>
-            <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                    <input type="text" id="terceiropq" name="terceiropq" class="form-control" v-model="terceiropq" placeholder="3º Porquê">
-                    <label class="form-label">3º Porquê</label>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                    <input type="text" id="quartopq" name="quartopq" class="form-control" v-model="quartopq" placeholder="4º Porquê">
-                    <label class="form-label">4º Porquê</label>
-                </div>
-            </div>
-            <div class="col-md-4 mt-2">
-                <div class="form-floating">
-                    <input type="text" id="quintopq" name="quintopq" class="form-control" v-model="quintopq" placeholder="5º Porquê">
-                    <label class="form-label">5º Porquê</label>
-                </div>
-            </div>
-            <div class="col-md-2 mt-2">
-                <div class="form-floating">
-                    <select class="form-control" id="step_number" name="step_number" placeholder="Selecione a causa raíz*" v-model="step_number">
-                        <option value="">Selecione...</option>
-                        <option value="1">1º Porquê</option>
-                        <option value="2">2º Porquê</option>
-                        <option value="3">3º Porquê</option>
-                        <option value="4">4º Porquê</option>
-                        <option value="5">5º Porquê</option>
-                    </select>
-                    <label class="form-label">Selecione a causa raíz*</label>
-                    <div id="invalidFeedbackStepNumber" class="invalid-feedback">
-                        Selecione a causa raíz
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2 mt-2">
-                <button type="button" class="btn btn-info texto_branco w-100" @click="saveFiveWhys()" id="btnSave">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
-                        <path d="M11 2H9v3h2z"/>
-                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-                    </svg>
-                    Salvar
+        <div class="accordion" id="accordionPanel">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingPasso1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsePasso1" aria-expanded="true" aria-controls="panelsStayOpen-collapsePasso1">
+                    PASSO 1: POTENCIAIS CAUSAS RAIZ - Identifique as possíveis causas raiz
                 </button>
-            </div>
-        </div>
-        <div class="mt-2">
-            <alert-component type="danger" :details="feedbackMessageFiveWhy" :title="feedbackTitleFiveWhy" v-if="statusFiveWhy == 'error'"></alert-component>
-            <alert-component type="success" :details="feedbackMessageFiveWhy" :title="feedbackTitleFiveWhy" v-if="statusFiveWhy == 'success'"></alert-component>
-        </div>
-        <hr class="divisor_horizontal">
-        <div class="row mt-3">
-            <h3>PASSO 4: TESTAR CAUSA IDENTIFICADA - Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os testes realizados e os resultados</h3>
-        </div>
-        <h5 class="mt-4">Causa raiz identificada: <b>{{ step_number_text }}</b></h5>
-        <div class="mt-2">
-            <alert-component type="danger" :details="feedbackMessageRootCauseStore" :title="feedbackTitleRootCauseStore" v-if="statusRootCauseStore == 'error'"></alert-component>
-            <alert-component type="success" :details="feedbackMessageRootCauseStore" :title="feedbackTitleRootCauseStore" v-if="statusRootCauseStore == 'success'"></alert-component>
-        </div>
-        <div class="row">
-            <div class="col-md-2 mt-2">
-                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddTest">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                    </svg>
-                    Adicionar Teste
-                </button>
-            </div>
-        </div>
-        <div id="test-results-section" v-for="test in rootCauseTestList.data" :key="test.id" :value="test.id">
-            <hr class="divisor_horizontal_small">
-            <div class="row">
-                <div class="col-md-12">
-                    <b>Teste Número:</b> {{ test.id }} | <b>Causa raiz testada:</b> {{ test.five_why.why }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mt-1">
-                    <b>Responsável pelo teste: </b> {{ test.user.name }}
-                </div>
-                <div class="col-md-6 mt-1">
-                    <b>Resultado do teste: </b>{{ test.approved | formatTestResult }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mt-3">
-                    <h5><b>Descrição do teste</b></h5>
-                    <p style="text-align: justify;">{{ test.description }}</p>
-                </div>
-                <div class="col-md-6 mt-3">
-                    <div class="form-floating">
-                        <h5><b>Resultados do teste</b></h5>
-                        <p style="text-align: justify;"> {{ test.result }}</p>
+                </h2>
+                <div id="panelsStayOpen-collapsePasso1" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <div class="form-group row mt-2 mb-4">
+                            <div class="col-md-8 mt-2">
+                                <div class="form-floating">
+                                    <input type="text" id="description" class="form-control" name="description" v-model="description" placeholder="Insira uma possível causa do problema*">
+                                    <label class="form-label">Insira uma possível causa do problema*</label>
+                                    <div id="invalidFeedbackDescription" class="invalid-feedback">
+                                        Informe uma possível causa do problema.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-2">
+                                <div class="form-floating">
+                                    <select class="form-control" id="category" name="category" placeholder="Categoria*" v-model="category">
+                                        <option value="">Selecione...</option>
+                                        <option value="environment">Meio ambiente</option>
+                                        <option value="workforce">Mão-de-obra</option>
+                                        <option value="method">Método</option>
+                                        <option value="machine">Máquina</option>
+                                        <option value="measurement">Meio de medição</option>
+                                        <option value="material">Matéria-prima</option>
+                                    </select>
+                                    <label class="form-label">Categoria*</label>
+                                    <div id="invalidFeedbackCategoria" class="invalid-feedback">
+                                        Informe a categoria.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-2">
+                                <div class="form-floating">
+                                    <button class="w-100 btn btn-secondary btn-lg" @click="addRootCausePotential()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                        </svg>
+                                        Adicionar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 mb-2">
+                            <div class="row">
+                                <div class="col col-4">
+                                    <b>Meio ambiente</b>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div
+                                            v-for="item in environment"
+                                            :key="item.id"
+                                            class="position-relative"
+                                        >
+                                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
+                                                {{ item.description }}
+                                            </span>
+                                            <button
+                                                class="btn-close-custom"
+                                                @click="deleteRootCausePotential(item.id)"
+                                                >✕
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-4">
+                                    <b>Mão-de-obra</b>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div
+                                            v-for="item in workforce"
+                                            :key="item.id"
+                                            class="position-relative"
+                                        >
+                                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
+                                                {{ item.description }}
+                                            </span>
+                                            <button
+                                                class="btn-close-custom"
+                                                @click="deleteRootCausePotential(item.id)"
+                                                >✕
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-4">
+                                    <b>Método</b>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div
+                                            v-for="item in method"
+                                            :key="item.id"
+                                            class="position-relative"
+                                        >
+                                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
+                                                {{ item.description }}
+                                            </span>
+                                            <button
+                                                class="btn-close-custom"
+                                                @click="deleteRootCausePotential(item.id)"
+                                                >✕
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col col-4">
+                                    <b>Máquina</b>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div
+                                            v-for="item in machine"
+                                            :key="item.id"
+                                            class="position-relative"
+                                        >
+                                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
+                                                {{ item.description }}
+                                            </span>
+                                            <button
+                                                class="btn-close-custom"
+                                                @click="deleteRootCausePotential(item.id)"
+                                                >✕
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-4">
+                                    <b>Meio de medição</b>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div
+                                            v-for="item in measurement"
+                                            :key="item.id"
+                                            class="position-relative"
+                                        >
+                                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
+                                                {{ item.description }}
+                                            </span>
+                                            <button
+                                                class="btn-close-custom"
+                                                @click="deleteRootCausePotential(item.id)"
+                                                >✕
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-4">
+                                    <b>Matéria-prima</b>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <div
+                                            v-for="item in material"
+                                            :key="item.id"
+                                            class="position-relative"
+                                        >
+                                            <span class="badge rounded-pill bg-dark text-white px-4 py-2 badge-lg">
+                                                {{ item.description }}
+                                            </span>
+                                            <button
+                                                class="btn-close-custom"
+                                                @click="deleteRootCausePotential(item.id)"
+                                                >✕
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 mt-1">
-                    <i><b>Criado em:</b> {{ test.created_at | formatDateTimeStamp}}</i>
-                </div>
-                <div class="col-md-6 mt-1">
-                <i><b>Testado em:</b> {{ test.approved_at | formatDateTime }}</i>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2 mt-2">
-                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalUpdateTest" @click="setTest(test)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                        </svg>
-                        Editar Teste
-                    </button>
-                </div>
-            </div>
-        </div>
-        <hr class="divisor_horizontal">
-        <div class="row mt-3">
-            <h3>PASSO 5: PONTO DE ESCAPE - Neste passo você deve identificar por que o problema não foi detectado antes de causar impacto e informar o plano de melhoria</h3>
-        </div>
-        <div class="mt-2">
-            <alert-component type="danger" :details="feedbackMessageEscapePoint" :title="feedbackTitleEscapePoint" v-if="statusEscapePoint == 'error'"></alert-component>
-            <alert-component type="success" :details="feedbackMessageEscapePoint" :title="feedbackTitleEscapePoint" v-if="statusEscapePoint == 'success'"></alert-component>
-        </div>
-        <div class="row">
-            <div class="col-md-3 mt-2">
-                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddEscapePoint">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                    </svg>
-                    Adicionar Ponto de Escape
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingPasso2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsePasso2" aria-expanded="false" aria-controls="panelsStayOpen-collapsePasso2">
+                    PASSO 2: CAUSA MAIS PROVÁVEL - Após identificar as possíveis causas raiz, indique a causa potencial mais provável
                 </button>
-            </div>
-        </div>
-        <div class="row mt-2" v-if="escapePointList.data.length === 0">
-            <div class="col-md-12 mt-2">
-                <alert-component type="warning" title="Não foi informado nenhum ponto de escape ainda"></alert-component>
-            </div>
-        </div>
-        <div id="test-escape-point" v-for="(escapePoint, index) in escapePointList.data" :key="`${escapePoint.id}-${index}`" :value="escapePoint.id">
-            <hr class="divisor_horizontal_small">
-            <div class="row">
-                <div class="col-md-12">
-                    <b>Etapa onde o defeito deveria ter sido encontrado:</b> {{ escapePoint.detection_stage }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mt-3">
-                    <h5><b>Por que não foi detectado</b></h5>
-                    <p style="text-align: justify;">{{ escapePoint.why_not }}</p>
-                </div>
-                <div class="col-md-6 mt-3">
-                    <div class="form-floating">
-                        <h5><b>Planos de Melhoria</b></h5>
-                        <p style="text-align: justify;"> {{ escapePoint.improvement_plan }}</p>
+                </h2>
+                <div id="panelsStayOpen-collapsePasso2" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingPasso2">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-12 mt-2">
+                                <div class="form-floating">
+                                    <select class="form-control" id="rootCause" name="rootCause" placeholder="Causa Raiz*" v-model="rootCause" @change="setRootCause()">
+                                        <option value="">Selecione...</option>
+                                        <option v-for="cause in rootCauses.data" :key="cause.id" :value="cause.id">
+                                            {{ cause.description }}
+                                        </option>
+                                    </select>
+                                    <label class="form-label">Causa Raiz*</label>
+                                    <div id="invalidFeedbackRootCause" class="invalid-feedback">
+                                        Informe a causa raiz mais provável
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 mt-1">
-                    <i><b>Criado em:</b> {{ escapePoint.created_at | formatDateTimeStamp}}</i>
-                </div>
-                <div class="col-md-6 mt-1">
-                <i><b>Última atualização:</b> {{ escapePoint.updated | formatDateTime }}</i>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingPasso3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsePasso3" aria-expanded="false" aria-controls="panelsStayOpen-collapsePasso3">
+                    PASSO 3: 5 PORQUÊS - E agora informe os 5 porquês
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapsePasso3" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingPasso3">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-4 mt-2">
+                                <div class="form-floating">
+                                    <input type="text" id="primeiropq" name="primeiropq" class="form-control" v-model="primeiropq" placeholder="1º Porquê">
+                                    <label class="form-label">1º Porquê</label>
+                                    <div id="invalidFeedbackPrimeiroPorque" class="invalid-feedback">
+                                        Informe pelo menos um porquê
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mt-2">
+                                <div class="form-floating">
+                                    <input type="text" id="segundopq" name="segundopq" class="form-control" v-model="segundopq" placeholder="2º Porquê">
+                                    <label class="form-label">2º Porquê</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mt-2">
+                                <div class="form-floating">
+                                    <input type="text" id="terceiropq" name="terceiropq" class="form-control" v-model="terceiropq" placeholder="3º Porquê">
+                                    <label class="form-label">3º Porquê</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mt-2">
+                                <div class="form-floating">
+                                    <input type="text" id="quartopq" name="quartopq" class="form-control" v-model="quartopq" placeholder="4º Porquê">
+                                    <label class="form-label">4º Porquê</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mt-2">
+                                <div class="form-floating">
+                                    <input type="text" id="quintopq" name="quintopq" class="form-control" v-model="quintopq" placeholder="5º Porquê">
+                                    <label class="form-label">5º Porquê</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-2">
+                                <div class="form-floating">
+                                    <select class="form-control" id="step_number" name="step_number" placeholder="Selecione a causa raíz*" v-model="step_number">
+                                        <option value="">Selecione...</option>
+                                        <option value="1">1º Porquê</option>
+                                        <option value="2">2º Porquê</option>
+                                        <option value="3">3º Porquê</option>
+                                        <option value="4">4º Porquê</option>
+                                        <option value="5">5º Porquê</option>
+                                    </select>
+                                    <label class="form-label">Selecione a causa raíz*</label>
+                                    <div id="invalidFeedbackStepNumber" class="invalid-feedback">
+                                        Selecione a causa raíz
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-2">
+                                <button type="button" class="btn btn-info texto_branco w-100" @click="saveFiveWhys()" id="btnSave">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
+                                        <path d="M11 2H9v3h2z"/>
+                                        <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
+                                    </svg>
+                                    Salvar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <alert-component type="danger" :details="feedbackMessageFiveWhy" :title="feedbackTitleFiveWhy" v-if="statusFiveWhy == 'error'"></alert-component>
+                            <alert-component type="success" :details="feedbackMessageFiveWhy" :title="feedbackTitleFiveWhy" v-if="statusFiveWhy == 'success'"></alert-component>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-3 mt-2">
-                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalUpdateEscapePoint" @click="setEscapePoint(escapePoint)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-                        </svg>
-                        Editar Ponto de Escape
-                    </button>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingPasso4">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsePasso4" aria-expanded="false" aria-controls="panelsStayOpen-collapsePasso4">
+                    PASSO 4: TESTAR CAUSA IDENTIFICADA - Com a causa raiz identificada por meio dos 5 Porquês, você deve testar se ela realmente reproduz o problema. Insira abaixo os testes realizados e os resultados
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapsePasso4" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingPasso4">
+                    <div class="accordion-body">
+                        <h5 class="mt-4">Causa raiz identificada: <b>{{ step_number_text }}</b></h5>
+                        <div class="mt-2">
+                            <alert-component type="danger" :details="feedbackMessageRootCauseStore" :title="feedbackTitleRootCauseStore" v-if="statusRootCauseStore == 'error'"></alert-component>
+                            <alert-component type="success" :details="feedbackMessageRootCauseStore" :title="feedbackTitleRootCauseStore" v-if="statusRootCauseStore == 'success'"></alert-component>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 mt-2">
+                                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddTest">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                    </svg>
+                                    Adicionar Teste
+                                </button>
+                            </div>
+                        </div>
+                        <div id="test-results-section" v-for="test in rootCauseTestList.data" :key="test.id" :value="test.id">
+                            <hr class="divisor_horizontal_small">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <b>Teste Número:</b> {{ test.id }} | <b>Causa raiz testada:</b> {{ test.five_why.why }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mt-1">
+                                    <b>Responsável pelo teste: </b> {{ test.user.name }}
+                                </div>
+                                <div class="col-md-6 mt-1">
+                                    <b>Resultado do teste: </b>{{ test.approved | formatTestResult }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mt-3">
+                                    <h5><b>Descrição do teste</b></h5>
+                                    <p style="text-align: justify;">{{ test.description }}</p>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <div class="form-floating">
+                                        <h5><b>Resultados do teste</b></h5>
+                                        <p style="text-align: justify;"> {{ test.result }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mt-1">
+                                    <i><b>Criado em:</b> {{ test.created_at | formatDateTimeStamp}}</i>
+                                </div>
+                                <div class="col-md-6 mt-1">
+                                <i><b>Testado em:</b> {{ test.approved_at | formatDateTime }}</i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 mt-2">
+                                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalUpdateTest" @click="setTest(test)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                        </svg>
+                                        Editar Teste
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <hr class="divisor_horizontal">
-        <div class="row mt-3">
-            <h3 v-if="identifiedRootCause.data.length === 0">CONCLUSÃO</h3>
-            <h3 v-if="identifiedRootCause.data.length === 1">CONCLUSÃO - Esta é a causa raiz deste incidente</h3>
-            <h3 v-if="identifiedRootCause.data.length > 1">CONCLUSÃO - Estas são as causas raizes deste incidente</h3>
-        </div>
-        <div id="root-cause-section" v-for="rootCause in identifiedRootCause.data" :value="rootCause.id">
-            <alert-component type="success" :title="rootCause.description"></alert-component>
-        </div>
-        <div class="mt-3" v-if="identifiedRootCause.data.length === 0">
-            <alert-component type="warning" title="Causa raiz ainda não foi identificada ainda"></alert-component>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingPasso5">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsePasso5" aria-expanded="false" aria-controls="panelsStayOpen-collapsePasso5">
+                    PASSO 5: PONTO DE ESCAPE - Neste passo você deve identificar por que o problema não foi detectado antes de causar impacto e informar o plano de melhoria
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapsePasso5" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-Passo5">
+                    <div class="accordion-body">
+                        <div class="mt-2">
+                            <alert-component type="danger" :details="feedbackMessageEscapePoint" :title="feedbackTitleEscapePoint" v-if="statusEscapePoint == 'error'"></alert-component>
+                            <alert-component type="success" :details="feedbackMessageEscapePoint" :title="feedbackTitleEscapePoint" v-if="statusEscapePoint == 'success'"></alert-component>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mt-2">
+                                <button class="w-100 btn btn-primary btn-md texto_branco" data-bs-toggle="modal" data-bs-target="#modalAddEscapePoint">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                    </svg>
+                                    Adicionar Ponto de Escape
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mt-2" v-if="escapePointList.data.length === 0">
+                            <div class="col-md-12 mt-2">
+                                <alert-component type="warning" title="Não foi informado nenhum ponto de escape ainda"></alert-component>
+                            </div>
+                        </div>
+                        <div id="test-escape-point" v-for="(escapePoint, index) in escapePointList.data" :key="`${escapePoint.id}-${index}`" :value="escapePoint.id">
+                            <hr class="divisor_horizontal_small">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <b>Etapa onde o defeito deveria ter sido encontrado:</b> {{ escapePoint.detection_stage }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mt-3">
+                                    <h5><b>Por que não foi detectado</b></h5>
+                                    <p style="text-align: justify;">{{ escapePoint.why_not }}</p>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <div class="form-floating">
+                                        <h5><b>Planos de Melhoria</b></h5>
+                                        <p style="text-align: justify;"> {{ escapePoint.improvement_plan }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mt-1">
+                                    <i><b>Criado em:</b> {{ escapePoint.created_at | formatDateTimeStamp}}</i>
+                                </div>
+                                <div class="col-md-6 mt-1">
+                                <i><b>Última atualização:</b> {{ escapePoint.updated | formatDateTime }}</i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 mt-2">
+                                    <button class="w-100 btn btn-secondary btn-md" data-bs-toggle="modal" data-bs-target="#modalUpdateEscapePoint" @click="setEscapePoint(escapePoint)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                        </svg>
+                                        Editar Ponto de Escape
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingConclusoes">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseConclusoes" aria-expanded="false" aria-controls="panelsStayOpen-collapseConclusoes">
+                    CONCLUSÕES
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapseConclusoes" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingConclusoes">
+                    <div class="accordion-body">
+                        <div class="row mt-3">
+                            <h3 v-if="identifiedRootCause.data.length === 1">Esta é a causa raiz deste incidente</h3>
+                            <h3 v-if="identifiedRootCause.data.length > 1">Estas são as causas raizes deste incidente</h3>
+                        </div>
+                        <div id="root-cause-section" v-for="rootCause in identifiedRootCause.data" :value="rootCause.id">
+                            <alert-component type="success" :title="rootCause.description"></alert-component>
+                        </div>
+                        <div class="mt-3" v-if="identifiedRootCause.data.length === 0">
+                            <alert-component type="warning" title="Causa raiz ainda não foi identificada ainda"></alert-component>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
