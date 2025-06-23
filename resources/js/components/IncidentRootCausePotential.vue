@@ -358,7 +358,7 @@
                 <alert-component type="warning" title="Não foi informado nenhum ponto de escape ainda"></alert-component>
             </div>
         </div>
-        <div id="test-escape-point" v-for="escapePoint in escapePointList.data" :key="escapePoint.id" :value="escapePoint.id">
+        <div id="test-escape-point" v-for="(escapePoint, index) in escapePointList.data" :key="`${escapePoint.id}-${index}`" :value="escapePoint.id">
             <hr class="divisor_horizontal_small">
             <div class="row">
                 <div class="col-md-12">
@@ -402,7 +402,7 @@
             <h3 v-if="identifiedRootCause.data.length === 1">CONCLUSÃO - Esta é a causa raiz deste incidente</h3>
             <h3 v-if="identifiedRootCause.data.length > 1">CONCLUSÃO - Estas são as causas raizes deste incidente</h3>
         </div>
-        <div id="root-cause-section" v-for="rootCause in identifiedRootCause.data" :key="rootCause.id" :value="rootCause.id">
+        <div id="root-cause-section" v-for="rootCause in identifiedRootCause.data" :value="rootCause.id">
             <alert-component type="success" :title="rootCause.description"></alert-component>
         </div>
         <div class="mt-3" v-if="identifiedRootCause.data.length === 0">
