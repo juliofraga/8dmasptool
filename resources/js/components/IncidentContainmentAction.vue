@@ -13,7 +13,7 @@
             }"
         ></orientation-component>
         <search-component 
-            title="Áreas" 
+            title="Ações de Conteção" 
             :buttons=" {
                 add: {
                     show: true,

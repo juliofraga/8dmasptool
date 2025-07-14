@@ -55,6 +55,9 @@ Route::middleware('auth')->group(function() {
         Route::get('/incidente/causa-raiz/{visual_id}', function () {
             return view('/admin/incident/root-cause-potential');
         })->name('incident-stage4');
+        Route::get('/incidente/acao-corretiva-permanente/{visual_id}', function () {
+            return view('/admin/incident/corrective-actions');
+        })->name('incident-stage5');
     });
 });
 
