@@ -441,7 +441,6 @@
                             this.cleanAddAreaFormData();
                         })
                         .catch(errors => {
-                            console.log('error: ', errors);
                             this.status = 'error';
                             this.feedbackTitle = "Erro ao adicionar área";
                             utils.closeModal('modalAdicionarArea');

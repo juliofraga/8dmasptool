@@ -30,4 +30,9 @@ class permanent_action extends Model
             'required' => 'O campo :attribute é obrigatório',
         ];
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
 }

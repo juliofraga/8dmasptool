@@ -37,6 +37,31 @@
             <alert-component type="danger" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'error'"></alert-component>
             <alert-component type="success" :details="feedbackMessage" :title="feedbackTitle" v-if="status == 'success'"></alert-component>
         </div>
+        <div v-if="Object.keys(actions.data).length > 0">
+            <list-component
+                :title="{
+                    id: {title: 'ID', length:'hidden', type:'text'},
+                    description: {title: 'Descrição', length: '7', type:'text'},
+                    status: {title: 'Status', length: '1', type:'status-incident'},
+                    deadline: {title: 'Data Limite', length: '2', type: 'date'},
+                    user_name: {title: 'Responsável', length: '1', type:'text'},
+                    editar: {title: 'Editar', length: '1', type: 'buttonModal', modalId: '#modalAtualizarAcaoPermanente'},
+                    user_id: {title: 'User ID', length: 'hidden', type:'text'},
+                    updated_at: {title: 'Atualização', length: 'hidden', type:'text'},
+                    created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetimestamp'}
+                }" 
+                :data="actions.data"
+                :status="status"
+                :feedbackMessage="feedbackMessage"
+                :feedbackTitle="feedbackTitle"
+            ></list-component>
+        </div>
+        <div v-else-if="loaded === true">
+            <no-itens-component></no-itens-component>
+        </div>
+        <div v-else-if="loaded === false">
+            <spinner-component></spinner-component>
+        </div>
         <div class="row mb-3 mt-4">
             <div class="col-sm-2 mt-3">
                 <button type="button" class="btn btn-dark texto_branco w-100" @click="previous()" id="btnPrevious">
@@ -177,6 +202,8 @@
                 urlBase: utils.API_URL + '/api/v1/incident/correctiveactions',
                 urlUser: utils.API_URL + '/api/v1/user',
                 users: {data: {}},
+                actions: {data: {}},
+                loaded: false,
             }
         },
         methods: {
@@ -213,10 +240,10 @@
                     let url = this.urlBase + '/store';
                     axios.post(url, formData, config)
                         .then(response => {
-                            this.status = 'sucesso';
+                            this.status = 'success';
                             this.feedbackTitle = "Ação corretiva permanente adicionada com sucesso";
                             utils.closeModal('modalAdicionarAcaoCorretiva');
-                            //this.loadActionList();
+                            this.loadActionList();
                             this.cleanAddCorrectiveActionsFormData();
                         })
                         .catch(errors => {
@@ -228,6 +255,7 @@
                                 dados: errors.response.data.errors
                             };
                         })
+                    utils.clearFeedbackMessage(this, 10000);
                 }
             },
             cleanAddCorrectiveActionsFormData() {
@@ -267,9 +295,30 @@
                         }
                     })
             },
+            loadActionList() {
+                let url = this.urlBase + '/' + this.visualid;
+                axios.get(url)
+                    .then(response => {
+                        this.actions = response.data;
+                        utils.clearFeedbackMessage(this, 10000);
+                        this.loaded = true;
+                    })
+                    .catch(errors => {
+                        if (errors.response.status == 500) {
+                            this.feedbackTitle = "Erro no servidor";
+                            this.status = 'error';
+                            this.feedbackMessage = {mensagem: "Desculpe, não conseguimos processar a sua requisição, tente novamente ou entre em contato com a equipe de suporte"}
+                        } else {
+                            this.feedbackTitle = "Houve um erro";
+                            this.status = 'error';
+                            this.feedbackMessage = errors;
+                        }
+                    })
+            },
         },
         mounted() {
             this.loadActiveUsers();
+            this.loadActionList();
         }
     }
 </script>

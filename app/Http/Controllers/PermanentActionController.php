@@ -25,10 +25,40 @@ class PermanentActionController extends Controller
         $request->merge([
             'incidents_id' => $incident_id
         ]);
-        $rootCausePotential = $this->permanentActionRepository->store($request);
-        if ($rootCausePotential->getStatusCode() === 500) {
-            return $rootCausePotential;
+        $permanentAction = $this->permanentActionRepository->store($request);
+        if ($permanentAction->getStatusCode() === 500) {
+            return $permanentAction;
         }
-        return $rootCausePotential;
+        return $permanentAction;
+    }
+
+    public function show(string $visual_id)
+    {
+        $incident_id = IncidentController::getIncidentId($visual_id);
+        if (!$incident_id) {
+            return response()->json(['error' => 'Incidente não encontrado'], 404);
+        }
+        $data = $this->permanentAction::with('user')
+            ->where('incidents_id', $incident_id)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'description' => $item->description,
+                    'user_name' => $item->user->name,
+                    'user_id' => $item->user->id,
+                    'created_at' => $item->created_at,
+                    'updated_at' => $item->updated_at,
+                    'status' => $item->status,
+                    'type' => $item->type,
+                    'category' => $item->category,
+                    'deadline' => $item->deadline
+                ];
+            });
+        if ($data) {
+            return response()->json(['data' => $data, 200]);
+        } else {
+            return response()->json(['error' => 'Não há ações corretivas permanentes cadastradas para este incidente'], 404);
+        }
     }
 }
