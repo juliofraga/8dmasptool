@@ -18,7 +18,7 @@
                 add: {
                     show: true,
                     type: 'modal',
-                    modalId: '#modalAdicionarAcaoCorretiva'
+                    modalId: '#modalAddCorrectiveAction'
                 },
                 search: {
                     show: false,
@@ -45,10 +45,12 @@
                     status: {title: 'Status', length: '1', type:'status-incident'},
                     deadline: {title: 'Data Limite', length: '2', type: 'date'},
                     user_name: {title: 'Responsável', length: '1', type:'text'},
-                    editar: {title: 'Editar', length: '1', type: 'buttonModal', modalId: '#modalAtualizarAcaoPermanente'},
+                    editar: {title: 'Editar', length: '1', type: 'buttonModal', modalId: '#modalUpdateCorrectiveAction'},
                     user_id: {title: 'User ID', length: 'hidden', type:'text'},
                     updated_at: {title: 'Atualização', length: 'hidden', type:'text'},
-                    created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetimestamp'}
+                    created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetimestamp'},
+                    category: {title: 'Categoria', length: 'hidden', type: 'text'},
+                    type: {title: 'Tipo', length: 'hidden', type: 'text'}
                 }" 
                 :data="actions.data"
                 :status="status"
@@ -81,7 +83,7 @@
             </div>
         </div>
         <!-- Modal para adicionar Ação Permanente -->
-        <modal-component id="modalAdicionarAcaoCorretiva" title="Adicionar Ação de Correção Permanente">
+        <modal-component id="modalAddCorrectiveAction" title="Adicionar Ação de Correção Permanente">
             <template v-slot:conteudo>
                 <div class="form-group">
                     <div class="row mt-2">
@@ -181,6 +183,117 @@
                 <button type="button" class="btn btn-success texto_branco" @click="save()">Salvar</button>
             </template>
         </modal-component>
+        <!-- Modal para atualizar Ação Permanente -->
+        <modal-component id="modalUpdateCorrectiveAction" title="Atualizar Ação de Correção Permanente">
+            <template v-slot:conteudo>
+                <div class="form-group">
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="categoryUpdate" name="categoryUpdate" placeholder="Categoria*" v-model="$store.state.item.category">
+                                    <option value="">Selecione...</option>
+                                    <option value="Corrective">Corretiva</option>
+                                    <option value="Preventive">Preventiva</option>
+                                    <option value="Improvement">Melhoria</option>
+                                </select>
+                                <label class="form-label">Categoria*</label>
+                                <div id="invalidFeedbackCategotyUpdate" class="invalid-feedback">
+                                    Informe a categoria dessa ação permanente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="typeUpdate" name="typeUpdate" placeholder="Type*" v-model="$store.state.item.type">
+                                    <option value="">Selecione...</option>
+                                    <option value="Occurrence">Ocorrência</option>
+                                    <option value="Not Detection">Não Detecção</option>
+                                </select>
+                                <label class="form-label">Type*</label>
+                                <div id="invalidFeedbackTypeUpdate" class="invalid-feedback">
+                                    Informe o tipo dessa ação permanente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="descriptionUpdate" name="descriptionUpdate" rows="10" v-model="$store.state.item.description" style="height: auto;">{{ $store.state.item.description }}</textarea>
+                                <label class="form-label">Descrição*</label>
+                                <div id="invalidFeedbackDescriptionUpdate" class="invalid-feedback">
+                                    Informe a descrição da ação permanente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <input type="date" class="form-control" id="deadlineUpdate" name="deadlineUpdate" v-model="$store.state.item.deadline" placeholder="Data Limite*">
+                                <label class="form-label">Data Limite*</label>
+                                <div id="invalidFeedbackDeadlineUpdate" class="invalid-feedback">
+                                    Informe a data limite da ação permanente.
+                                </div>
+                                <div id="invalidFeedbackInvalidDateUpdate" class="invalid-feedback">
+                                    A data informada é menor que a data atual, informe uma data valida.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="userResponsibleUpdate" name="userResponsibleUpdate" placeholder="Responsável*" v-model="$store.state.item.user_id">
+                                    <option value="">Selecione...</option>
+                                    <option v-for="user in users" :key="user.id" :value="user.id">
+                                        {{ user.name }}
+                                    </option>
+                                </select>
+                                <label class="form-label">Responsável*</label>
+                                <div id="invalidFeedbackResponsibleUpdate" class="invalid-feedback">
+                                    Informe o responsável por esta ação permanente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 mt-2">
+                            <div class="form-floating">
+                                <select class="form-control" id="statusActionUpdate" name="statusActionUpdate" placeholder="Status*" v-model="$store.state.item.status">
+                                    <option value="">Selecione...</option>
+                                    <option value="Not Started">Não iniciado</option>
+                                    <option value="In Progress">Em andamento</option>
+                                    <option value="Canceled">Cancelado</option>
+                                    <option value="On hold">Em espera</option>
+                                    <option value="Finished">Concluído</option>
+                                </select>
+                                <label class="form-label">Status*</label>
+                                <div id="invalidFeedbackStatusUpdate" class="invalid-feedback">
+                                    Informe o status dessa ação permanente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <label class="form-label"><i>Data de criação: {{ $store.state.item.created_at | formatDateTimeStamp}}</i></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label class="form-label"><i>Última atualização: {{ $store.state.item.updated_at | formatDateTimeStamp}}</i></label>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:rodape>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success texto_branco" @click="update()">Atualizar</button>
+            </template>
+        </modal-component>
     </div>
 </template>
 
@@ -242,14 +355,14 @@
                         .then(response => {
                             this.status = 'success';
                             this.feedbackTitle = "Ação corretiva permanente adicionada com sucesso";
-                            utils.closeModal('modalAdicionarAcaoCorretiva');
+                            utils.closeModal('modalAddCorrectiveAction');
                             this.loadActionList();
                             this.cleanAddCorrectiveActionsFormData();
                         })
                         .catch(errors => {
                             this.status = 'error';
                             this.feedbackTitle = "Erro ao adicionar ação corretiva permanente";
-                            utils.closeModal('modalAdicionarAcaoCorretiva');
+                            utils.closeModal('modalAddCorrectiveAction');
                             this.feedbackMessage = {
                                 mensagem: errors.response.data.message,
                                 dados: errors.response.data.errors
@@ -257,6 +370,34 @@
                         })
                     utils.clearFeedbackMessage(this, 10000);
                 }
+            },
+            update() {
+                const fields = {
+                    'category': 'categoryUpdate',
+                    'type': 'typeUpdate',
+                    'description': 'descriptionUpdate',
+                    'deadline': 'deadlineUpdate',
+                    'user_id': 'userResponsibleUpdate',
+                    'status': 'statusActionUpdate'
+                };
+                if (this.fieldUpdateValidation(fields)) {
+
+                }
+                
+
+            },
+            fieldUpdateValidation(fields) {
+                Object.entries(fields).forEach(([stored, fieldId]) => {
+                    if (this.$store.state.item[stored] == '') {
+                        document.getElementById(fieldId).classList.add('is-invalid');
+                        return false;
+                    } else {
+                        if (document.getElementById(fieldId).classList.contains('is-invalid')) {
+                                document.getElementById(fieldId).classList.remove('is-invalid');
+                            }
+                    }
+                });
+                return true;
             },
             cleanAddCorrectiveActionsFormData() {
                 this.description = '';
