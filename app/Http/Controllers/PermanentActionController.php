@@ -61,4 +61,21 @@ class PermanentActionController extends Controller
             return response()->json(['error' => 'Não há ações corretivas permanentes cadastradas para este incidente'], 404);
         }
     }
+
+    public function update(Request $request, int $id)
+    {
+        $action = $this->permanentAction->find($id);
+        if (!$action) {
+            return response()->json(['erro' => 'Registro não encontrado'], 404);
+        }
+        $request->merge([
+            'description' => $request->description === 'null' ? NULL : $request->description,
+        ]);
+        $update = $action->update($request->all());
+        if ($update) {
+            return response()->json($action, 200);
+        } else {
+            return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
+        }
+    }
 }

@@ -380,11 +380,52 @@
                     'user_id': 'userResponsibleUpdate',
                     'status': 'statusActionUpdate'
                 };
-                if (this.fieldUpdateValidation(fields)) {
-
+                const currentDate = new Date(utils.returnCurrentDate());
+                let dateDeadline = new Date(this.$store.state.item.deadline);
+                if (dateDeadline < currentDate) {
+                    document.getElementById('deadlineUpdate').classList.add('is-invalid');
+                    document.getElementById('invalidFeedbackInvalidDateUpdate').style.display = 'block';
+                    document.getElementById('invalidFeedbackDeadlineUpdate').style.display = 'none';
+                    return;
+                } else {
+                    if (document.getElementById('invalidFeedbackDeadlineUpdate').classList.contains('is-invalid')) {
+                        document.getElementById('invalidFeedbackDeadlineUpdate').style.display = 'block';
+                    }
+                    document.getElementById('invalidFeedbackInvalidDateUpdate').style.display = 'none';
                 }
-                
+                if (this.fieldUpdateValidation(fields)) {
+                    let formData = new FormData();
+                    formData.append('_method', 'patch');
+                    formData.append('description', this.$store.state.item.description);
+                    formData.append('users_id', this.$store.state.item.user_id);
+                    formData.append('status', this.$store.state.item.status);
+                    formData.append('type', this.$store.state.item.type);
+                    formData.append('category', this.$store.state.item.category);
+                    formData.append('deadline', this.$store.state.item.deadline);
 
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
+                    let url = this.urlBase + '/' + this.$store.state.item.id;
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.status = 'sucesso';
+                            this.feedbackTitle = "Ação corretiva permanente atualizada com sucesso";
+                            utils.closeModal('modalUpdateCorrectiveAction');
+                            this.loadActionList();
+                        })
+                        .catch(errors => {
+                            this.status = 'error';
+                            this.feedbackTitle = "Erro ao atualizar ação corretiva permanente";
+                            utils.closeModal('modalUpdateCorrectiveAction');
+                            this.feedbackMessage = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                        })
+                }
             },
             fieldUpdateValidation(fields) {
                 Object.entries(fields).forEach(([stored, fieldId]) => {

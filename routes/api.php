@@ -77,6 +77,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
         Route::prefix('correctiveactions')->group(function () {
             Route::post('/store', 'PermanentActionController@store');
             Route::get('/{visual_id}', 'PermanentActionController@show');
+            Route::patch('/{id}', 'PermanentActionController@update');
         });
     });
     Route::post('logout', 'AuthController@logout');
