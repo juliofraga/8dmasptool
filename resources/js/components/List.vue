@@ -43,20 +43,46 @@
                         {{ title[keyValue].title }}
                     </button>
                 </a>
+                <div class="dropdown" :id="'menuDropdown-' + key" v-if="title[keyValue].type === 'listOptions' && classList === 'correctiveActions'">
+                    <button class="dropdown-button btn btn-outline-secondary w-100" @click="toggleDropdown(key)">Opções ▸</button>
+                    <div class="dropdown-content">
+                        <a href="#" data-bs-toggle="modal" :data-bs-target="title[keyValue].options[0]" @click="setStore(obj)">Editar</a>
+                        <a href="#" data-bs-toggle="modal" :data-bs-target="title[keyValue].options[1]" @click="setStore(obj)">Adicionar Verificação</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-button')) {
+            document.getElementById("menuDropdown").classList.remove("show");
+        }
+    }
     export default {
         data () {
             return {
                 urlRedirect: ''
             }
         },
-        props: ['title', 'data', 'status', 'feedbackTitle', 'feedbackMessage'],
+        props: ['title', 'data', 'status', 'feedbackTitle', 'feedbackMessage', 'classList'],
         methods: {
+            toggleDropdown(key) {
+                const id = `menuDropdown-${key}`;
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.toggle("show");
+                }
+            },
+            handleClickOutside(event) {
+                if (!event.target.matches(".dropdown-button")) {
+                    document.querySelectorAll(".dropdown").forEach((el) =>
+                        el.classList.remove("show")
+                    );
+                }
+            },
             setStore(obj) {
                 this.$store.state.item = obj;
             },
@@ -84,6 +110,10 @@
         },
         mounted() {
             this.setUrlRedirect();
-        }
+            window.addEventListener("click", this.handleClickOutside);
+        },
+        beforeDestroy() {
+            window.removeEventListener("click", this.handleClickOutside);
+        },
     }
 </script>
