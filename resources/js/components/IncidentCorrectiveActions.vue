@@ -9,7 +9,7 @@
         <orientation-component
             :sentence="{
                 etapa: '5 e 6', 
-                mensagem: 'Nessa etapa você deverá identificar, selecionar e implementar uma ou mais ações corretivas eficazes e definitivas que eliminem a causa raiz do problema, impedindo que ele volte a ocorrer. Além disso, como parte da etapa 6, você vai adicionar os resultados dessas ações.'
+                mensagem: 'Como parte da etapa 5, você deverá identificar, selecionar e implementar uma ou mais ações corretivas eficazes e definitivas que eliminem a causa raiz do problema, impedindo que ele volte a ocorrer. Além disso, como parte da etapa 6, você vai adicionar os resultados dessas ações.'
             }"
         ></orientation-component>
         <search-component 
