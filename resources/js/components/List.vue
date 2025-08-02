@@ -44,7 +44,7 @@
                     </button>
                 </a>
                 <div class="dropdown" :id="'menuDropdown-' + key" v-if="title[keyValue].type === 'listOptions' && classList === 'correctiveActions'">
-                    <button class="dropdown-button btn btn-outline-secondary w-100" @click="toggleDropdown(key)">Opções ▸</button>
+                    <button class="dropdown-button btn btn-sm btn-outline-secondary w-100" @click="toggleDropdown(key)">Opções ▸</button>
                     <div class="dropdown-content">
                         <a href="#" data-bs-toggle="modal" :data-bs-target="title[keyValue].options[0]" @click="setStore(obj)">Editar</a>
                         <a href="#" data-bs-toggle="modal" :data-bs-target="title[keyValue].options[1]" @click="setStore(obj)">Adicionar Verificação</a>

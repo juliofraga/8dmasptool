@@ -79,6 +79,9 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function() {
             Route::get('/{visual_id}', 'PermanentActionController@show');
             Route::patch('/{id}', 'PermanentActionController@update');
         });
+        Route::prefix('verification')->group(function () {
+            Route::post('/store', 'VerificationController@store');
+        });
     });
     Route::post('logout', 'AuthController@logout');
     Route::post('me', 'AuthController@me');
