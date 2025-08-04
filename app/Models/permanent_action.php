@@ -35,4 +35,9 @@ class permanent_action extends Model
     {
         return $this->belongsTo(User::class, 'users_id');
     }
+
+    public function verifications()
+    {
+        return $this->hasMany(Verification::class, 'permanent_actions_id');
+    }
 }

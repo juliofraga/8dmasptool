@@ -38,7 +38,7 @@ class PermanentActionController extends Controller
         if (!$incident_id) {
             return response()->json(['error' => 'Incidente não encontrado'], 404);
         }
-        $data = $this->permanentAction::with('user')
+        $data = $this->permanentAction::with(['user', 'verifications'])
             ->where('incidents_id', $incident_id)
             ->get()
             ->map(function ($item) {
@@ -52,7 +52,19 @@ class PermanentActionController extends Controller
                     'status' => $item->status,
                     'type' => $item->type,
                     'category' => $item->category,
-                    'deadline' => $item->deadline
+                    'deadline' => $item->deadline,
+                    'verifications' => $item->verifications->map(function ($verification) {
+                        return [
+                            'id' => $verification->id,
+                            'permanent_actions_id' => $verification->permanent_actions_id,
+                            'method' => $verification->method,
+                            'result' => $verification->result,
+                            'date' => $verification->date,
+                            'effective' => $verification->effective,
+                            'created_at' => $verification->created_at,
+                            'updated_at' => $verification->update_at
+                        ];
+                    })
                 ];
             });
         if ($data) {

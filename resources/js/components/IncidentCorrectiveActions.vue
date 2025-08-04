@@ -50,7 +50,8 @@
                     updated_at: {title: 'Atualização', length: 'hidden', type:'text'},
                     created_at: {title: 'Data de Criação', length: 'hidden', type: 'datetimestamp'},
                     category: {title: 'Categoria', length: 'hidden', type: 'text'},
-                    type: {title: 'Tipo', length: 'hidden', type: 'text'}
+                    type: {title: 'Tipo', length: 'hidden', type: 'text'},
+                    verifications: {title: 'Verificações', length: 'hidden', type: 'object'}
                 }" 
                 :data="actions.data"
                 :status="status"
