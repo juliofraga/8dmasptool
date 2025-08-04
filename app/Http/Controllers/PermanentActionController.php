@@ -78,4 +78,9 @@ class PermanentActionController extends Controller
             return response()->json(['erro' => 'Falha ao atualizar o registro.'], 500);
         }
     }
+
+    public static function get(int $id)
+    {
+        return permanent_action::where('id', $id)->get();
+    }
 }

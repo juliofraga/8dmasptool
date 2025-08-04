@@ -6,6 +6,7 @@ use App\Models\verification;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\VerificationRepository;
+use App\Http\Controllers\PermanentActionController;
 
 class VerificationController extends Controller
 {
@@ -20,6 +21,11 @@ class VerificationController extends Controller
 
     public function store(Request $request)
     {
+        $permanentActionId = $request->permanent_actions_id;
+        $permanentAction = PermanentActionController::get($permanentActionId);
+        if (!$permanentAction) {
+            return response()->json(['erro' => 'Ação permanente não encontrada'], 404);
+        }
         return $this->verificationRepository->store($request);
     }
 }

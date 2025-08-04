@@ -375,7 +375,7 @@
                 deadline: '',
                 urlBase: utils.API_URL + '/api/v1/incident/correctiveactions',
                 urlUser: utils.API_URL + '/api/v1/user',
-                urlVerification: utils.API_URL + '/api/v1/verification',
+                urlVerification: utils.API_URL + '/api/v1/incident/verification',
                 users: {data: {}},
                 actions: {data: {}},
                 loaded: false,
@@ -442,12 +442,37 @@
                 if (!idAction) {
                     this.status = 'error';
                     this.feedbackTitle = "ID da ação corretiva não identificado";
-                    utils.closeModal('modalAddVerification');
-                    utils.clearFeedbackMessage(this, 10000);
-                }
-                if (utils.fieldsValidate(['method', 'result', 'dateVerification', 'effective'], this)) {
+                } else if (utils.fieldsValidate(['method', 'result', 'dateVerification', 'effective'], this)) {
+                    let formData = new FormData();
+                    formData.append('method', this.method);
+                    formData.append('result', this.result);
+                    formData.append('date', this.dateVerification);
+                    formData.append('effective', this.effective);
+                    formData.append('permanent_actions_id', idAction);
+                    let config = {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        }
+                    }
 
+                    let url = this.urlVerification + '/store';
+                    axios.post(url, formData, config)
+                        .then(response => {
+                            this.status = 'success';
+                            this.feedbackTitle = "Resultado da verificação da ação orretiva adicionada com sucesso";
+                            this.cleanAddVerificationFormData();
+                        })
+                        .catch(errors => {
+                            this.status = 'error';
+                            this.feedbackTitle = "Erro ao adicionar resultado da verificação da ação corretiva";
+                            this.feedbackMessage = {
+                                mensagem: errors.response.data.message,
+                                dados: errors.response.data.errors
+                            };
+                        })
                 }
+                utils.closeModal('modalAddVerification');
+                utils.clearFeedbackMessage(this, 10000);
             },
             update() {
                 const fields = {
@@ -517,6 +542,12 @@
                     }
                 });
                 return true;
+            },
+            cleanAddVerificationFormData() {
+                this.method = '';
+                this.result = '';
+                this.dateVerification = '',
+                this.effective = '';
             },
             cleanAddCorrectiveActionsFormData() {
                 this.description = '';
