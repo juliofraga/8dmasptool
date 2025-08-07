@@ -56,11 +56,6 @@
 </template>
 
 <script>
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown-button')) {
-            document.getElementById("menuDropdown").classList.remove("show");
-        }
-    }
     export default {
         data () {
             return {

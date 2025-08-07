@@ -299,52 +299,106 @@
         <!-- Modal para adicionar verificação da Ação Permanente -->
         <modal-component id="modalAddVerification" title="Adicionar Verificação da Ação de Correção Permanente">
             <template v-slot:conteudo>
-                <div class="form-group">
-                    <div class="row mt-2">
-                        <input type="hidden" id="actionId" name="actionId" v-model="$store.state.item.id">
-                        <div class="col-sm-12 mt-2">
-                            <div class="form-floating">
-                                <textarea class="form-control" id="method" name="method" rows="10" v-model="method" style="height: auto;"></textarea>
-                                <label class="form-label">Método*</label>
-                                <div id="invalidFeedbackMethod" class="invalid-feedback">
-                                    Informe o método de verificação.
+                <input type="hidden" id="actionId" name="actionId" v-model="$store.state.item.id">
+                <div v-if="$store.state.item.verifications && $store.state.item.verifications.length > 0">
+                    <div class="form-group">
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="methodUpdate" name="methodUpdate" rows="10" v-model="$store.state.item.verifications[0].method" style="height: auto;"></textarea>
+                                    <label class="form-label">Método*</label>
+                                    <div id="invalidFeedbackMethodUpdate" class="invalid-feedback">
+                                        Informe o método de verificação.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="resultUpdate" name="resultUpdate" rows="10" v-model="$store.state.item.verifications[0].result" style="height: auto;"></textarea>
+                                    <label class="form-label">Resultado*</label>
+                                    <div id="invalidFeedbackResultUpdate" class="invalid-feedback">
+                                        Informe o resultado da verificação.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="dateVerificationUpdate" name="dateVerificationUpdate" v-model="$store.state.item.verifications[0].date" placeholder="Data da Verificação*">
+                                    <label class="form-label">Data da Verificação*</label>
+                                    <div id="invalidFeedbackDateVerificationUpdate" class="invalid-feedback">
+                                        Informe a data da verificação.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <select class="form-control" id="effectiveUpdate" name="effectiveUpdate" placeholder="A ação foi efetiva?*" v-model="$store.state.item.verifications[0].effective">
+                                        <option value="">Selecione...</option>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </select>
+                                    <label class="form-label">A ação foi efetiva?*</label>
+                                    <div id="invalidFeedbackEffectiveUpdate" class="invalid-feedback">
+                                        Informe se a ação foi efetiva.
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-12 mt-2">
-                            <div class="form-floating">
-                                <textarea class="form-control" id="result" name="result" rows="10" v-model="result" style="height: auto;"></textarea>
-                                <label class="form-label">Resultado*</label>
-                                <div id="invalidFeedbackResult" class="invalid-feedback">
-                                    Informe o resultado da verificação.
+                </div>
+                <div v-else>
+                    <div class="form-group">
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="method" name="method" rows="10" v-model="method" style="height: auto;"></textarea>
+                                    <label class="form-label">Método*</label>
+                                    <div id="invalidFeedbackMethod" class="invalid-feedback">
+                                        Informe o método de verificação.
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-12 mt-2">
-                            <div class="form-floating">
-                                <input type="date" class="form-control" id="dateVerification" name="dateVerification" v-model="dateVerification" placeholder="Data da Verificação*">
-                                <label class="form-label">Data da Verificação*</label>
-                                <div id="invalidFeedbackDateVerification" class="invalid-feedback">
-                                    Informe a data da verificação.
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="result" name="result" rows="10" v-model="result" style="height: auto;"></textarea>
+                                    <label class="form-label">Resultado*</label>
+                                    <div id="invalidFeedbackResult" class="invalid-feedback">
+                                        Informe o resultado da verificação.
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-12 mt-2">
-                            <div class="form-floating">
-                                <select class="form-control" id="effective" name="effective" placeholder="A ação foi efetiva?*" v-model="effective">
-                                    <option value="">Selecione...</option>
-                                    <option value="1">Sim</option>
-                                    <option value="2">Não</option>
-                                </select>
-                                <label class="form-label">A ação foi efetiva?*</label>
-                                <div id="invalidFeedbackEffective" class="invalid-feedback">
-                                    Informe se a ação foi efetiva.
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="dateVerification" name="dateVerification" v-model="dateVerification" placeholder="Data da Verificação*">
+                                    <label class="form-label">Data da Verificação*</label>
+                                    <div id="invalidFeedbackDateVerification" class="invalid-feedback">
+                                        Informe a data da verificação.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-12 mt-2">
+                                <div class="form-floating">
+                                    <select class="form-control" id="effective" name="effective" placeholder="A ação foi efetiva?*" v-model="effective">
+                                        <option value="">Selecione...</option>
+                                        <option value="1">Sim</option>
+                                        <option value="2">Não</option>
+                                    </select>
+                                    <label class="form-label">A ação foi efetiva?*</label>
+                                    <div id="invalidFeedbackEffective" class="invalid-feedback">
+                                        Informe se a ação foi efetiva.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -438,42 +492,74 @@
                     utils.clearFeedbackMessage(this, 10000);
                 }
             },
+            verificationFieldsValidation(json, fields) {
+                Object.entries(fields).forEach(([stored, fieldId]) => {
+                    console.log(json[stored]);
+                    if (json[stored] == '') {
+                        document.getElementById(fieldId).classList.add('is-invalid');
+                        return false;
+                    } else {
+                        if (document.getElementById(fieldId).classList.contains('is-invalid')) {
+                            document.getElementById(fieldId).classList.remove('is-invalid');
+                        }
+                    }
+                });
+                return true;
+            },
             saveVerification() {
                 const idAction = document.getElementById('actionId').value;
                 if (!idAction) {
+                    utils.closeModal('modalAddVerification');
+                    utils.clearFeedbackMessage(this, 10000);
                     this.status = 'error';
                     this.feedbackTitle = "ID da ação corretiva não identificado";
-                } else if (utils.fieldsValidate(['method', 'result', 'dateVerification', 'effective'], this)) {
-                    let formData = new FormData();
-                    formData.append('method', this.method);
-                    formData.append('result', this.result);
-                    formData.append('date', this.dateVerification);
-                    formData.append('effective', this.effective);
-                    formData.append('permanent_actions_id', idAction);
-                    let config = {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
+                } else {
+                    const fields = {
+                        'method': 'methodUpdate',
+                        'result': 'resultUpdate',
+                        'date': 'dateVerificationUpdate',
+                        'effective': 'effectiveUpdate'
+                    };
+                    if (this.$store.state.item.verifications && this.$store.state.item.verifications.length > 0) {
+                        if (this.verificationFieldsValidation(this.$store.state.item.verifications[0], fields)) {
+                            
+                            utils.closeModal('modalAddVerification');
+                            utils.clearFeedbackMessage(this, 10000);
+                        }
+                    } else {
+                        if (utils.fieldsValidate(['method', 'result', 'dateVerification', 'effective'], this)) {
+                            let formData = new FormData();
+                            formData.append('method', this.method);
+                            formData.append('result', this.result);
+                            formData.append('date', this.dateVerification);
+                            formData.append('effective', this.effective);
+                            formData.append('permanent_actions_id', idAction);
+                            let config = {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                }
+                            }
+
+                            let url = this.urlVerification + '/store';
+                            axios.post(url, formData, config)
+                                .then(response => {
+                                    this.status = 'success';
+                                    this.feedbackTitle = "Resultado da verificação da ação orretiva adicionada com sucesso";
+                                    this.cleanAddVerificationFormData();
+                                })
+                                .catch(errors => {
+                                    this.status = 'error';
+                                    this.feedbackTitle = "Erro ao adicionar resultado da verificação da ação corretiva";
+                                    this.feedbackMessage = {
+                                        mensagem: errors.response.data.message,
+                                        dados: errors.response.data.errors
+                                    };
+                                })
+                            utils.closeModal('modalAddVerification');
+                            utils.clearFeedbackMessage(this, 10000);
                         }
                     }
-
-                    let url = this.urlVerification + '/store';
-                    axios.post(url, formData, config)
-                        .then(response => {
-                            this.status = 'success';
-                            this.feedbackTitle = "Resultado da verificação da ação orretiva adicionada com sucesso";
-                            this.cleanAddVerificationFormData();
-                        })
-                        .catch(errors => {
-                            this.status = 'error';
-                            this.feedbackTitle = "Erro ao adicionar resultado da verificação da ação corretiva";
-                            this.feedbackMessage = {
-                                mensagem: errors.response.data.message,
-                                dados: errors.response.data.errors
-                            };
-                        })
                 }
-                utils.closeModal('modalAddVerification');
-                utils.clearFeedbackMessage(this, 10000);
             },
             update() {
                 const fields = {
